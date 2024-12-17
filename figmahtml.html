@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page</title>
+  <link rel="stylesheet" href="figmacss.css">
+</head>
+<body>
+  <!-- Container for the content -->
+  <div class="container">
+    <!-- Navigation Bar -->
+    <header>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#" class="active">Home</a></li>
+          <li><a href="#">How It Works</a></li>
+          <li><a href="#">Safety</a></li>
+          <li><a href="#">Support Us</a></li>
+          <li><a href="#">About Us</a></li>
+        </ul>
+        <div class="language">English (United States)</div>
+        <div class="auth-buttons">
+          <button class="login">Log in</button>
+          <button class="signup">Sign Up</button>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Login Form -->
+    <div class="login-form">
+      <h1>Log in</h1>
+      <form>
+        <label for="email">E-mail</label>
+        <input type="email" id="email" placeholder="Enter your e-mail">
+        
+        <label for="password">Password</label>
+        <div class="password-wrapper">
+          <input type="password" id="password" placeholder="Enter your password">
+          <span class="hide-password">👁️ Hide</span>
+        </div>
+
+        <div class="form-options">
+          <label><input type="checkbox"> Remember me</label>
+          <a href="#" class="forgot-password">Forget password?</a>
+        </div>
+        
+        <button type="submit" class="btn-submit">Log in</button>
+        <p class="signup-text">Don’t have an Account? <a href="#"><strong>Sign Up Free</strong></a></p>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
