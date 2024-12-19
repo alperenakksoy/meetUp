@@ -10,6 +10,33 @@
 </head>
 <body>
 
+    <header>
+        <div class="header-container">
+            <!-- Left Section: Logo and Navigation -->
+            <div class="header-left">
+                <div class="logo"></div>
+                <nav>
+                    <ul>
+                        <li><a href="#" class="active">Home</a></li>
+                        <li><a href="#">How It Works</a></li>
+                        <li><a href="#">Safety</a></li>
+                        <li><a href="#">Support Us</a></li>
+                        <li><a href="#">About Us</a></li>
+                    </ul>
+                </nav>
+            </div>
+    
+            <!-- Right Section: Dropdown and Buttons -->
+            <div class="header-right">
+                <select>
+                    <option>English (United States)</option>
+                </select>
+                <button class="login-btn">Log in</button>
+                <button class="signup-btn">Sign Up</button>
+            </div>
+        </div>
+    </header>
+
     <div class="wrapper">
     <form action="">
         <h1>Register</h1>
@@ -29,7 +56,17 @@
                 <input type="password" placeholder="Password" required>
             </div>
 
-            <button type="submit" id="loginBtn">Create an Account</button>
+            <div class="input-box">
+                <input type="date" required>
+               <select>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+                </select>             
+            </div>
+            
+
+            <button type="submit" id="loginBtn">Join</button>
 
             <div class="login-link">
                 <p>Have an Account? <a href="/Users/alperenaksoy/Desktop/WebProgramming Course/loginScreen/loginIndex.html"> Login</a></p>

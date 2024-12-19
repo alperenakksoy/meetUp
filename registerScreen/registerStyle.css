@@ -5,21 +5,123 @@
     box-sizing: border-box;
 }
 
+/* Header styles */
+header {
+    background-color: #fff;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ddd;
+    width: 100%; /* Full width */
+    display: flex;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    position: fixed; /* Fix the header at the top */
+    top: 0;
+    left: 0;
+    z-index: 10; /* Keeps the header above the content */
+}
+
+/* Container for all header content */
+.header-container {
+    display: flex;
+    width: 100%;
+    justify-content: space-between; /* Separate left and right sections */
+    align-items: center;
+}
+
+/* Left-side content */
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    width: 40px;
+    height: 40px;
+    background-color: #ccc;
+    border-radius: 50%;
+    margin-right: 20px; /* Space between logo and nav */
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px; /* Spacing between navigation links */
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #000;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+nav ul li a.active {
+    font-weight: bold;
+}
+
+/* Right-side content */
+.header-right {
+    display: flex;
+    outline: none;
+    border: none;
+    align-items: center;
+    gap: 15px; /* Spacing between elements */
+}
+
+.header-right select {
+    padding: 5px;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.header-right .login-btn {
+    outline: none;
+    border: none;
+    background-color: #fff;
+    border: 1px solid #000;
+    padding: 7px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.header-right .signup-btn {
+    background-color: #000;
+    outline: none;
+    border: none;
+    color: #fff;
+    border: none;
+    padding: 7px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
 /* Body styles */
 body {
     font-family: Arial, sans-serif;
-    background-color:  #dddddd;
+    background-color: #1E1E1E;
     display: flex;
-    justify-content: center;
+    flex-direction: column; /* Keeps header at the top */
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
+    margin: 0;
+    padding-top: 70px; /* Give space for the fixed header */
 }
 
-.wrapper{
-    background-color: #fff ;
+/* Wrapper styles */
+.wrapper {
+    background-color: #fff;
     border-radius: 10px;
     width: 420px;
+    margin-top: auto; /* Pushes the login form downward */
+    margin-bottom: auto; /* Centers it vertically */
+    padding: 20px 0; /* Add some padding for spacing */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Optional: Adds a subtle shadow */
 }
+
 
 .wrapper h1{
     margin-top: 10px;
@@ -46,7 +148,7 @@ body {
     outline: none;
     border-radius: 40px;
     padding: 20px 45px 20px 20px;
-    border:2px solid rgb(0, 0, 0);
+    border:1px solid rgb(117, 117, 117);
 }
 .input-box input::placeholder{
     color:black;    
@@ -101,7 +203,7 @@ body {
     outline: none;
     border-radius: 40px;
     padding: 20px 45px 20px 20px;
-    border:2px solid rgb(0, 0, 0);
+    border:1px solid rgb(117, 117, 117);
 }
 .name #lname{
     width: 45%;
@@ -111,5 +213,5 @@ body {
     outline: none;
     border-radius: 40px;
     padding: 20px 45px 20px 20px;
-    border:2px solid rgb(0, 0, 0);
+    border:1px solid rgb(117, 117, 117);
 }
