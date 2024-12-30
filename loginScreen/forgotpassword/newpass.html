@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter New Password</title>
+    <link rel="stylesheet" href="resetPassword.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="header-left">
+                <div class="logo"></div>
+                <nav>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="support.html">Support Us</a></li>
+                        <li><a href="#">Safety</a></li>
+                        <li><a href="#">How It Works</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="header-right">
+                <select class="language-select">
+                    <option value="en">English</option>
+                    <option value="tr">Turkish</option>
+                    <option value="es">Spanish</option>
+                    <option value="ar">Arabic</option>
+                    <option value="fr">French</option>
+                    <option value="it">Italian</option>
+                    <option value="de">German</option>
+                </select>
+                <button class="login-btn">Log in</button>
+                <button class="signup-btn">Sign Up</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="wrapper">
+        <form action="/reset-password" method="POST">
+            <h1>Enter New Password</h1>
+            <p class="description">Create a strong password for your account</p>
+            
+            <div class="input-box">
+                <label for="newPassword">New Password</label>
+                <div class="password-field">
+                    <input 
+                        type="password" 
+                        id="newPassword" 
+                        name="newPassword"
+                        placeholder="Enter your new password"
+                        pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}"
+                        required
+                    >
+                    <button type="button" class="show-password" aria-label="Show password">
+                        <svg viewBox="0 0 24 24" class="eye-icon">
+                            <path d="M12 4.5c-5 0-9.3 3-11 7.5 1.7 4.5 6 7.5 11 7.5s9.3-3 11-7.5c-1.7-4.5-6-7.5-11-7.5zm0 12.5c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5zm0-8c-1.7 0-3 1.3-3 3s1.3 3 3 3 3-1.3 3-3-1.3-3-3-3z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="requirements">
+                    <p>Password must contain:</p>
+                    <ul>
+                        <li>At least 8 characters</li>
+                        <li>One uppercase letter</li>
+                        <li>One lowercase letter</li>
+                        <li>One number</li>
+                        <li>One special character (!@#$%^&*)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="input-box">
+                <label for="confirmPassword">Confirm Password</label>
+                <div class="password-field">
+                    <input 
+                        type="password" 
+                        id="confirmPassword" 
+                        name="confirmPassword"
+                        placeholder="Confirm your password"
+                        required
+                    >
+                    <button type="button" class="show-password" aria-label="Show password">
+                        <svg viewBox="0 0 24 24" class="eye-icon">
+                            <path d="M12 4.5c-5 0-9.3 3-11 7.5 1.7 4.5 6 7.5 11 7.5s9.3-3 11-7.5c-1.7-4.5-6-7.5-11-7.5zm0 12.5c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5zm0-8c-1.7 0-3 1.3-3 3s1.3 3 3 3 3-1.3 3-3-1.3-3-3-3z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="reset-btn">Reset Password</button>
+
+            <div class="login-link">
+                <p>Remember your password? <a href="/Users/alperenaksoy/Desktop/meetUp/loginScreen/loginIndex.html">Sign in</a></p>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
