@@ -232,6 +232,356 @@ button {
   transition: 0.2s;
 }
 
+/* Popup overlay styles */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.popup-overlay.active {
+  display: flex;
+  opacity: 1;
+}
+
+/* Wrapper styles for popup */
+.popup-overlay .wrapper {
+  background: rgba(255, 255, 255, 0.95);
+  width: 420px;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  transform: scale(0.8);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  position: relative;
+}
+
+.popup-overlay.active .wrapper {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* Input box styling */
+.popup-overlay .input-box {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.popup-overlay .input-box input {
+  width: 100%;
+  padding: 15px 20px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid #e1e1e1;
+  border-radius: 12px;
+  font-size: 16px;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.popup-overlay .input-box input:focus {
+  border-color: #e5941d;
+  box-shadow: 0 0 0 3px rgba(229, 148, 29, 0.2);
+}
+
+/* Login button styling */
+.popup-overlay #loginBtn {
+  width: 100%;
+  padding: 15px;
+  background: #000;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+}
+
+.popup-overlay #loginBtn:hover {
+  background: #e5941d;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(229, 148, 29, 0.3);
+}
+
+/* Remember me and forgot password section */
+.popup-overlay .rememberMe {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.popup-overlay .rememberMe label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.popup-overlay .rememberMe input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #e5941d;
+}
+
+.popup-overlay .rememberMe a {
+  color: #333;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.popup-overlay .rememberMe a:hover {
+  color: #e5941d;
+}
+
+/* Register link styling */
+.popup-overlay .register-link {
+  text-align: center;
+  margin-top: 25px;
+  font-size: 15px;
+  color: #666;
+}
+
+.popup-overlay .register-link a {
+  color: #333;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.popup-overlay .register-link a:hover {
+  color: #e5941d;
+}
+
+/* Close button styling */
+.popup-overlay .close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 30px;
+  height: 30px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.popup-overlay .close-btn:hover {
+background-color: rgba(211, 27, 27, 0.828);
+transition: 0.2s;}
+
+.popup-overlay .close-btn::before,
+.popup-overlay .close-btn::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 2px;
+  background-color: #333;
+  top: 50%;
+  left: 50%;
+}
+
+.popup-overlay .close-btn::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.popup-overlay .close-btn::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+/* Title styling */
+.popup-overlay h1 {
+  color: #333;
+  font-size: 28px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 30px;
+  letter-spacing: -0.5px;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 480px) {
+  .popup-overlay .wrapper {
+    width: 90%;
+    padding: 30px 20px;
+  }
+  
+  .popup-overlay h1 {
+    font-size: 24px;
+  }
+  
+  .popup-overlay .input-box input {
+    padding: 12px 15px;
+    font-size: 14px;
+  }
+  
+  .popup-overlay #loginBtn {
+    padding: 12px;
+    font-size: 15px;
+  }
+}
+
+/* Add smooth show/hide animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+/* Additional styles for registration form */
+.popup-overlay .input-box select {
+  width: 100%;
+  padding: 15px 20px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid #e1e1e1;
+  border-radius: 12px;
+  font-size: 16px;
+  color: #333;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 16px;
+}
+
+.popup-overlay .input-box select:focus {
+  border-color: #e5941d;
+  box-shadow: 0 0 0 3px rgba(229, 148, 29, 0.2);
+}
+
+.popup-overlay .input-box select option {
+  padding: 10px;
+}
+
+/* Date input styling */
+.popup-overlay .input-box input[type="date"] {
+  width: 100%;
+  padding: 15px 20px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid #e1e1e1;
+  border-radius: 12px;
+  font-size: 16px;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.popup-overlay .input-box input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  padding: 5px;
+  filter: invert(0.4);
+}
+
+.popup-overlay .input-box .date-label {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.popup-overlay .input-box input[type="date"]:valid + .date-label,
+.popup-overlay .input-box input[type="date"]:focus + .date-label {
+  opacity: 0;
+}
+
+/* Register button styling */
+.popup-overlay #registerBtn {
+  width: 100%;
+  padding: 15px;
+  background: #000;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+}
+
+.popup-overlay #registerBtn:hover {
+  background: #e5941d;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(229, 148, 29, 0.3);
+}
+
+/* Login link styling */
+.popup-overlay .login-link {
+  text-align: center;
+  margin-top: 25px;
+  font-size: 15px;
+  color: #666;
+}
+
+.popup-overlay .login-link a {
+  color: #333;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.popup-overlay .login-link a:hover {
+  color: #e5941d;
+}
+
+/* Adjust wrapper height for registration */
+.popup-overlay .wrapper {
+  max-height: 90vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #e5941d #f1f1f1;
+}
+
+.popup-overlay .wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+.popup-overlay .wrapper::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.popup-overlay .wrapper::-webkit-scrollbar-thumb {
+  background: #e5941d;
+  border-radius: 4px;
+}
+
 /* Header Section */
 header {
   background-color: #fff;

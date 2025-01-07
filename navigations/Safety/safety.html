@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us - SocialLoop</title>
-    <link rel="stylesheet" href="aboutStyle.css">
+    <title>Safety - SocialLoop</title>
+    <link rel="stylesheet" href="safety.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Volkhov:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Header -->
     <header>
         <div class="header-container">
             <div class="header-left">
@@ -45,105 +46,40 @@
     </header>
 
     <!-- Hero Section -->
-    <section class="about-hero">
-        <div class="about-hero-content">
-            <h1>Our Story</h1>
-            <p class="subtitle">Building Connections, Creating Memories</p>
+    <section class="safety-hero">
+        <div class="safety-hero-content">
+            <h1>Your Safety is Our Priority</h1>
+            <p class="subtitle">Guidelines and tools to ensure a secure experience</p>
         </div>
     </section>
 
-    <!-- Mission Section -->
-    <section class="mission">
+    <!-- Safety Guidelines Section -->
+    <section class="guidelines">
         <div class="container">
-            <div class="mission-content">
-                <h2>Our Mission</h2>
-                <p>SocialLoop was born from a simple idea: making it easier for people to connect in real life. We believe that the best experiences come from genuine human connections and shared adventures.</p>
-                <div class="stats">
-                    <div class="stat-item">
-                        <h3>50K+</h3>
-                        <p>Active Users</p>
-                    </div>
-                    <div class="stat-item">
-                        <h3>100+</h3>
-                        <p>Cities</p>
-                    </div>
-                    <div class="stat-item">
-                        <h3>10K+</h3>
-                        <p>Events Created</p>
-                    </div>
-                </div>
+            <div class="guidelines-content">
+                <h2>Safety Guidelines</h2>
+                <p>We are committed to fostering a safe and respectful community. Please follow these guidelines:</p>
+                <ul class="guidelines-list">
+                    <li>✔️ Respect others' boundaries and privacy.</li>
+                    <li>✔️ Report suspicious or inappropriate behavior immediately.</li>
+                    <li>✔️ Avoid sharing sensitive personal information.</li>
+                    <li>✔️ Meet in public places for initial hangouts.</li>
+                    <li>✔️ Trust your instincts and prioritize your comfort.</li>
+                </ul>
             </div>
         </div>
     </section>
 
-    <!-- Values Section -->
-    <section class="values">
+    <!-- Reporting Section -->
+    <section class="reporting">
         <div class="container">
-            <h2>Our Values</h2>
-            <div class="values-grid">
-                <div class="value-card">
-                    <div class="icon" style="background-color: #FFD666;">
-                        <img src="../navigations/aboutUsImg/safetyFirsty.png" alt="Safety icon">
-                    </div>
-                    <h3>Safety First</h3>
-                    <p>We prioritize user safety through verification systems and community guidelines.</p>
-                </div>
-                <div class="value-card">
-                    <div class="icon" style="background-color: #FF8666;">
-                        <img src="../navigations/aboutUsImg/communityIcon.png" alt="Community icon">
-                    </div>
-                    <h3>Community-Driven</h3>
-                    <p>Our platform thrives on the diverse perspectives and experiences of our users.</p>
-                </div>
-                <div class="value-card">
-                    <div class="icon" style="background-color: #66B8FF;">
-                        <img src="../navigations/aboutUsImg/Innovationicon.png" alt="Innovation icon">
-                    </div>
-                    <h3>Innovation</h3>
-                    <p>We continuously evolve our platform to enhance user experience and connection.</p>
-                </div>
-            </div>
+            <h2>Report an Issue</h2>
+            <p>If you encounter a problem, let us know so we can take immediate action.</p>
+            <a href="/Users/alperenaksoy/Desktop/meetUp/navigations/Safety/report.html" class="report-btn">Report Now</a>
         </div>
     </section>
 
-    <!-- Team Section -->
-    <section class="team">
-        <div class="container">
-            <h2>Meet Our Team</h2>
-            <div class="team-grid">
-                <div class="team-member">
-                    <img src="../navigations/aboutUsImg/founder.jpg" alt="Team member">
-                    <h3>Ahmet Alperen Aksoy</h3>
-                    <p>Founder & CEO</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section class="contact">
-        <div class="container">
-            <h2>Get in Touch</h2>
-            <div class="contact-content">
-                <div class="contact-info">
-                    <h3>We'd love to hear from you</h3>
-                    <p>Have questions or suggestions? Reach out to us!</p>
-                    <div class="contact-details">
-                        <p>📧 contact@socialloop.com</p>
-                        <p>📍 Istanbul, Turkey</p>
-                    </div>
-                </div>
-                <form class="contact-form">
-                    <input type="text" placeholder="Your Name" required>
-                    <input type="email" placeholder="Your Email" required>
-                    <textarea placeholder="Your Message" required></textarea>
-                    <button type="submit">Send Message</button>
-                </form>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer (Same as main page) -->
+    <!-- Footer -->
     <footer class="footer">
         <div class="footer-container">
             <div class="footer-section logo-section">
@@ -180,6 +116,7 @@
         </div>
     </footer>
 </body>
+
 <script>
     let lastScroll = 0;
  let isScrollingDown = false;
@@ -208,4 +145,5 @@
      lastScroll = currentScroll;
  });
 </script>
+
 </html>

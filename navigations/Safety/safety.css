@@ -1,7 +1,8 @@
-@import url('../homepage/styles.css');
+@import url('/Users/alperenaksoy/Desktop/meetUp/homepage/styles.css');
+
 
 /* Hero Section */
-.support-hero {
+.safety-hero {
     background: #e5941d;
     background-size: cover;
     background-position: center;
@@ -14,70 +15,77 @@
     margin-top: 60px;
 }
 
-.support-hero-content h1 {
+.safety-hero-content h1 {
     font-size: 4rem;
     margin-bottom: 20px;
     font-family: "Volkhov", serif;
 }
 
-.support-hero-content .subtitle {
+.safety-hero-content .subtitle {
     font-size: 1.5rem;
     opacity: 0.9;
 }
 
-/* Contribution Section */
-.contribution {
+/* Guidelines Section */
+.guidelines {
     padding: 80px 0;
     background-color: #fff;
 }
 
-.contribution-content {
+.guidelines-content {
     text-align: center;
 }
 
-.contribution-content h2 {
+.guidelines-content h2 {
     font-size: 2.5rem;
     color: #2c2c54;
     margin-bottom: 30px;
 }
 
-.contribution-content p {
+.guidelines-content p {
     font-size: 1.2rem;
     color: #666;
     max-width: 800px;
     margin: 0 auto;
 }
 
-.contribution-list {
+.guidelines-list {
     list-style: none;
     padding: 0;
     margin-top: 30px;
 }
 
-.contribution-list li {
+.guidelines-list li {
     font-size: 1.2rem;
     color: #666;
     margin-bottom: 20px;
 }
 
-/* Call-to-Action Section */
-.cta {
-    background-color: #f5a623;
-    color: white;
+/* Reporting Section */
+.reporting {
+    background-color: #f9f9f9;
+    padding: 80px 0;
     text-align: center;
-    padding: 40px 20px;
 }
 
-.cta h2 {
+.reporting h2 {
     font-size: 2.5rem;
+    color: #2c2c54;
     margin-bottom: 20px;
 }
 
-.cta-btn {
+.reporting p {
+    font-size: 1.2rem;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto 30px;
+}
+
+.report-btn {
     display: inline-block;
     padding: 15px 30px;
-    background-color: white;
-    color: #f5a623;
+    background-color: #f5a623;
+    color: white;
     font-size: 1.2rem;
     font-weight: bold;
     border-radius: 8px;
@@ -85,6 +93,6 @@
     transition: background-color 0.3s ease;
 }
 
-.cta-btn:hover {
-    background-color: #fff3e0;
+.report-btn:hover {
+    background-color: #e5941d;
 }

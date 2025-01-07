@@ -3,41 +3,228 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>How it Works</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>How It Works - SocialLoop</title>
+    <link rel="stylesheet" href="../navigations/howItWorks.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Volkhov:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Header Section -->
     <header>
         <div class="header-container">
             <div class="header-left">
                 <div class="logo"></div>
                 <nav>
                     <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="about.html">About Us</a></li>
-                        <li><a href="support.html">Support Us</a></li>
-                        <li><a href="safety.html">Safety</a></li>
-                        <li><a href="howitworks.html" class="active">How it Works</a></li>
+                        <li><a href="../homepage/index.html">Home</a></li>
+                        <li><a href="../navigations/aboutUs.html">About Us</a></li>
+                        <li><a href="../navigations/supportUs.html">Support Us</a></li>
+                        <li><a href="../navigations/Safety/safety.html">Safety</a></li>
+                        <li><a href="../navigations/howitworks.html">How It Works</a></li>
                     </ul>
                 </nav>
             </div>
-
             <div class="header-right">
+                <select>
+                    <option>English</option>
+                    <option>Turkish</option>
+                    <option>Spanish</option>
+                    <option>Arabic</option>
+                    <option>French</option>
+                    <option>Italian</option>
+                    <option>German</option>
+                </select>
+                <a href="../loginScreen/loginIndex.html">
                 <button class="login-btn">Log in</button>
+              </a>
+              <a href="../registerScreen/registerIndex.html">
                 <button class="signup-btn">Sign Up</button>
+            </a>
             </div>
         </div>
     </header>
+    <!-- Hero Section -->
+    <section class="how-hero">
+        <div class="how-hero-content">
+            <h1>How SocialLoop Works</h1>
+            <p class="subtitle">Your Guide to Making Meaningful Connections</p>
+        </div>
+    </section>
 
-    <!-- Main Content Section -->
-    <div class="wrapper">
-        <h1>How it Works</h1>
-        <p>
-            Our platform allows users to create or join events, meet new people, and build connections. After creating a profile, users can
-            choose from a variety of events, ranging from coffee meetups to museum explorations. Whether you're a solo traveler or a local,
-            our platform offers a unique opportunity to meet like-minded people.
-        </p>
-    </div>
+    <!-- Steps Section -->
+    <section class="steps">
+        <div class="container">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h2>Create Your Profile</h2>
+                    <p>Sign up and create your profile with your interests, photos, and a bio. Verify your account to build trust in the community.</p>
+                    <div class="step-features">
+                        <div class="feature">
+                            <img src="../navigations/howItWorksImg/profileIcon.png" alt="Profile icon">
+                            <span>Add your interests</span>
+                        </div>
+                        <div class="feature">
+                            <img src="../navigations/howItWorksImg/verify.png" alt="Verify icon">
+                            <span>Verify your account</span>
+                        </div>
+                        <div class="feature">
+                            <img src="../navigations/howItWorksImg/bio.png" alt="Bio icon">
+                            <span>Write your bio</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h2>Create or Join Events</h2>
+                    <p>Host your own events or join existing ones. From coffee meetups to city explorations, find activities that interest you.</p>
+                    <div class="event-types">
+                        <span class="event-tag">☕ Coffee</span>
+                        <span class="event-tag">🍺 Drinks</span>
+                        <span class="event-tag">🏛️ Museums</span>
+                        <span class="event-tag">🚶 Walking</span>
+                        <span class="event-tag">⚽ Sports</span>
+                        <span class="event-tag">🍽️ Dining</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h2>Connect & Chat</h2>
+                    <p>Request to join events or approve join requests for your events. Chat with participants and share contact details safely.</p>
+                    <div class="connect-options">
+                        <div class="connect-item">
+                            <img src="../navigations/howItWorksImg/chatt.png" alt="Chat icon">
+                            <span>Group Chat</span>
+                        </div>
+                        <div class="connect-item">
+                            <img src="../navigations/howItWorksImg/social.png" alt="Social icon">
+                            <span>Social Links</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h2>Meet & Review</h2>
+                    <p>Meet in person and enjoy the event! Afterward, leave reviews and comments about your experience and make lasting connections.</p>
+                    <div class="review-preview">
+                        <div class="rating">
+                            ⭐⭐⭐⭐⭐
+                        </div>
+                        <p class="review-text">"Great experience! Made new friends and explored the city together!"</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Safety Tips -->
+    <section class="safety-tips">
+        <div class="container">
+            <h2>Safety First</h2>
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <img src="../navigations/howItWorksImg/location.png" alt="Public place icon">
+                    <h3>Meet in Public Places</h3>
+                    <p>Always meet in well-lit, public locations with plenty of people around.</p>
+                </div>
+                <div class="tip-card">
+                    <img src="../navigations/howItWorksImg/share.png" alt="Share icon">
+                    <h3>Share Your Plans</h3>
+                    <p>Let friends or family know about your meetup plans and location.</p>
+                </div>
+                <div class="tip-card">
+                    <img src="../navigations/howItWorksImg/reportIcon.png" alt="Report icon">
+                    <h3>Report Concerns</h3>
+                    <p>Use our reporting system if you encounter any suspicious behavior.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <h2>Ready to Start Your Journey?</h2>
+            <p>Join our community and start making meaningful connections today!</p>
+            <div class="cta-buttons">
+                <button class="primary-btn">Create Account</button>
+                <button class="secondary-btn">Browse Events</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (Same as main page) -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section logo-section">
+                <h2>SocialLoop</h2>
+                <p>Connects people for spontaneous hangouts and real-time socializing.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Company</h3>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Support Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <ul>
+                    <li><a href="#">Help/FAQ</a></li>
+                    <li><a href="#">Emergency</a></li>
+                    <li><a href="#">Safety</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>More</h3>
+                <ul>
+                    <li><a href="#">Report</a></li>
+                    <li><a href="#">Tips for Socializing</a></li>
+                    <li><a href="#">Advices for Improve</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>All rights reserved @socialloop.co</p>
+        </div>
+    </footer>
 </body>
+<script>
+    let lastScroll = 0;
+ let isScrollingDown = false;
+ 
+ window.addEventListener('scroll', () => {
+     const currentScroll = window.pageYOffset;
+     const header = document.querySelector('header');
+     const scrollThreshold = 100; // Adjust this value as needed
+     
+     if (currentScroll <= 0) {
+         header.classList.remove('hide');
+         return;
+     }
+ 
+     if (currentScroll > scrollThreshold) { // Only start hiding after threshold
+         if (currentScroll > lastScroll && !isScrollingDown) {
+             // Scrolling down
+             header.classList.add('hide');
+             isScrollingDown = true;
+         } else if (currentScroll < lastScroll && isScrollingDown) {
+             // Scrolling up
+             header.classList.remove('hide');
+             isScrollingDown = false;
+         }
+     }
+     lastScroll = currentScroll;
+ });
+</script>
 </html>

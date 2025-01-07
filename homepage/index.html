@@ -17,11 +17,11 @@
                 <div class="logo"></div>
                 <nav>
                     <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="about.html">About Us</a></li>
-                        <li><a href="support.html">Support Us</a></li>
-                        <li><a href="#">Safety</a></li>
-                        <li><a href="#">How It Works</a></li>
+                        <li><a href="../homepage/index.html">Home</a></li>
+                        <li><a href="../navigations/aboutUs.html">About Us</a></li>
+                        <li><a href="../navigations/supportUs.html">Support Us</a></li>
+                        <li><a href="../navigations/Safety/safety.html">Safety</a></li>
+                        <li><a href="../navigations/howitworks.html">How It Works</a></li>
                     </ul>
                 </nav>
             </div>
@@ -97,7 +97,11 @@
         <img src="homeImg/hagia-sophia.jpg" alt="Event 1 Image">
         <div class="event-details">
           <div class="event-title">Explore Hagia Sophia</div>
-          <button class="join-btn">Join</button>
+
+          <a href="../registerScreen/registerIndex.html">
+            <button class="join-btn">Join</button>
+           </a>
+           
           <div class="event-time">Dec 28, 2024 - 3:00 PM</div>
         </div>
       </div>
@@ -106,8 +110,12 @@
       <div class="event-card">
         <img src="homeImg/piknik.webp" alt="Event 2 Image">
         <div class="event-details">
-          <div class="event-title">Picnic in the Park</div>
-          <button class="join-btn">Join</button>
+          <div class="event-title">Picnic in the Maçka Park</div>
+
+          <a href="../registerScreen/registerIndex.html">
+            <button class="join-btn">Join</button>
+           </a>
+
           <div class="event-time">Jan 5, 2025 - 12:00 PM</div>
         </div>
       </div>
@@ -116,13 +124,96 @@
       <div class="event-card">
         <img src="homeImg/pub.jpg" alt="Event 3 Image">
         <div class="event-details">
-          <div class="event-title">Pub Crawl</div>
-          <button class="join-btn">Join</button>
+          <div class="event-title">Pub Crawl - Alsancak</div>
+
+          <a href="../registerScreen/registerIndex.html">
+            <button class="join-btn">Join</button>
+           </a>
+
           <div class="event-time">Jan 10, 2025 - 8:00 PM</div>
         </div>
       </div>
     </div>
   </section>
+  
+  <div class="popup-overlay" id="loginPopup">
+    <div class="wrapper">
+      <button class="close-btn" aria-label="Close login popup"></button>
+      <form action="">
+        <h1>Welcome Back</h1>
+        <div class="input-box">
+          <input type="email" placeholder="Enter your email" required>
+        </div>
+        <div class="input-box">
+          <input type="password" placeholder="Enter your password" required>
+        </div>
+        <div class="rememberMe">
+          <label>
+            <input type="checkbox">
+            <span>Remember me</span>
+          </label>
+          <a href="#">Forgot password?</a>
+        </div>
+        <button type="submit" id="loginBtn">Login</button>
+        <div class="register-link">
+          <p>Don't have an account? <a href="registerScreen/registerIndex.html">Register now</a></p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!--Register popup-->
+  <div class="popup-overlay" id="registerPopup">
+    <div class="wrapper">
+      <button class="close-btn" aria-label="Close registration popup"></button>
+      <form action="">
+        <h1>Create Account</h1>
+        
+        <div class="input-box">
+          <input type="text" placeholder="First Name" required>
+        </div>
+        
+        <div class="input-box">
+          <input type="text" placeholder="Last Name" required>
+        </div>
+        
+        <div class="input-box">
+          <input type="email" placeholder="Email" required>
+        </div>
+        
+        <div class="input-box">
+          <input type="password" placeholder="Password" required>
+        </div>
+        
+        <div class="input-box">
+          <input type="password" placeholder="Confirm Password" required>
+        </div>
+        
+        <div class="input-box">
+          <input type="date" required>
+          <label class="date-label"> </label>
+        </div>
+        
+        <div class="input-box">
+          <select required>
+            <option value="" disabled selected>Select Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+            <option value="prefer-not">Prefer not to say</option>
+          </select>
+        </div>
+  
+        <button type="submit" id="registerBtn">Create Account</button>
+        
+        <div class="login-link">
+          <p>Already have an account? <a href="#" id="switchToLogin">Login</a></p>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Hangout-->
       
   <section class="hangout">
     <h2>Hang Out</h2>
@@ -254,36 +345,13 @@
     <div class="footer-bottom">
       <p>All rights reserved @socialloop.co</p>
     </div>
+
+
   </footer>
   
     
 </body>
-<script>
-    let lastScroll = 0;
-let isScrollingDown = false;
+<script src="home.js">
 
-window.addEventListener('scroll', () => {
-    const currentScroll = window.pageYOffset;
-    const header = document.querySelector('header');
-    const scrollThreshold = 100; // Adjust this value as needed
-    
-    if (currentScroll <= 0) {
-        header.classList.remove('hide');
-        return;
-    }
-
-    if (currentScroll > scrollThreshold) { // Only start hiding after threshold
-        if (currentScroll > lastScroll && !isScrollingDown) {
-            // Scrolling down
-            header.classList.add('hide');
-            isScrollingDown = true;
-        } else if (currentScroll < lastScroll && isScrollingDown) {
-            // Scrolling up
-            header.classList.remove('hide');
-            isScrollingDown = false;
-        }
-    }
-    lastScroll = currentScroll;
-});
 </script>
 </html>

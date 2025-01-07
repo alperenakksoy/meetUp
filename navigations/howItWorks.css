@@ -1,0 +1,269 @@
+/* Base styles (importing from main CSS) */
+@import url('../homepage/styles.css');
+
+
+/* Hero Section */
+.how-hero {
+    background: #e5941d;
+    background-size: cover;
+    background-position: center;
+    height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    margin-top: 60px;
+}
+
+.how-hero-content {
+    max-width: 800px;
+    padding: 0 20px;
+}
+
+.how-hero-content h1 {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    font-family: "Volkhov", serif;
+}
+
+.how-hero-content .subtitle {
+    font-size: 1.5rem;
+    opacity: 0.9;
+}
+
+/* Steps Section */
+.steps {
+    padding: 80px 0;
+    background-color: #fff;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.step-card {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 60px;
+    padding: 40px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.step-number {
+    font-size: 4rem;
+    font-weight: bold;
+    color: #f5a623;
+    min-width: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Volkhov", serif;
+}
+
+.step-content {
+    flex: 1;
+}
+
+.step-content h2 {
+    font-size: 2rem;
+    color: #2c2c54;
+    margin-bottom: 20px;
+}
+
+.step-content p {
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+/* Step Features */
+.step-features {
+    display: flex;
+    gap: 30px;
+}
+
+.feature {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Step Features */
+.feature img {
+    width: 24px;  /* Reduced from 32px */
+    height: 24px; /* Reduced from 32px */
+    object-fit: contain;
+}
+/* Event Types */
+.event-types {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.event-tag {
+    background-color: #f0f0f0;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 1.1rem;
+    color: #2c2c54;
+}
+
+/* Connect Options */
+/* Connect Options */
+.connect-options {
+    display: flex;
+    gap: 40px;
+}
+
+.connect-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.connect-item img {
+    width: 24px;  /* Reduced from default size */
+    height: 24px; /* Reduced from default size */
+    object-fit: contain; /* Ensures image maintains aspect ratio */
+}
+
+.connect-item span {
+    font-size: 1.1rem;
+    color: #2c2c54;
+}
+/* Review Preview */
+.review-preview {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.rating {
+    color: #f5a623;
+    margin-bottom: 10px;
+}
+
+.review-text {
+    font-style: italic;
+    color: #666;
+}
+
+/* Safety Tips Section */
+.safety-tips {
+    background-color: #f9f9f9;
+    padding: 80px 0;
+}
+
+.safety-tips h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #2c2c54;
+    margin-bottom: 50px;
+}
+
+.tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.tip-card {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.tip-card img {
+    width: 32px;    /* Reduced from 48px */
+    height: 32px;   /* Reduced from 48px */
+    object-fit: contain;
+    margin-bottom: 20px;
+}
+
+.tip-card h3 {
+    font-size: 1.5rem;
+    color: #2c2c54;
+    margin-bottom: 15px;
+}
+
+.tip-card p {
+    color: #666;
+    line-height: 1.6;
+}
+
+/* CTA Section */
+.cta {
+    padding: 80px 0;
+    text-align: center;
+    background-color: #fff;
+}
+
+.cta h2 {
+    font-size: 2.5rem;
+    color: #2c2c54;
+    margin-bottom: 20px;
+}
+
+.cta p {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 40px;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.primary-btn {
+    background-color: #f5a623;
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.secondary-btn {
+    background-color: transparent;
+    color: #f5a623;
+    padding: 15px 30px;
+    border: 2px solid #f5a623;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.primary-btn:hover {
+    background-color: #e5941d;
+}
+
+.secondary-btn:hover {
+    background-color: #f5a623;
+    color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .how-hero-content h1 {
+        font-size: 3rem;
+    }
+
+    .step-card {
+        flex-direction: column;
+        gap: 20px;
+    }
+}

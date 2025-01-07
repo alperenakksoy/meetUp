@@ -1,145 +1,270 @@
-/* General reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* Base styles (importing from main CSS) */
+@import url('../homepage/styles.css');
+
+/* About Hero Section */
+.about-hero {
+    background: #e5941d;
+    background-size: cover;
+    background-position: center;
+    height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    margin-top: 60px;
 }
 
-/* Header styles */
-header {
+.about-hero-content {
+    max-width: 800px;
+    padding: 0 20px;
+}
+
+.about-hero-content h1 {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    font-family: "Volkhov", serif;
+}
+
+.about-hero-content .subtitle {
+    font-size: 1.5rem;
+    opacity: 0.9;
+}
+
+/* Mission Section */
+.mission {
+    padding: 80px 0;
     background-color: #fff;
-    padding: 10px 20px;
-    border-bottom: 1px solid #ddd;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    font-family: Arial, sans-serif;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 10;
 }
 
-.header-container {
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    align-items: center;
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
 }
 
-.header-left {
-    display: flex;
-    align-items: center;
+.mission-content {
+    text-align: center;
 }
 
-.logo {
-    width: 40px;
-    height: 40px;
-    background-color: #ccc;
+.mission-content h2 {
+    font-size: 2.5rem;
+    color: #2c2c54;
+    margin-bottom: 30px;
+}
+
+.mission-content p {
+    font-size: 1.2rem;
+    color: #666;
+    max-width: 800px;
+    margin: 0 auto 50px;
+}
+
+.stats {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    margin-top: 50px;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-item h3 {
+    font-size: 2.5rem;
+    color: #f5a623;
+    margin-bottom: 10px;
+}
+
+.stat-item p {
+    font-size: 1.1rem;
+    color: #666;
+    margin: 0;
+}
+
+/* Values Section */
+.values {
+    background-color: #f9f9f9;
+    padding: 80px 0;
+}
+
+.values h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #2c2c54;
+    margin-bottom: 50px;
+}
+
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.value-card {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.value-card:hover {
+    transform: translateY(-10px);
+}
+
+.value-card .icon {
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
-    margin-right: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
 }
 
-nav ul {
-    list-style: none;
+.value-card h3 {
+    font-size: 1.5rem;
+    color: #2c2c54;
+    margin-bottom: 15px;
+}
+
+.value-card p {
+    color: #666;
+    line-height: 1.6;
+}
+
+/* Team Section */
+.team {
+    padding: 80px 0;
+    background-color: #fff;
+}
+
+.team h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #2c2c54;
+    margin-bottom: 50px;
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+    margin-top: 40px;
+}
+
+.team-member {
+    text-align: center;
+}
+
+.team-member img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    object-fit: cover;
+}
+
+.team-member h3 {
+    font-size: 1.5rem;
+    color: #2c2c54;
+    margin-bottom: 10px;
+}
+
+.team-member p {
+    color: #666;
+}
+
+/* Contact Section */
+.contact {
+    background-color: #f9f9f9;
+    padding: 80px 0;
+}
+
+.contact h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #2c2c54;
+    margin-bottom: 50px;
+}
+
+.contact-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: center;
+}
+
+.contact-info h3 {
+    font-size: 2rem;
+    color: #2c2c54;
+    margin-bottom: 20px;
+}
+
+.contact-info p {
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.contact-details p {
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}
+
+.contact-form {
     display: flex;
+    flex-direction: column;
     gap: 20px;
 }
 
-nav ul li a {
-    text-decoration: none;
-    color: #000;
-    font-size: 16px;
-    font-weight: 500;
-    padding: 10px 10px;
-}
-
-nav ul li a:hover {
-    transform: scale(0.1);
-    color: #222222;
-    text-decoration: underline #000;
-    transition: 0.5s;
-}
-
-nav ul li a.active {
-    font-weight: bold;
-}
-
-.header-right {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.header-right select {
-    padding: 5px;
+.contact-form input,
+.contact-form textarea {
+    padding: 15px;
     border: 1px solid #ddd;
-    border-radius: 5px;
+    border-radius: 8px;
+    font-size: 1rem;
 }
 
-.header-right button {
-    padding: 7px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
+.contact-form textarea {
+    height: 150px;
+    resize: vertical;
 }
 
-.login-btn {
-    border: 1px solid #000;
-    background-color: #fff;
-}
-
-.signup-btn {
-    background-color: #000;
-    color: #fff;
-}
-
-/* Body styles */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #1E1E1E;
-    color: #fff;
-    padding-top: 70px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-
-/* Wrapper styles */
-.wrapper {
-    background-color: #fff;
-    border-radius: 10px;
-    width: 420px;
-    padding: 20px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    color: #333;
-}
-
-.wrapper h1 {
-    font-size: 30px;
-    margin-bottom: 20px;
-    color: #000;
-}
-
-.wrapper p {
-    font-size: 16px;
-    line-height: 1.6;
-    margin-bottom: 20px;
-}
-
-.donate-btn {
-    background-color: #007BFF;
-    color: #fff;
+.contact-form button {
+    background-color: #f5a623;
+    color: white;
+    padding: 15px 30px;
     border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
+    border-radius: 8px;
+    font-size: 1.1rem;
     cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
+    transition: background-color 0.3s ease;
 }
 
-.donate-btn:hover {
-    background-color: #0056b3;
+.contact-form button:hover {
+    background-color: #e5941d;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .about-hero-content h1 {
+        font-size: 3rem;
+    }
+
+    .stats {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .contact-content {
+        grid-template-columns: 1fr;
+    }
+
+    .team-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
 }
