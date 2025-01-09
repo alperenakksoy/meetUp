@@ -117,6 +117,77 @@
     </footer>
 </body>
 
+    <!--pop out login form-->
+
+    <!-- Login Popup -->
+<div class="popup-overlay" id="loginPopup">
+    <div class="wrapper">
+        <button class="close-btn" aria-label="Close login popup"></button>
+        <form action="">
+            <h1>Welcome Back</h1>
+            <div class="input-box">
+                <input type="email" placeholder="Enter your email" required>
+            </div>
+            <div class="input-box">
+                <input type="password" placeholder="Enter your password" required>
+            </div>
+            <div class="rememberMe">
+                <label>
+                    <input type="checkbox">
+                    <span>Remember me</span>
+                </label>
+                <a href="#">Forgot password?</a>
+            </div>
+            <button type="submit" id="loginBtn">Login</button>
+            <div class="register-link">
+                <p>Don't have an account? <a href="#">Register now</a></p>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Register Popup -->
+<div class="popup-overlay" id="registerPopup">
+    <div class="wrapper">
+        <button class="close-btn" aria-label="Close registration popup"></button>
+        <form action="">
+            <h1>Create Account</h1>
+            <div class="input-box">
+                <input type="text" placeholder="First Name" required>
+            </div>
+            <div class="input-box">
+                <input type="text" placeholder="Last Name" required>
+            </div>
+            <div class="input-box">
+                <input type="email" placeholder="Email" required>
+            </div>
+            <div class="input-box">
+                <input type="password" placeholder="Password" required>
+            </div>
+            <div class="input-box">
+                <input type="password" placeholder="Confirm Password" required>
+            </div>
+            <div class="input-box">
+                <input type="date" required>
+                <label class="date-label"></label>
+            </div>
+            <div class="input-box">
+                <select required>
+                    <option value="" disabled selected>Select Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                    <option value="prefer-not">Prefer not to say</option>
+                </select>
+            </div>
+            <button type="submit" id="registerBtn">Create Account</button>
+            <div class="login-link">
+                <p>Already have an account? <a href="#">Login</a></p>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
     let lastScroll = 0;
  let isScrollingDown = false;
@@ -144,6 +215,69 @@
      }
      lastScroll = currentScroll;
  });
+
+
+ // report button
+
+ // Add this script to your safety.html file
+document.addEventListener('DOMContentLoaded', () => {
+    const reportButton = document.querySelector('.report-btn');
+    const loginPopup = document.getElementById('loginPopup');
+    const registerPopup = document.getElementById('registerPopup');
+    const closeButtons = document.querySelectorAll('.close-btn');
+    const registerLinks = document.querySelectorAll('.register-link a');
+    const loginLinks = document.querySelectorAll('.login-link a');
+
+    // Show popup function
+    const showPopup = (popup) => {
+        popup.classList.add('active');
+    };
+
+    // Hide popup function
+    const hidePopup = (popup) => {
+        popup.classList.remove('active');
+    };
+
+    // Add click event to Report button
+    reportButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        showPopup(loginPopup);
+    });
+
+    // Handle close buttons
+    closeButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            hidePopup(loginPopup);
+            hidePopup(registerPopup);
+        });
+    });
+
+    // Switch to register popup
+    registerLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            hidePopup(loginPopup);
+            showPopup(registerPopup);
+        });
+    });
+
+    // Switch to login popup
+    loginLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            hidePopup(registerPopup);
+            showPopup(loginPopup);
+        });
+    });
+
+    // Close popup when clicking outside
+    window.addEventListener('click', (e) => {
+        if (e.target.classList.contains('popup-overlay')) {
+            hidePopup(loginPopup);
+            hidePopup(registerPopup);
+        }
+    });
+});
 </script>
 
 </html>
