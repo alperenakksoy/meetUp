@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SocialLoop - Connect & Explore Together</title>
+    <link rel="stylesheet" href="main.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-left">
+            <div class="logo">
+                <img src="/logo.png" alt="SocialLoop">
+            </div>
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search for events or people...">
+            </div>
+        </div>
+        
+        <nav class="main-nav">
+            <a href="about.html">About Us</a>
+            <a href="support.html">Support Us</a>
+            <a href="safety.html">Safety</a>
+            <a href="how-it-works.html">How It Works</a>
+            <button class="create-event-btn">Create Event</button>
+        </nav>
+
+        <div class="user-controls">
+            <a href="#" class="notifications">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">3</span>
+            </a>
+            <a href="#" class="messages">
+                <i class="fas fa-envelope"></i>
+                <span class="message-badge">5</span>
+            </a>
+            <div class="user-profile">
+                <img src="/profile-placeholder.jpg" alt="Alperen AKSOY">
+                <span>Alperen</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <aside class="user-sidebar">
+            <div class="user-info">
+                <img src="/profile-placeholder.jpg" alt="Alperen AKSOY">
+                <h2>Alperen AKSOY</h2>
+                <p class="location"><i class="fas fa-map-marker-alt"></i> Istanbul, Türkiye</p>
+                <div class="user-stats">
+                    <div class="stat">
+                        <span class="number">23</span>
+                        <span class="label">Events</span>
+                    </div>
+                    <div class="stat">
+                        <span class="number">156</span>
+                        <span class="label">Friends</span>
+                    </div>
+                    <div class="stat">
+                        <span class="number">4.8</span>
+                        <span class="label">Rating</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quick-links">
+                <a href="#"><i class="fas fa-calendar"></i> My Events</a>
+                <a href="#"><i class="fas fa-user-friends"></i> Friends</a>
+                <a href="#"><i class="fas fa-star"></i> Reviews</a>
+                <a href="#"><i class="fas fa-cog"></i> Settings</a>
+            </div>
+        </aside>
+
+        <section class="events-feed">
+            <div class="feed-filters">
+                <h2>Upcoming Events</h2>
+                <div class="filter-options">
+                    <button class="active">All</button>
+                    <button>Today</button>
+                    <button>This Week</button>
+                    <button>This Weekend</button>
+                </div>
+            </div>
+
+            <div class="event-cards">
+                <!-- Event Card 1 -->
+                <div class="event-card">
+                    <div class="event-image">
+                        <img src="/event1.jpg" alt="Coffee Meetup">
+                        <span class="event-category coffee">Coffee</span>
+                    </div>
+                    <div class="event-details">
+                        <h3>Morning Coffee & Chat</h3>
+                        <p class="event-time"><i class="far fa-clock"></i> Today, 10:00 AM</p>
+                        <p class="event-location"><i class="fas fa-map-marker-alt"></i> Brew Lab Coffee, Istanbul</p>
+                        <div class="event-host">
+                            <img src="/host1.jpg" alt="Host">
+                            <span>Hosted by Sarah</span>
+                        </div>
+                        <div class="event-footer">
+                            <span class="attendees">
+                                <i class="fas fa-users"></i> 3/5 spots left
+                            </span>
+                            <button class="join-btn">Join Event</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event Card 2 -->
+                <div class="event-card">
+                    <div class="event-image">
+                        <img src="/event2.jpg" alt="Museum Visit">
+                        <span class="event-category culture">Culture</span>
+                    </div>
+                    <div class="event-details">
+                        <h3>Hagia Sophia Museum Tour</h3>
+                        <p class="event-time"><i class="far fa-clock"></i> Tomorrow, 2:00 PM</p>
+                        <p class="event-location"><i class="fas fa-map-marker-alt"></i> Sultanahmet, Istanbul</p>
+                        <div class="event-host">
+                            <img src="/host2.jpg" alt="Host">
+                            <span>Hosted by Mehmet</span>
+                        </div>
+                        <div class="event-footer">
+                            <span class="attendees">
+                                <i class="fas fa-users"></i> 2/6 spots left
+                            </span>
+                            <button class="join-btn">Join Event</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="load-more">
+                <button>Load More Events</button>
+            </div>
+        </section>
+
+        <aside class="activity-sidebar">
+            <div class="upcoming-events">
+                <h3>Your Upcoming Events</h3>
+                <div class="event-list">
+                    <div class="mini-event">
+                        <div class="event-time">
+                            <span class="date">JAN 12</span>
+                            <span class="time">15:00</span>
+                        </div>
+                        <div class="event-info">
+                            <h4>Football Match Viewing</h4>
+                            <p>With Alex and 4 others</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="friend-activity">
+                <h3>Friend Activity</h3>
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <img src="/user1.jpg" alt="User">
+                        <p><strong>Emma</strong> joined "Sunday Brunch"</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </main>
+</body>
+</html>
