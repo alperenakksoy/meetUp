@@ -4,29 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SocialLoop - Events</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Volkhov:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <style>
         /* Global Styles */
-        :root {
-            --primary-color: #3498db;
-            --secondary-color: #2980b9;
-            --background-color: #f5f8fa;
-            --text-color: #333;
-            --light-gray: #ecf0f1;
-            --border-color: #e1e8ed;
-            --success-color: #2ecc71;
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background-color: var(--background-color);
-            color: var(--text-color);
+            font-family: 'Arial', sans-serif;
             line-height: 1.6;
+            color: #333;
+            padding-top: 80px; /* Accommodate fixed header */
+        }
+
+        h1, h2, h3 {
+            font-weight: bold;
         }
 
         .container {
@@ -37,54 +35,82 @@
 
         /* Header Styles */
         header {
-            background-color: white;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            position: sticky;
+            background-color: #fff;
+            padding: 10px 20px;
+            border-bottom: 1px solid #ddd;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            position: fixed;
             top: 0;
-            z-index: 100;
+            left: 0;
+            z-index: 10;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        header.hide {
+            transform: translateY(-100%);
         }
 
         .header-container {
             display: flex;
+            width: 100%;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 20px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
         }
 
         .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--primary-color);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
+            width: 40px;
+            height: 40px;
+            background-image: url('../homepage/homeImg/logo.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 50%;
+            margin-right: 20px;
         }
 
-        .logo i {
-            margin-right: 8px;
-        }
-
-        .nav-menu {
-            display: flex;
+        nav ul {
             list-style: none;
+            display: flex;
+            gap: 20px;
         }
 
-        .nav-menu li {
-            margin-left: 20px;
-        }
-
-        .nav-menu a {
+        nav ul li a {
             text-decoration: none;
-            color: var(--text-color);
+            color: #000;
+            font-size: 16px;
             font-weight: 500;
-            padding: 8px 12px;
-            border-radius: 4px;
+            padding: 10px 10px;
             transition: all 0.3s ease;
         }
 
-        .nav-menu a:hover, .nav-menu a.active {
-            background-color: var(--primary-color);
-            color: white;
+        nav ul li a:hover {
+            color: #e5941d;
+        }
+
+        nav ul li a.active {
+            font-weight: bold;
+            color: #e5941d;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-right select {
+            padding: 5px 10px;
+            margin-right: 30px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
         }
 
         .user-menu {
@@ -99,6 +125,7 @@
             border-radius: 50%;
             object-fit: cover;
             cursor: pointer;
+            border: 2px solid #f5a623;
         }
 
         .notification-badge {
@@ -116,6 +143,49 @@
             right: -5px;
         }
 
+        /* Button Styles */
+        .btn {
+            background-color: #f5a623;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            cursor: pointer;
+            font-size: 1rem;
+            border-radius: 5px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background-color: #f5a623;
+        }
+
+        .btn-primary:hover {
+            background-color: #e5941d;
+        }
+
+        .btn-secondary {
+            background-color: #000;
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e5941d;
+        }
+
+        .btn-outline {
+            border: 1px solid #f5a623;
+            color: #f5a623;
+            background-color: transparent;
+        }
+
+        .btn-outline:hover {
+            background-color: #f5a623;
+            color: white;
+        }
+
         /* Page Header */
         .page-header {
             display: flex;
@@ -125,329 +195,341 @@
         }
 
         .page-title {
-            font-size: 24px;
-            font-weight: 600;
+            font-family: 'Volkhov', serif;
+            font-size: 2.5rem;
+            color: #2c3e50;
         }
 
-        .btn {
-            display: inline-block;
-            padding: 8px 16px;
-            border-radius: 4px;
+        /* Event Filters */
+        .events-filter {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .filter-item {
+            flex: 1;
+        }
+
+        .filter-item label {
+            display: block;
+            margin-bottom: 5px;
             font-weight: 500;
-            text-align: center;
+        }
+
+        .filter-item select, 
+        .filter-item input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .filter-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .filter-tag {
+            padding: 6px 12px;
+            background-color: #f5f5f5;
+            border-radius: 20px;
+            font-size: 14px;
             cursor: pointer;
             transition: all 0.3s ease;
-            text-decoration: none;
         }
 
-        .btn-primary {
-            background-color: var(--primary-color);
+        .filter-tag:hover, .filter-tag.active {
+            background-color: #f5a623;
             color: white;
         }
 
-        .btn-primary:hover {
-            background-color: var(--secondary-color);
-        }
-
-        /* Tabs */
-        .tabs {
+        /* Event categories */
+        .event-categories {
             display: flex;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            flex-wrap: wrap;
+            gap: 10px;
             margin-bottom: 20px;
-            overflow: hidden;
         }
 
-        .tab {
-            flex: 1;
-            padding: 12px 0;
-            text-align: center;
+        .category-pill {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 14px;
             cursor: pointer;
-            font-weight: 500;
-            color: #555;
-            border-bottom: 3px solid transparent;
             transition: all 0.3s ease;
         }
 
-        .tab.active {
-            color: var(--primary-color);
-            border-bottom-color: var(--primary-color);
+        .category-pill.active {
+            background-color: #f5a623;
+            color: white;
+            border-color: #f5a623;
         }
 
-        .tab:hover:not(.active) {
-            background-color: var(--light-gray);
+        .category-pill:hover {
+            background-color: #f5f5f5;
         }
 
-        /* Filter Bar */
-        .filter-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            padding: 12px 15px;
-            margin-bottom: 20px;
+        .category-pill.active:hover {
+            background-color: #e5941d;
         }
 
-        .filter-options {
-            display: flex;
-            gap: 10px;
-        }
-
-        .filter-dropdown {
-            position: relative;
-        }
-
-        .filter-button {
-            background-color: var(--light-gray);
-            border: none;
-            border-radius: 4px;
-            padding: 8px 12px;
-            font-size: 14px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-
-        .filter-button i {
-            margin-right: 5px;
-        }
-
-        .search-box {
-            display: flex;
-            align-items: center;
-            background-color: var(--light-gray);
-            border-radius: 4px;
-            padding: 8px 12px;
-        }
-
-        .search-box input {
-            border: none;
-            background: transparent;
-            outline: none;
-            font-size: 14px;
-            width: 200px;
-        }
-
-        .search-box i {
-            color: #777;
-            margin-right: 5px;
-        }
-
-        /* Events Grid */
+        /* Event Grid */
         .events-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
+            padding: 20px 0;
         }
 
         .event-card {
-            background-color: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease;
+            flex: 1;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 15px;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            transition: all 0.3s ease;
         }
 
         .event-card:hover {
-            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            transform: scale(1.05);
+            transition: 0.2s;
         }
 
         .event-image {
-            height: 180px;
             width: 100%;
+            height: 180px;
             object-fit: cover;
+            border-radius: 10px;
         }
 
         .event-details {
-            padding: 15px;
-        }
-
-        .event-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .event-meta {
-            margin-bottom: 12px;
+            padding: 16px;
         }
 
         .event-host {
             display: flex;
             align-items: center;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
         }
 
         .host-avatar {
-            width: 25px;
-            height: 25px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             object-fit: cover;
-            margin-right: 8px;
+            margin-right: 10px;
+            border: 2px solid #f5a623;
         }
 
         .host-name {
+            font-weight: 500;
+        }
+
+        .event-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .event-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .event-date, .event-location, .event-attendees {
+            display: flex;
+            align-items: center;
             font-size: 14px;
             color: #555;
         }
 
-        .event-date, .event-location {
-            font-size: 14px;
-            color: #777;
-            display: flex;
-            align-items: center;
-            margin-bottom: 5px;
-        }
-
-        .event-date i, .event-location i {
-            margin-right: 5px;
-            font-size: 14px;
-            width: 16px;
+        .event-date i, .event-location i, .event-attendees i {
+            width: 20px;
+            color: #f5a623;
         }
 
         .event-description {
             font-size: 14px;
             color: #555;
-            margin-bottom: 12px;
-            line-height: 1.4;
-            height: 60px;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            margin-bottom: 15px;
             display: -webkit-box;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
         .event-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid var(--border-color);
+            margin-top: 10px;
         }
 
-        .event-participants {
+        .event-tags {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .event-tag {
+            font-size: 12px;
+            padding: 3px 8px;
+            background-color: #f5f5f5;
+            border-radius: 20px;
+        }
+
+        .event-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .event-action-btn {
+            background-color: transparent;
+            border: none;
+            color: #555;
+            cursor: pointer;
             display: flex;
             align-items: center;
+            font-size: 14px;
         }
 
-        .participant-avatars {
-            display: flex;
-        }
-
-        .participant-avatar {
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid white;
-            margin-left: -8px;
-        }
-
-        .participant-avatar:first-child {
-            margin-left: 0;
-        }
-
-        .participant-count {
-            font-size: 12px;
-            color: #777;
-            margin-left: 8px;
-        }
-
-        .event-actions button {
-            background-color: var(--light-gray);
-            border: none;
-            border-radius: 4px;
-            padding: 6px 12px;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .event-actions button:hover {
-            background-color: var(--primary-color);
+        .join-btn {
+            background-color: #f5a623;
             color: white;
+            border: none;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 1rem;
+            border-radius: 5px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
         }
 
+        .join-btn:hover {
+            background-color: #e5941d;
+        }
+
+        .event-action-btn i {
+            margin-right: 5px;
+        }
+
+        .event-action-btn:hover {
+            color: #f5a623;
+        }
+
+        /* Pagination */
         .pagination {
             display: flex;
             justify-content: center;
             margin-top: 30px;
+            gap: 5px;
         }
 
         .pagination-item {
-            width: 35px;
-            height: 35px;
+            width: 36px;
+            height: 36px;
             display: flex;
-            align-items: center;
             justify-content: center;
-            margin: 0 5px;
+            align-items: center;
             border-radius: 4px;
+            border: 1px solid #ddd;
             background-color: white;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
+        .pagination-item:hover {
+            background-color: #f5f5f5;
+        }
+
         .pagination-item.active {
-            background-color: var(--primary-color);
+            background-color: #f5a623;
             color: white;
+            border-color: #f5a623;
         }
 
-        .pagination-item:hover:not(.active) {
-            background-color: var(--light-gray);
-        }
-
-        /* Responsive Design */
+        /* Responsive styles */
         @media (max-width: 768px) {
-            .filter-options {
-                flex-wrap: wrap;
-            }
-
             .events-grid {
                 grid-template-columns: 1fr;
             }
 
-            .search-box {
-                width: 100%;
-                margin-top: 10px;
+            .filter-group {
+                flex-direction: column;
+                gap: 10px;
             }
 
-            .search-box input {
-                width: 100%;
-            }
-
-            .filter-bar {
+            .page-header {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 10px;
             }
+            
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .header-right {
+                width: 100%;
+                justify-content: center;
+            }
         }
     </style>
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <!-- Header Navigation -->
     <header>
         <div class="header-container">
-            <a href="index.php" class="logo">
-                <i class="fas fa-globe"></i>
-                SocialLoop
-            </a>
-            <ul class="nav-menu">
-                <li><a href="index.php"><i class="fas fa-home"></i> Home</a></li>
-                <li><a href="events.php" class="active"><i class="fas fa-calendar-alt"></i> Events</a></li>
-                <li><a href="messages.php"><i class="fas fa-envelope"></i> Messages</a></li>
-                <li><a href="friends.php"><i class="fas fa-users"></i> Friends</a></li>
-            </ul>
-            <div class="user-menu">
-                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile Picture">
-                <div class="notification-badge">3</div>
+            <div class="header-left">
+                <div class="logo"></div>
+                <nav>
+                    <ul>
+                        <li><a href="index.php">Home</a></li>
+                        <li><a href="events.php" class="active">Events</a></li>
+                        <li><a href="messages.php">Messages</a></li>
+                        <li><a href="friends.php">Friends</a></li>
+                        <li><a href="aboutUs.php">About Us</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="header-right">
+                <select>
+                    <option>English</option>
+                    <option>Turkish</option>
+                    <option>Spanish</option>
+                    <option>Arabic</option>
+                    <option>French</option>
+                </select>
+                <div class="user-menu">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile Picture">
+                    <div class="notification-badge">3</div>
+                </div>
             </div>
         </div>
     </header>
@@ -456,268 +538,300 @@
     <div class="container">
         <!-- Page Header -->
         <div class="page-header">
-            <h1 class="page-title"><i class="fas fa-calendar-alt"></i> Events</h1>
-            <a href="create_event.php" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Create Event
+            <h1 class="page-title">Events</h1>
+            <a href="create_event.php" class="btn btn-secondary">
+                <i class="fas fa-plus"></i> Create New Event
             </a>
         </div>
 
-        <!-- Tabs -->
-        <div class="tabs">
-            <div class="tab active">All Events</div>
-            <div class="tab">My Events</div>
-            <div class="tab">Participating</div>
-            <div class="tab">Past Events</div>
+        <!-- Event Categories -->
+        <div class="event-categories">
+            <div class="category-pill active">All Events</div>
+            <div class="category-pill">My Events</div>
+            <div class="category-pill">Attending</div>
+            <div class="category-pill">Saved</div>
+            <div class="category-pill">Past Events</div>
         </div>
 
-        <!-- Filter Bar -->
-        <div class="filter-bar">
-            <div class="filter-options">
-                <div class="filter-dropdown">
-                    <button class="filter-button">
-                        <i class="fas fa-map-marker-alt"></i> Location
-                    </button>
+        <!-- Filters -->
+        <div class="events-filter">
+            <div class="filter-group">
+                <div class="filter-item">
+                    <label for="location">Location</label>
+                    <select id="location">
+                        <option value="">Any Location</option>
+                        <option value="istanbul">Istanbul</option>
+                        <option value="ankara">Ankara</option>
+                        <option value="izmir">Izmir</option>
+                        <option value="antalya">Antalya</option>
+                    </select>
                 </div>
-                <div class="filter-dropdown">
-                    <button class="filter-button">
-                        <i class="fas fa-calendar"></i> Date
-                    </button>
+                <div class="filter-item">
+                    <label for="date">Date</label>
+                    <input type="date" id="date">
                 </div>
-                <div class="filter-dropdown">
-                    <button class="filter-button">
-                        <i class="fas fa-tag"></i> Category
-                    </button>
+                <div class="filter-item">
+                    <label for="category">Category</label>
+                    <select id="category">
+                        <option value="">All Categories</option>
+                        <option value="coffee">Coffee & Drinks</option>
+                        <option value="cultural">Cultural</option>
+                        <option value="sports">Sports & Outdoor</option>
+                        <option value="language">Language Exchange</option>
+                        <option value="food">Food & Dining</option>
+                        <option value="art">Art & Music</option>
+                        <option value="tech">Technology</option>
+                    </select>
                 </div>
             </div>
-            <div class="search-box">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Search events...">
+            <div class="filter-tags">
+                <div class="filter-tag active">Popular</div>
+                <div class="filter-tag">This Week</div>
+                <div class="filter-tag">Weekends</div>
+                <div class="filter-tag">Free</div>
+                <div class="filter-tag">Morning</div>
+                <div class="filter-tag">Evening</div>
+                <div class="filter-tag">Beginner Friendly</div>
             </div>
         </div>
 
         <!-- Events Grid -->
         <div class="events-grid">
-            <!-- Event 1 -->
+            <!-- Event Card 1 -->
             <div class="event-card">
                 <img src="/api/placeholder/400/180" alt="Event Image" class="event-image">
                 <div class="event-details">
+                    <div class="event-host">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Host" class="host-avatar">
+                        <span class="host-name">Ahmet Alperen Aksoy</span>
+                    </div>
                     <h3 class="event-title">Coffee & Cultural Exchange</h3>
-                    <div class="event-meta">
-                        <div class="event-host">
-                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Host" class="host-avatar">
-                            <span class="host-name">Hosted by Ahmet</span>
-                        </div>
+                    <div class="event-info">
                         <div class="event-date">
                             <i class="far fa-calendar"></i>
-                            April 5, 2025 • 15:00
+                            <span>April 5, 2025 • 15:00 - 17:00</span>
                         </div>
                         <div class="event-location">
                             <i class="fas fa-map-marker-alt"></i>
-                            Kadıköy, Istanbul
+                            <span>Mandabatmaz Coffee, Kadıköy, Istanbul</span>
+                        </div>
+                        <div class="event-attendees">
+                            <i class="fas fa-users"></i>
+                            <span>7 people attending</span>
                         </div>
                     </div>
-                    <div class="event-description">
-                        Join me for coffee and conversation! Let's share stories about our cultures, travel experiences, and more. Perfect for travelers and locals who want to connect.
-                    </div>
+                    <p class="event-description">
+                        Join us for an afternoon of coffee and conversation! Share your travel stories, learn about Turkish culture, and make new friends in a cozy atmosphere.
+                    </p>
                     <div class="event-footer">
-                        <div class="event-participants">
-                            <div class="participant-avatars">
-                                <img src="https://randomuser.me/api/portraits/women/63.jpg" alt="Participant" class="participant-avatar">
-                                <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Participant" class="participant-avatar">
-                                <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Participant" class="participant-avatar">
-                            </div>
-                            <span class="participant-count">+4 going</span>
+                        <div class="event-tags">
+                            <span class="event-tag">Coffee</span>
+                            <span class="event-tag">Cultural</span>
                         </div>
                         <div class="event-actions">
-                            <button>Join</button>
+                            <button class="join-btn">
+                                <i class="fas fa-check-circle"></i> Join
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Event 2 -->
+            <!-- Event Card 2 -->
             <div class="event-card">
                 <img src="/api/placeholder/400/180" alt="Event Image" class="event-image">
                 <div class="event-details">
+                    <div class="event-host">
+                        <img src="https://randomuser.me/api/portraits/women/29.jpg" alt="Host" class="host-avatar">
+                        <span class="host-name">Olivia Martinez</span>
+                    </div>
                     <h3 class="event-title">Hiking Belgrad Forest</h3>
-                    <div class="event-meta">
-                        <div class="event-host">
-                            <img src="https://randomuser.me/api/portraits/women/29.jpg" alt="Host" class="host-avatar">
-                            <span class="host-name">Hosted by Olivia</span>
-                        </div>
+                    <div class="event-info">
                         <div class="event-date">
                             <i class="far fa-calendar"></i>
-                            April 8, 2025 • 09:00
+                            <span>April 8, 2025 • 09:00 - 14:00</span>
                         </div>
                         <div class="event-location">
                             <i class="fas fa-map-marker-alt"></i>
-                            Belgrad Forest, Istanbul
+                            <span>Belgrad Forest, Istanbul</span>
+                        </div>
+                        <div class="event-attendees">
+                            <i class="fas fa-users"></i>
+                            <span>12 people attending</span>
                         </div>
                     </div>
-                    <div class="event-description">
-                        Let's explore the beautiful Belgrad Forest together! A moderate hike suitable for all fitness levels. We'll enjoy nature, take photos, and have a picnic lunch.
-                    </div>
+                    <p class="event-description">
+                        Explore the beautiful Belgrad Forest with a group of nature lovers! We'll hike for about 8 km at a moderate pace, with plenty of stops for photos and rest.
+                    </p>
                     <div class="event-footer">
-                        <div class="event-participants">
-                            <div class="participant-avatars">
-                                <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Participant" class="participant-avatar">
-                                <img src="https://randomuser.me/api/portraits/women/29.jpg" alt="Participant" class="participant-avatar">
-                                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Participant" class="participant-avatar">
-                            </div>
-                            <span class="participant-count">+6 going</span>
+                        <div class="event-tags">
+                            <span class="event-tag">Outdoor</span>
+                            <span class="event-tag">Hiking</span>
                         </div>
                         <div class="event-actions">
-                            <button>Join</button>
+                            <button class="join-btn">
+                                <i class="fas fa-check-circle"></i> Join
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Event 3 -->
+            <!-- Event Card 3 -->
             <div class="event-card">
                 <img src="/api/placeholder/400/180" alt="Event Image" class="event-image">
                 <div class="event-details">
+                    <div class="event-host">
+                        <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Host" class="host-avatar">
+                        <span class="host-name">David Wilson</span>
+                    </div>
                     <h3 class="event-title">Historical Istanbul Tour</h3>
-                    <div class="event-meta">
-                        <div class="event-host">
-                            <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Host" class="host-avatar">
-                            <span class="host-name">Hosted by David</span>
-                        </div>
+                    <div class="event-info">
                         <div class="event-date">
                             <i class="far fa-calendar"></i>
-                            April 10, 2025 • 10:00
+                            <span>April 10, 2025 • 10:00 - 15:00</span>
                         </div>
                         <div class="event-location">
                             <i class="fas fa-map-marker-alt"></i>
-                            Sultanahmet, Istanbul
+                            <span>Sultanahmet Square, Istanbul</span>
+                        </div>
+                        <div class="event-attendees">
+                            <i class="fas fa-users"></i>
+                            <span>15 people attending</span>
                         </div>
                     </div>
-                    <div class="event-description">
-                        Explore the historical peninsula of Istanbul with a local history enthusiast! We'll visit Hagia Sophia, Blue Mosque, Topkapi Palace, and more.
-                    </div>
+                    <p class="event-description">
+                        Discover the rich history of Istanbul's old city. We'll visit Hagia Sophia, Blue Mosque, Topkapi Palace, and more. Suitable for history enthusiasts and first-time visitors.
+                    </p>
                     <div class="event-footer">
-                        <div class="event-participants">
-                            <div class="participant-avatars">
-                                <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="Participant" class="participant-avatar">
-                                <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="Participant" class="participant-avatar">
-                                <img src="https://randomuser.me/api/portraits/women/55.jpg" alt="Participant" class="participant-avatar">
-                            </div>
-                            <span class="participant-count">+8 going</span>
+                        <div class="event-tags">
+                            <span class="event-tag">Cultural</span>
+                            <span class="event-tag">History</span>
                         </div>
                         <div class="event-actions">
-                            <button>Join</button>
+                            <button class="join-btn">
+                                <i class="fas fa-check-circle"></i> Join
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Event 4 -->
+            <!-- Event Card 4 -->
             <div class="event-card">
                 <img src="/api/placeholder/400/180" alt="Event Image" class="event-image">
                 <div class="event-details">
-                    <h3 class="event-title">Photography Walk in Balat</h3>
-                    <div class="event-meta">
-                        <div class="event-host">
-                            <img src="https://randomuser.me/api/portraits/women/63.jpg" alt="Host" class="host-avatar">
-                            <span class="host-name">Hosted by Emma</span>
-                        </div>
+                    <div class="event-host">
+                        <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Host" class="host-avatar">
+                        <span class="host-name">Sophie Chen</span>
+                    </div>
+                    <h3 class="event-title">Turkish Cooking Workshop</h3>
+                    <div class="event-info">
                         <div class="event-date">
                             <i class="far fa-calendar"></i>
-                            April 12, 2025 • 14:00
+                            <span>April 12, 2025 • 18:00 - 21:00</span>
                         </div>
                         <div class="event-location">
                             <i class="fas fa-map-marker-alt"></i>
-                            Balat, Istanbul
+                            <span>Community Kitchen, Beşiktaş, Istanbul</span>
+                        </div>
+                        <div class="event-attendees">
+                            <i class="fas fa-users"></i>
+                            <span>8 people attending</span>
                         </div>
                     </div>
-                    <div class="event-description">
-                        Let's capture the colorful houses and unique atmosphere of Balat! All photography levels welcome - bring your camera or smartphone.
-                    </div>
+                    <p class="event-description">
+                        Learn to prepare traditional Turkish dishes with a local chef! We'll make mezze, main courses, and baklava. No prior cooking experience required.
+                    </p>
                     <div class="event-footer">
-                        <div class="event-participants">
-                            <div class="participant-avatars">
-                                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Participant" class="participant-avatar">
-                                <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Participant" class="participant-avatar">
-                            </div>
-                            <span class="participant-count">+3 going</span>
+                        <div class="event-tags">
+                            <span class="event-tag">Food</span>
+                            <span class="event-tag">Cooking</span>
                         </div>
                         <div class="event-actions">
-                            <button>Join</button>
+                            <button class="join-btn">
+                                <i class="fas fa-check-circle"></i> Join
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Event 5 -->
+            <!-- Event Card 5 -->
             <div class="event-card">
                 <img src="/api/placeholder/400/180" alt="Event Image" class="event-image">
                 <div class="event-details">
-                    <h3 class="event-title">Turkish Cooking Class</h3>
-                    <div class="event-meta">
-                        <div class="event-host">
-                            <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Host" class="host-avatar">
-                            <span class="host-name">Hosted by Sophie</span>
-                        </div>
-                        <div class="event-date">
-                            <i class="far fa-calendar"></i>
-                            April 15, 2025 • 18:00
-                        </div>
-                        <div class="event-location">
-                            <i class="fas fa-map-marker-alt"></i>
-                            Beşiktaş, Istanbul
-                        </div>
+                    <div class="event-host">
+                        <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Host" class="host-avatar">
+                        <span class="host-name">Michael Brown</span>
                     </div>
-                    <div class="event-description">
-                        Learn how to cook authentic Turkish dishes in a friendly environment! We'll prepare a full meal together, then enjoy it with Turkish tea.
-                    </div>
-                    <div class="event-footer">
-                        <div class="event-participants">
-                            <div class="participant-avatars">
-                                <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="Participant" class="participant-avatar">
-                                <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="Participant" class="participant-avatar">
-                            </div>
-                            <span class="participant-count">+4 going</span>
-                        </div>
-                        <div class="event-actions">
-                            <button>Join</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Event 6 -->
-            <div class="event-card">
-                <img src="/api/placeholder/400/180" alt="Event Image" class="event-image">
-                <div class="event-details">
                     <h3 class="event-title">Language Exchange Meetup</h3>
-                    <div class="event-meta">
-                        <div class="event-host">
-                            <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="Host" class="host-avatar">
-                            <span class="host-name">Hosted by James</span>
-                        </div>
+                    <div class="event-info">
                         <div class="event-date">
                             <i class="far fa-calendar"></i>
-                            April 18, 2025 • 19:00
+                            <span>April 15, 2025 • 19:00 - 22:00</span>
                         </div>
                         <div class="event-location">
                             <i class="fas fa-map-marker-alt"></i>
-                            Taksim, Istanbul
+                            <span>Multilingual Cafe, Şişli, Istanbul</span>
+                        </div>
+                        <div class="event-attendees">
+                            <i class="fas fa-users"></i>
+                            <span>20 people attending</span>
                         </div>
                     </div>
-                    <div class="event-description">
-                        Practice Turkish, English, or any other language in a relaxed cafe setting. All language levels welcome! Let's help each other learn.
-                    </div>
+                    <p class="event-description">
+                        Practice languages while meeting new people! English, Turkish, Spanish, French, and more. All levels welcome. Structured activities and free conversation time.
+                    </p>
                     <div class="event-footer">
-                        <div class="event-participants">
-                            <div class="participant-avatars">
-                                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Participant" class="participant-avatar">
-                                <img src="https://randomuser.me/api/portraits/women/63.jpg" alt="Participant" class="participant-avatar">
-                                <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Participant" class="participant-avatar">
-                            </div>
-                            <span class="participant-count">+12 going</span>
+                        <div class="event-tags">
+                            <span class="event-tag">Language</span>
+                            <span class="event-tag">Social</span>
                         </div>
                         <div class="event-actions">
-                            <button>Join</button>
+                            <button class="join-btn">
+                                <i class="fas fa-check-circle"></i> Join
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event Card 6 -->
+            <div class="event-card">
+                <img src="/api/placeholder/400/180" alt="Event Image" class="event-image">
+                <div class="event-details">
+                    <div class="event-host">
+                        <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="Host" class="host-avatar">
+                        <span class="host-name">Isabella Johnson</span>
+                    </div>
+                    <h3 class="event-title">Bosphorus Sunset Cruise</h3>
+                    <div class="event-info">
+                        <div class="event-date">
+                            <i class="far fa-calendar"></i>
+                            <span>April 18, 2025 • 17:30 - 20:30</span>
+                        </div>
+                        <div class="event-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Eminönü Pier, Istanbul</span>
+                        </div>
+                        <div class="event-attendees">
+                            <i class="fas fa-users"></i>
+                            <span>25 people attending</span>
+                        </div>
+                    </div>
+                    <p class="event-description">
+                        Experience Istanbul from the water! Join our group for a beautiful sunset cruise along the Bosphorus with drinks, snacks, and amazing photo opportunities.
+                    </p>
+                    <div class="event-footer">
+                        <div class="event-tags">
+                            <span class="event-tag">Sightseeing</span>
+                            <span class="event-tag">Social</span>
+                        </div>
+                        <div class="event-actions">
+                            <button class="join-btn">
+                                <i class="fas fa-check-circle"></i> Join
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -726,31 +840,77 @@
 
         <!-- Pagination -->
         <div class="pagination">
-            <div class="pagination-item"><i class="fas fa-chevron-left"></i></div>
+            <div class="pagination-item">
+                <i class="fas fa-chevron-left"></i>
+            </div>
             <div class="pagination-item active">1</div>
             <div class="pagination-item">2</div>
             <div class="pagination-item">3</div>
-            <div class="pagination-item">...</div>
-            <div class="pagination-item">8</div>
-            <div class="pagination-item"><i class="fas fa-chevron-right"></i></div>
+            <div class="pagination-item">4</div>
+            <div class="pagination-item">5</div>
+            <div class="pagination-item">
+                <i class="fas fa-chevron-right"></i>
+            </div>
         </div>
     </div>
 
+
     <script>
-        // This would be connected to PHP for dynamic content
+        // Scroll behavior for header
+        let lastScroll = 0;
+        let isScrollingDown = false;
+        
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            const header = document.querySelector('header');
+            const scrollThreshold = 100;
+            
+            if (currentScroll <= 0) {
+                header.classList.remove('hide');
+                return;
+            }
+        
+            if (currentScroll > scrollThreshold) {
+                if (currentScroll > lastScroll && !isScrollingDown) {
+                    header.classList.add('hide');
+                    isScrollingDown = true;
+                } else if (currentScroll < lastScroll && isScrollingDown) {
+                    header.classList.remove('hide');
+                    isScrollingDown = false;
+                }
+            }
+            lastScroll = currentScroll;
+        });
+
+        // Join button popup functionality
         document.addEventListener('DOMContentLoaded', function() {
-            // Tab switching
-            const tabs = document.querySelectorAll('.tab');
-            tabs.forEach(tab => {
-                tab.addEventListener('click', function() {
-                    tabs.forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-                    // In a real implementation, this would trigger loading different events
+            const joinButtons = document.querySelectorAll('.join-btn');
+            const loginPopup = document.getElementById('loginPopup');
+            
+            joinButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    loginPopup.classList.add('active');
                 });
             });
-
-            // Filter buttons would open dropdowns
-            // Join buttons would trigger event joining via AJAX
+            
+            loginPopup.addEventListener('click', function(e) {
+                if (e.target === loginPopup) {
+                    loginPopup.classList.remove('active');
+                }
+            });
+            
+            document.querySelectorAll('.close-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    loginPopup.classList.remove('active');
+                });
+            });
+            
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && loginPopup.classList.contains('active')) {
+                    loginPopup.classList.remove('active');
+                }
+            });
         });
     </script>
 </body>
