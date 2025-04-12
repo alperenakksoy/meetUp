@@ -4,29 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SocialLoop - Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Volkhov:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <style>
         /* Global Styles */
-        :root {
-            --primary-color: #3498db;
-            --secondary-color: #2980b9;
-            --background-color: #f5f8fa;
-            --text-color: #333;
-            --light-gray: #ecf0f1;
-            --border-color: #e1e8ed;
-            --success-color: #2ecc71;
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background-color: var(--background-color);
-            color: var(--text-color);
+            font-family: 'Arial', sans-serif;
             line-height: 1.6;
+            color: #333;
+            padding-top: 80px; /* Accommodate fixed header */
+            background-color: #f5f8fa;
         }
 
         .container {
@@ -37,54 +32,82 @@
 
         /* Header Styles */
         header {
-            background-color: white;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            position: sticky;
+            background-color: #fff;
+            padding: 10px 20px;
+            border-bottom: 1px solid #ddd;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            position: fixed;
             top: 0;
-            z-index: 100;
+            left: 0;
+            z-index: 10;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        header.hide {
+            transform: translateY(-100%);
         }
 
         .header-container {
             display: flex;
+            width: 100%;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 20px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
         }
 
         .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--primary-color);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
+            width: 40px;
+            height: 40px;
+            background-image: url('../homepage/homeImg/logo.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 50%;
+            margin-right: 20px;
         }
 
-        .logo i {
-            margin-right: 8px;
-        }
-
-        .nav-menu {
-            display: flex;
+        nav ul {
             list-style: none;
+            display: flex;
+            gap: 20px;
         }
 
-        .nav-menu li {
-            margin-left: 20px;
-        }
-
-        .nav-menu a {
+        nav ul li a {
             text-decoration: none;
-            color: var(--text-color);
+            color: #000;
+            font-size: 16px;
             font-weight: 500;
-            padding: 8px 12px;
-            border-radius: 4px;
+            padding: 10px 10px;
             transition: all 0.3s ease;
         }
 
-        .nav-menu a:hover, .nav-menu a.active {
-            background-color: var(--primary-color);
-            color: white;
+        nav ul li a:hover {
+            color: #e5941d;
+        }
+
+        nav ul li a.active {
+            font-weight: bold;
+            color: #e5941d;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-right select {
+            padding: 5px 10px;
+            margin-right: 30px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
         }
 
         .user-menu {
@@ -99,6 +122,7 @@
             border-radius: 50%;
             object-fit: cover;
             cursor: pointer;
+            border: 2px solid #f5a623;
         }
 
         .notification-badge {
@@ -124,13 +148,14 @@
             margin-top: 20px;
         }
 
+        /* Sidebar */
         .profile-sidebar {
             background-color: white;
             border-radius: 8px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             padding: 20px;
             position: sticky;
-            top: 90px;
+            top: 100px;
             height: fit-content;
         }
 
@@ -144,7 +169,7 @@
         .profile-info {
             text-align: center;
             padding-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid #eee;
         }
 
         .profile-photo {
@@ -153,25 +178,29 @@
             border-radius: 50%;
             object-fit: cover;
             margin: 0 auto 15px;
-            border: 4px solid var(--light-gray);
+            border: 4px solid #f5f5f5;
         }
 
         .profile-name {
-            font-size: 22px;
+            font-size: 1.5rem;
             font-weight: bold;
             margin-bottom: 5px;
+            font-family: 'Volkhov', serif;
+            color: #2c3e50;
         }
 
         .profile-location {
-            color: #777;
+            color: #666;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 10px;
+            font-size: 0.9rem;
         }
 
         .profile-location i {
             margin-right: 5px;
+            color: #f5a623;
         }
 
         .profile-stats {
@@ -186,12 +215,13 @@
 
         .stat-value {
             font-weight: bold;
-            font-size: 18px;
+            font-size: 1.2rem;
+            color: #f5a623;
         }
 
         .stat-label {
-            font-size: 12px;
-            color: #777;
+            font-size: 0.8rem;
+            color: #666;
         }
 
         .profile-actions {
@@ -200,37 +230,38 @@
 
         .btn {
             display: inline-block;
-            padding: 8px 16px;
-            border-radius: 4px;
+            padding: 10px 15px;
+            border-radius: 5px;
             font-weight: 500;
-            text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
+            text-align: center;
         }
 
         .btn-primary {
-            background-color: var(--primary-color);
+            background-color: #f5a623;
             color: white;
+            border: none;
         }
 
         .btn-primary:hover {
-            background-color: var(--secondary-color);
+            background-color: #e5941d;
         }
 
         .btn-outline {
-            border: 1px solid var(--primary-color);
-            color: var(--primary-color);
+            border: 1px solid #f5a623;
+            color: #f5a623;
             background-color: transparent;
         }
 
         .btn-outline:hover {
-            background-color: var(--light-gray);
+            background-color: #f5a623;
+            color: white;
         }
 
         .edit-profile-btn {
             width: 100%;
-            margin-top: 10px;
         }
 
         /* User Details */
@@ -243,33 +274,43 @@
         }
 
         .detail-section h3 {
-            font-size: 16px;
-            margin-bottom: 8px;
-            color: #555;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            color: #2c3e50;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
+            font-family: 'Volkhov', serif;
         }
 
         .detail-item {
             display: flex;
             margin-bottom: 8px;
+            font-size: 0.9rem;
         }
 
         .detail-item i {
             width: 25px;
-            color: var(--primary-color);
+            color: #f5a623;
         }
 
         .interests-list {
             display: flex;
             flex-wrap: wrap;
-            gap: 5px;
-            margin-top: 5px;
+            gap: 8px;
+            margin-top: 10px;
         }
 
         .interest-tag {
-            background-color: var(--light-gray);
-            padding: 4px 10px;
+            background-color: #f5f5f5;
+            padding: 5px 10px;
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .interest-tag:hover {
+            background-color: #f5a623;
+            color: white;
         }
 
         /* Content Boxes */
@@ -277,37 +318,51 @@
             background-color: white;
             border-radius: 8px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            padding: 20px;
+            overflow: hidden;
         }
 
         .content-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--border-color);
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
         }
 
         .content-header h2 {
-            font-size: 18px;
+            font-size: 1.2rem;
             font-weight: 600;
+            color: #2c3e50;
+            font-family: 'Volkhov', serif;
+        }
+
+        .content-header h2 i {
+            color: #f5a623;
+            margin-right: 8px;
         }
 
         .view-all {
-            color: var(--primary-color);
+            color: #f5a623;
             text-decoration: none;
-            font-size: 14px;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .view-all:hover {
+            color: #e5941d;
+            text-decoration: underline;
         }
 
         /* Events Section */
         .events-list {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 15px;
+            gap: 20px;
+            padding: 20px;
         }
 
         .event-card {
+            background-color: #fff;
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
@@ -316,6 +371,7 @@
 
         .event-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .event-image {
@@ -325,31 +381,34 @@
         }
 
         .event-details {
-            padding: 12px;
+            padding: 15px;
         }
 
         .event-title {
             font-weight: 600;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
+            color: #2c3e50;
         }
 
         .event-date, .event-location {
-            font-size: 13px;
-            color: #777;
+            font-size: 0.9rem;
+            color: #666;
             display: flex;
             align-items: center;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
         }
 
         .event-date i, .event-location i {
-            margin-right: 5px;
-            font-size: 14px;
+            margin-right: 8px;
+            color: #f5a623;
+            width: 16px;
+            text-align: center;
         }
 
         .event-participants {
             display: flex;
             align-items: center;
-            margin-top: 10px;
+            margin-top: 15px;
         }
 
         .participant-avatars {
@@ -357,12 +416,13 @@
         }
 
         .participant-avatar {
-            width: 25px;
-            height: 25px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid white;
             margin-left: -8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .participant-avatar:first-child {
@@ -370,20 +430,26 @@
         }
 
         .participant-count {
-            font-size: 12px;
-            color: #777;
-            margin-left: 8px;
+            font-size: 0.8rem;
+            color: #666;
+            margin-left: 10px;
         }
 
         /* Friends Section */
         .friends-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-            gap: 10px;
+            gap: 15px;
+            padding: 20px;
         }
 
         .friend-item {
             text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .friend-item:hover {
+            transform: translateY(-3px);
         }
 
         .friend-avatar {
@@ -391,12 +457,14 @@
             height: 60px;
             border-radius: 50%;
             object-fit: cover;
+            border: 2px solid #f5f5f5;
+            margin-bottom: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         .friend-name {
-            font-size: 12px;
-            margin-top: 5px;
-            color: var(--text-color);
+            font-size: 0.8rem;
+            color: #333;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -404,18 +472,22 @@
 
         /* Messages Section */
         .message-list {
-            display: flex;
-            flex-direction: column;
+            padding: 0;
         }
 
         .message-item {
             display: flex;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border-color);
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.3s ease;
         }
 
         .message-item:last-child {
             border-bottom: none;
+        }
+
+        .message-item:hover {
+            background-color: #f9f9f9;
         }
 
         .message-avatar {
@@ -424,6 +496,7 @@
             border-radius: 50%;
             object-fit: cover;
             margin-right: 15px;
+            border: 2px solid #f5f5f5;
         }
 
         .message-content {
@@ -434,38 +507,41 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 5px;
+            align-items: center;
         }
 
         .message-sender {
             font-weight: 600;
+            color: #2c3e50;
         }
 
         .message-time {
-            font-size: 12px;
-            color: #777;
+            font-size: 0.8rem;
+            color: #888;
         }
 
         .message-preview {
-            font-size: 14px;
-            color: #555;
+            font-size: 0.9rem;
+            color: #666;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
         .unread {
-            background-color: rgba(52, 152, 219, 0.05);
+            background-color: rgba(245, 166, 35, 0.05);
         }
 
         .unread .message-preview {
             font-weight: 500;
-            color: var(--text-color);
+            color: #333;
         }
 
         .message-status {
-            width: 10px;
-            height: 10px;
-            background-color: var(--primary-color);
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: #f5a623;
             border-radius: 50%;
             margin-right: 5px;
         }
@@ -484,28 +560,52 @@
             .events-list {
                 grid-template-columns: 1fr;
             }
+            
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .header-right {
+                width: 100%;
+                justify-content: center;
+            }
         }
     </style>
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <!-- Header Navigation -->
     <header>
         <div class="header-container">
-            <a href="index.php" class="logo">
-                <i class="fas fa-globe"></i>
-                SocialLoop
-            </a>
-            <ul class="nav-menu">
-                <li><a href="index.php"><i class="fas fa-home"></i> Home</a></li>
-                <li><a href="events.php"><i class="fas fa-calendar-alt"></i> Events</a></li>
-                <li><a href="messages.php"><i class="fas fa-envelope"></i> Messages</a></li>
-                <li><a href="friends.php"><i class="fas fa-users"></i> Friends</a></li>
-            </ul>
-            <div class="user-menu">
-                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile Picture">
-                <div class="notification-badge">3</div>
+            <div class="header-left">
+                <div class="logo"></div>
+                <nav>
+                    <ul>
+                        <li><a href="index.php">Home</a></li>
+                        <li><a href="events.php">Events</a></li>
+                        <li><a href="messages.php">Messages</a></li>
+                        <li><a href="friends.php">Friends</a></li>
+                        <li><a href="aboutUs.php">About Us</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="header-right">
+                <select>
+                    <option>English</option>
+                    <option>Turkish</option>
+                    <option>Spanish</option>
+                    <option>Arabic</option>
+                    <option>French</option>
+                </select>
+                <div class="user-menu">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile Picture">
+                    <div class="notification-badge">3</div>
+                </div>
             </div>
         </div>
     </header>
@@ -786,25 +886,64 @@
     </div>
 
     <script>
-        // This is where you would add JavaScript for interactivity
-        // For example, to toggle edit mode or handle real-time notifications
+        // Scroll behavior for header
+        let lastScroll = 0;
+        let isScrollingDown = false;
         
-        // PHP integration points would include:
-        // 1. Fetching user profile data
-        // 2. Loading friends list
-        // 3. Getting recent messages
-        // 4. Loading upcoming events
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            const header = document.querySelector('header');
+            const scrollThreshold = 100;
+            
+            if (currentScroll <= 0) {
+                header.classList.remove('hide');
+                return;
+            }
         
-        // Example of how you might connect this to PHP (not functional in this HTML-only preview)
-        /*
-        document.addEventListener('DOMContentLoaded', function() {
-            // These would be AJAX requests in a real implementation
-            // fetchUserProfile();
-            // fetchFriends();
-            // fetchMessages();
-            // fetchEvents();
+            if (currentScroll > scrollThreshold) {
+                if (currentScroll > lastScroll && !isScrollingDown) {
+                    header.classList.add('hide');
+                    isScrollingDown = true;
+                } else if (currentScroll < lastScroll && isScrollingDown) {
+                    header.classList.remove('hide');
+                    isScrollingDown = false;
+                }
+            }
+            lastScroll = currentScroll;
         });
-        */
+        
+        // Add click events to cards for navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Make event cards clickable to navigate to event details
+            const eventCards = document.querySelectorAll('.event-card');
+            eventCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const eventTitle = this.querySelector('.event-title').textContent;
+                    // In a real app, this would use an event ID instead of title
+                    window.location.href = `event_details.php?title=${encodeURIComponent(eventTitle)}`;
+                });
+            });
+            
+            // Make friend items clickable to navigate to friend profiles
+            const friendItems = document.querySelectorAll('.friend-item');
+            friendItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const friendName = this.querySelector('.friend-name').textContent;
+                    // In a real app, this would use a user ID instead of name
+                    window.location.href = `profile.php?name=${encodeURIComponent(friendName)}`;
+                });
+            });
+            
+            // Make message items clickable to open conversation
+            const messageItems = document.querySelectorAll('.message-item');
+            messageItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const senderName = this.querySelector('.message-sender').textContent;
+                    // In a real app, this would use a conversation ID
+                    window.location.href = `messages.php?conversation=${encodeURIComponent(senderName)}`;
+                });
+            });
+        });
     </script>
 </body>
 </html>
