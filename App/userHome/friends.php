@@ -1,46 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SocialLoop - Friends</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Volkhov:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-    
-</head>
+<?php
+require_once __DIR__ . '/../../helpers.php';
+
+// Set page variables
+$pageTitle = 'Dashboard';
+$activePage = 'events';
+$isLoggedIn = true;
+?>
+<?php loadPartial('head') ?>
+
 <body>
-    <!-- Header Navigation -->
-    <header>
-        <div class="header-container">
-            <div class="header-left">
-                <div class="logo"></div>
-                <nav>
-                    <ul>
-                        <li><a href="index.php">Home</a></li>
-                        <li><a href="events.php">Events</a></li>
-                        <li><a href="messages.php">Messages</a></li>
-                        <li><a href="friends.php" class="active">Friends</a></li>
-                        <li><a href="aboutUs.php">About Us</a></li>
-                    </ul>
-                </nav>
-            </div>
-            <div class="header-right">
-                <select>
-                    <option>English</option>
-                    <option>Turkish</option>
-                    <option>Spanish</option>
-                    <option>Arabic</option>
-                    <option>French</option>
-                </select>
-                <div class="user-menu">
-                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile Picture">
-                    <div class="notification-badge">3</div>
-                </div>
-            </div>
-        </div>
-    </header>
+<?php loadPartial('header') ?>
 
     <!-- Main Content -->
     <div class="container">
@@ -481,31 +450,6 @@
     </div>
 
     <script>
-        // Scroll behavior for header
-        let lastScroll = 0;
-        let isScrollingDown = false;
-        
-        window.addEventListener('scroll', () => {
-            const currentScroll = window.pageYOffset;
-            const header = document.querySelector('header');
-            const scrollThreshold = 100;
-            
-            if (currentScroll <= 0) {
-                header.classList.remove('hide');
-                return;
-            }
-        
-            if (currentScroll > scrollThreshold) {
-                if (currentScroll > lastScroll && !isScrollingDown) {
-                    header.classList.add('hide');
-                    isScrollingDown = true;
-                } else if (currentScroll < lastScroll && isScrollingDown) {
-                    header.classList.remove('hide');
-                    isScrollingDown = false;
-                }
-            }
-            lastScroll = currentScroll;
-        });
 
         // Tab switching functionality
         document.addEventListener('DOMContentLoaded', function() {
@@ -519,6 +463,8 @@
             });
         });
     </script>
+    <?=loadPartial('scripts'); ?>
+    <?=loadPartial(name: 'footer'); ?>
 </body>
 </html>
 
