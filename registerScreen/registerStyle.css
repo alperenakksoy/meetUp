@@ -269,7 +269,7 @@ body {
 .logo {
     width: 40px;
     height: 40px;
-    background-image: url('../homepage/homeImg/logo.png');
+    background-image: url('/public/images/homeImg/logo.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

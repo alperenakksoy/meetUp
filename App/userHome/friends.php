@@ -8,367 +8,329 @@ $isLoggedIn = true;
 ?>
 <?php loadPartial('head') ?>
 
-<body>
+<body class="bg-gray-100">
 <?php loadPartial('header') ?>
-
     <!-- Main Content -->
-    <div class="container">
+    <div class="container mx-auto px-4 py-8">
         <!-- Page Header -->
-        <div class="page-header">
-            <h1 class="page-title">Friends</h1>
-            <a href="#" class="btn btn-secondary">
-                <i class="fas fa-user-plus"></i> Find Friends
+        <div class="flex justify-between items-center mb-6 mt-20">
+            <h1 class="text-3xl font-bold text-gray-800">Friends</h1>
+            <a href="#" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 flex items-center">
+                <i class="fas fa-user-plus mr-2"></i> Find Friends
             </a>
         </div>
 
         <!-- Search and Filters -->
-        <div class="friends-controls">
-            <div class="search-box">
-                <input type="text" class="search-input" placeholder="Search friends...">
-                <i class="fas fa-search search-icon"></i>
+        <div class="mb-6">
+            <div class="relative mb-4">
+                <input type="text" class="w-full p-3 pl-10 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="Search friends...">
+                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
             </div>
-            <div class="filter-group">
-                <div class="filter-item">
-                    <select class="filter-select">
-                        <option value="">All Locations</option>
-                        <option value="istanbul">Istanbul</option>
-                        <option value="ankara">Ankara</option>
-                        <option value="izmir">Izmir</option>
-                        <option value="international">International</option>
-                    </select>
-                </div>
-                <div class="filter-item">
-                    <select class="filter-select">
-                        <option value="">All Interests</option>
-                        <option value="travel">Travel</option>
-                        <option value="photography">Photography</option>
-                        <option value="food">Food</option>
-                        <option value="sports">Sports</option>
-                        <option value="culture">Culture</option>
-                    </select>
-                </div>
-                <div class="filter-item">
-                    <select class="filter-select">
-                        <option value="">Sort By</option>
-                        <option value="recent">Recently Added</option>
-                        <option value="name">Name (A-Z)</option>
-                        <option value="mutual">Mutual Friends</option>
-                    </select>
-                </div>
+            <div class="flex flex-wrap gap-4">
+                <select class="p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500">
+                    <option value="">All Locations</option>
+                    <option value="istanbul">Istanbul</option>
+                    <option value="ankara">Ankara</option>
+                    <option value="izmir">Izmir</option>
+                    <option value="international">International</option>
+                </select>
+                <select class="p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500">
+                    <option value="">All Interests</option>
+                    <option value="travel">Travel</option>
+                    <option value="photography">Photography</option>
+                    <option value="food">Food</option>
+                    <option value="sports">Sports</option>
+                    <option value="culture">Culture</option>
+                </select>
+                <select class="p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500">
+                    <option value="">Sort By</option>
+                    <option value="recent">Recently Added</option>
+                    <option value="name">Name (A-Z)</option>
+                    <option value="mutual">Mutual Friends</option>
+                </select>
             </div>
         </div>
 
         <!-- Tabs -->
-        <div class="friends-tabs">
-            <div class="tab-item active">All Friends</div>
-            <div class="tab-item">Recently Added</div>
-            <div class="tab-item">Birthday This Month</div>
-            <div class="tab-item">Requests <span class="tab-badge">3</span></div>
-            <div class="tab-item">Suggestions</div>
+        <div class="flex border-b mb-6">
+            <div class="px-4 py-2 text-orange-600 border-b-2 border-orange-600 cursor-pointer">All Friends</div>
+            <div class="px-4 py-2 text-gray-600 hover:text-orange-600 cursor-pointer">Recently Added</div>
+            <div class="px-4 py-2 text-gray-600 hover:text-orange-600 cursor-pointer">Birthday This Month</div>
+            <div class="px-4 py-2 text-gray-600 hover:text-orange-600 cursor-pointer flex items-center">
+                Requests <span class="ml-2 bg-red-500 text-white text-xs rounded-full px-2 py-1">3</span>
+            </div>
+            <div class="px-4 py-2 text-gray-600 hover:text-orange-600 cursor-pointer">Suggestions</div>
         </div>
 
         <!-- Friend Requests Section -->
-        <div class="content-section">
-            <div class="section-header">
-                <h2 class="section-title">Friend Requests</h2>
-                <a href="#" class="view-all">See All</a>
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold text-gray-800">Friend Requests</h2>
+                <a href="#" class="text-orange-600 hover:underline">See All</a>
             </div>
-
-            <div class="friend-request">
-                <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Friend" class="request-avatar">
-                <div class="request-info">
-                    <div class="request-name">Thomas Anderson</div>
-                    <div class="request-mutual">
-                        <i class="fas fa-user-friends"></i> 3 mutual friends
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Friend" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <div class="font-semibold text-gray-800">Thomas Anderson</div>
+                            <div class="text-sm text-gray-600"><i class="fas fa-user-friends mr-1"></i> 3 mutual friends</div>
+                            <div class="text-sm text-gray-500">2 days ago</div>
+                        </div>
                     </div>
-                    <div class="request-time">2 days ago</div>
-                </div>
-                <div class="request-actions">
-                    <button class="btn btn-success">
-                        <i class="fas fa-check"></i> Accept
-                    </button>
-                    <button class="btn btn-danger">
-                        <i class="fas fa-times"></i> Decline
-                    </button>
-                </div>
-            </div>
-
-            <div class="friend-request">
-                <img src="https://randomuser.me/api/portraits/women/70.jpg" alt="Friend" class="request-avatar">
-                <div class="request-info">
-                    <div class="request-name">Maria Garcia</div>
-                    <div class="request-mutual">
-                        <i class="fas fa-user-friends"></i> 5 mutual friends
+                    <div class="flex gap-2">
+                        <button class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 flex items-center">
+                            <i class="fas fa-check mr-2"></i> Accept
+                        </button>
+                        <button class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 flex items-center">
+                            <i class="fas fa-times mr-2"></i> Decline
+                        </button>
                     </div>
-                    <div class="request-time">4 days ago</div>
                 </div>
-                <div class="request-actions">
-                    <button class="btn btn-success">
-                        <i class="fas fa-check"></i> Accept
-                    </button>
-                    <button class="btn btn-danger">
-                        <i class="fas fa-times"></i> Decline
-                    </button>
-                </div>
-            </div>
-
-            <div class="friend-request">
-                <img src="https://randomuser.me/api/portraits/men/42.jpg" alt="Friend" class="request-avatar">
-                <div class="request-info">
-                    <div class="request-name">John Walker</div>
-                    <div class="request-mutual">
-                        <i class="fas fa-user-friends"></i> 2 mutual friends
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <img src="https://randomuser.me/api/portraits/women/70.jpg" alt="Friend" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <div class="font-semibold text-gray-800">Maria Garcia</div>
+                            <div class="text-sm text-gray-600"><i class="fas fa-user-friends mr-1"></i> 5 mutual friends</div>
+                            <div class="text-sm text-gray-500">4 days ago</div>
+                        </div>
                     </div>
-                    <div class="request-time">1 week ago</div>
+                    <div class="flex gap-2">
+                        <button class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 flex items-center">
+                            <i class="fas fa-check mr-2"></i> Accept
+                        </button>
+                        <button class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 flex items-center">
+                            <i class="fas fa-times mr-2"></i> Decline
+                        </button>
+                    </div>
                 </div>
-                <div class="request-actions">
-                    <button class="btn btn-success">
-                        <i class="fas fa-check"></i> Accept
-                    </button>
-                    <button class="btn btn-danger">
-                        <i class="fas fa-times"></i> Decline
-                    </button>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <img src="https://randomuser.me/api/portraits/men/42.jpg" alt="Friend" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <div class="font-semibold text-gray-800">John Walker</div>
+                            <div class="text-sm text-gray-600"><i class="fas fa-user-friends mr-1"></i> 2 mutual friends</div>
+                            <div class="text-sm text-gray-500">1 week ago</div>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 flex items-center">
+                            <i class="fas fa-check mr-2"></i> Accept
+                        </button>
+                        <button class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 flex items-center">
+                            <i class="fas fa-times mr-2"></i> Decline
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- All Friends Section -->
-        <div class="content-section">
-            <div class="section-header">
-                <h2 class="section-title">All Friends (156)</h2>
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <div class="mb-4">
+                <h2 class="text-xl font-semibold text-gray-800">All Friends (156)</h2>
             </div>
-
-            <div class="friends-grid">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <!-- Friend 1 -->
-                <div class="friend-card">
-                    <div class="friend-card-header">
-                        <div class="friend-cover"></div>
-                        <div class="friend-avatar-container">
-                            <img src="https://randomuser.me/api/portraits/women/63.jpg" alt="Friend" class="friend-avatar">
-                        </div>
+                <div class="bg-gray-50 rounded-lg shadow-sm overflow-hidden">
+                    <div class="h-24 bg-gray-200"></div>
+                    <div class="relative">
+                        <img src="https://randomuser.me/api/portraits/women/63.jpg" alt="Friend" class="w-20 h-20 rounded-full border-4 border-white absolute -top-10 left-1/2 transform -translate-x-1/2">
                     </div>
-                    <div class="friend-card-body">
-                        <h3 class="friend-name">Emma Johnson</h3>
-                        <div class="friend-location">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>London, UK</span>
+                    <div class="p-4 pt-12 text-center">
+                        <h3 class="font-semibold text-gray-800">Emma Johnson</h3>
+                        <div class="text-sm text-gray-600 flex items-center justify-center">
+                            <i class="fas fa-map-marker-alt mr-1"></i> London, UK
                         </div>
-                        <div class="friend-info">Travel enthusiast, Photography lover</div>
-                        <div class="mutual-friends">
-                            <div class="mutual-avatars">
-                                <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Mutual Friend" class="mutual-avatar">
-                                <img src="https://randomuser.me/api/portraits/women/29.jpg" alt="Mutual Friend" class="mutual-avatar">
+                        <div class="text-sm text-gray-500 mt-1">Travel enthusiast, Photography lover</div>
+                        <div class="flex justify-center mt-2">
+                            <div class="flex -space-x-2">
+                                <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
+                                <img src="https://randomuser.me/api/portraits/women/29.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
                             </div>
-                            <span>2 mutual friends</span>
+                            <span class="text-sm text-gray-600 ml-2">2 mutual friends</span>
                         </div>
-                        <div class="friend-actions">
-                            <button class="btn btn-outline friend-action-btn">Message</button>
-                            <button class="btn btn-primary friend-action-btn">Profile</button>
+                        <div class="mt-4 flex justify-center gap-2">
+                            <button class="border border-gray-300 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-100">Message</button>
+                            <button class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600">Profile</button>
                         </div>
                     </div>
                 </div>
-
                 <!-- Friend 2 -->
-                <div class="friend-card">
-                    <div class="friend-card-header">
-                        <div class="friend-cover"></div>
-                        <div class="friend-avatar-container">
-                            <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Friend" class="friend-avatar">
-                        </div>
+                <div class="bg-gray-50 rounded-lg shadow-sm overflow-hidden">
+                    <div class="h-24 bg-gray-200"></div>
+                    <div class="relative">
+                        <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Friend" class="w-20 h-20 rounded-full border-4 border-white absolute -top-10 left-1/2 transform -translate-x-1/2">
                     </div>
-                    <div class="friend-card-body">
-                        <h3 class="friend-name">David Wilson</h3>
-                        <div class="friend-location">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Berlin, Germany</span>
+                    <div class="p-4 pt-12 text-center">
+                        <h3 class="font-semibold text-gray-800">David Wilson</h3>
+                        <div class="text-sm text-gray-600 flex items-center justify-center">
+                            <i class="fas fa-map-marker-alt mr-1"></i> Berlin, Germany
                         </div>
-                        <div class="friend-info">Hiking, Photography, Cultural exploration</div>
-                        <div class="mutual-friends">
-                            <div class="mutual-avatars">
-                                <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Mutual Friend" class="mutual-avatar">
-                                <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="Mutual Friend" class="mutual-avatar">
-                                <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="Mutual Friend" class="mutual-avatar">
+                        <div class="text-sm text-gray-500 mt-1">Hiking, Photography, Cultural exploration</div>
+                        <div class="flex justify-center mt-2">
+                            <div class="flex -space-x-2">
+                                <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
+                                <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
+                                <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
                             </div>
-                            <span>3 mutual friends</span>
+                            <span class="text-sm text-gray-600 ml-2">3 mutual friends</span>
                         </div>
-                        <div class="friend-actions">
-                            <button class="btn btn-outline friend-action-btn">Message</button>
-                            <button class="btn btn-primary friend-action-btn">Profile</button>
+                        <div class="mt-4 flex justify-center gap-2">
+                            <button class="border border-gray-300 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-100">Message</button>
+                            <button class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600">Profile</button>
                         </div>
                     </div>
                 </div>
-
                 <!-- Friend 3 -->
-                <div class="friend-card">
-                    <div class="friend-card-header">
-                        <div class="friend-cover"></div>
-                        <div class="friend-avatar-container">
-                            <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Friend" class="friend-avatar">
-                        </div>
+                <div class="bg-gray-50 rounded-lg shadow-sm overflow-hidden">
+                    <div class="h-24 bg-gray-200"></div>
+                    <div class="relative">
+                        <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Friend" class="w-20 h-20 rounded-full border-4 border-white absolute -top-10 left-1/2 transform -translate-x-1/2">
                     </div>
-                    <div class="friend-card-body">
-                        <h3 class="friend-name">Sophie Chen</h3>
-                        <div class="friend-location">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Tokyo, Japan</span>
+                    <div class="p-4 pt-12 text-center">
+                        <h3 class="font-semibold text-gray-800">Sophie Chen</h3>
+                        <div class="text-sm text-gray-600 flex items-center justify-center">
+                            <i class="fas fa-map-marker-alt mr-1"></i> Tokyo, Japan
                         </div>
-                        <div class="friend-info">Food lover, Cultural experiences</div>
-                        <div class="mutual-friends">
-                            <div class="mutual-avatars">
-                                <img src="https://randomuser.me/api/portraits/women/29.jpg" alt="Mutual Friend" class="mutual-avatar">
+                        <div class="text-sm text-gray-500 mt-1">Food lover, Cultural experiences</div>
+                        <div class="flex justify-center mt-2">
+                            <div class="flex -space-x-2">
+                                <img src="https://randomuser.me/api/portraits/women/29.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
                             </div>
-                            <span>1 mutual friend</span>
+                            <span class="text-sm text-gray-600 ml-2">1 mutual friend</span>
                         </div>
-                        <div class="friend-actions">
-                            <button class="btn btn-outline friend-action-btn">Message</button>
-                            <button class="btn btn-primary friend-action-btn">Profile</button>
+                        <div class="mt-4 flex justify-center gap-2">
+                            <button class="border border-gray-300 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-100">Message</button>
+                            <button class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600">Profile</button>
                         </div>
                     </div>
                 </div>
-
                 <!-- Friend 4 -->
-                <div class="friend-card">
-                    <div class="friend-card-header">
-                        <div class="friend-cover"></div>
-                        <div class="friend-avatar-container">
-                            <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Friend" class="friend-avatar">
-                        </div>
+                <div class="bg-gray-50 rounded-lg shadow-sm overflow-hidden">
+                    <div class="h-24 bg-gray-200"></div>
+                    <div class="relative">
+                        <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Friend" class="w-20 h-20 rounded-full border-4 border-white absolute -top-10 left-1/2 transform -translate-x-1/2">
                     </div>
-                    <div class="friend-card-body">
-                        <h3 class="friend-name">Michael Brown</h3>
-                        <div class="friend-location">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Istanbul, Turkey</span>
+                    <div class="p-4 pt-12 text-center">
+                        <h3 class="font-semibold text-gray-800">Michael Brown</h3>
+                        <div class="text-sm text-gray-600 flex items-center justify-center">
+                            <i class="fas fa-map-marker-alt mr-1"></i> Istanbul, Turkey
                         </div>
-                        <div class="friend-info">Hiking, Outdoor activities</div>
-                        <div class="mutual-friends">
-                            <div class="mutual-avatars">
-                                <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Mutual Friend" class="mutual-avatar">
-                                <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Mutual Friend" class="mutual-avatar">
-                                <img src="https://randomuser.me/api/portraits/women/63.jpg" alt="Mutual Friend" class="mutual-avatar">
+                        <div class="text-sm text-gray-500 mt-1">Hiking, Outdoor activities</div>
+                        <div class="flex justify-center mt-2">
+                            <div class="flex -space-x-2">
+                                <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
+                                <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
+                                <img src="https://randomuser.me/api/portraits/women/63.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
                             </div>
-                            <span>3 mutual friends</span>
+                            <span class="text-sm text-gray-600 ml-2">3 mutual friends</span>
                         </div>
-                        <div class="friend-actions">
-                            <button class="btn btn-outline friend-action-btn">Message</button>
-                            <button class="btn btn-primary friend-action-btn">Profile</button>
+                        <div class="mt-4 flex justify-center gap-2">
+                            <button class="border border-gray-300 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-100">Message</button>
+                            <button class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600">Profile</button>
                         </div>
                     </div>
                 </div>
-
                 <!-- Friend 5 -->
-                <div class="friend-card">
-                    <div class="friend-card-header">
-                        <div class="friend-cover"></div>
-                        <div class="friend-avatar-container">
-                            <img src="https://randomuser.me/api/portraits/women/29.jpg" alt="Friend" class="friend-avatar">
-                        </div>
+                <div class="bg-gray-50 rounded-lg shadow-sm overflow-hidden">
+                    <div class="h-24 bg-gray-200"></div>
+                    <div class="relative">
+                        <img src="https://randomuser.me/api/portraits/women/29.jpg" alt="Friend" class="w-20 h-20 rounded-full border-4 border-white absolute -top-10 left-1/2 transform -translate-x-1/2">
                     </div>
-                    <div class="friend-card-body">
-                        <h3 class="friend-name">Olivia Martinez</h3>
-                        <div class="friend-location">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Barcelona, Spain</span>
+                    <div class="p-4 pt-12 text-center">
+                        <h3 class="font-semibold text-gray-800">Olivia Martinez</h3>
+                        <div class="text-sm text-gray-600 flex items-center justify-center">
+                            <i class="fas fa-map-marker-alt mr-1"></i> Barcelona, Spain
                         </div>
-                        <div class="friend-info">Art, Museums, Culture</div>
-                        <div class="mutual-friends">
-                            <div class="mutual-avatars">
-                                <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="Mutual Friend" class="mutual-avatar">
-                                <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="Mutual Friend" class="mutual-avatar">
+                        <div class="text-sm text-gray-500 mt-1">Art, Museums, Culture</div>
+                        <div class="flex justify-center mt-2">
+                            <div class="flex -space-x-2">
+                                <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
+                                <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
                             </div>
-                            <span>2 mutual friends</span>
+                            <span class="text-sm text-gray-600 ml-2">2 mutual friends</span>
                         </div>
-                        <div class="friend-actions">
-                            <button class="btn btn-outline friend-action-btn">Message</button>
-                            <button class="btn btn-primary friend-action-btn">Profile</button>
+                        <div class="mt-4 flex justify-center gap-2">
+                            <button class="border border-gray-300 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-100">Message</button>
+                            <button class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600">Profile</button>
                         </div>
                     </div>
                 </div>
-
                 <!-- Friend 6 -->
-                <div class="friend-card">
-                    <div class="friend-card-header">
-                        <div class="friend-cover"></div>
-                        <div class="friend-avatar-container">
-                            <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="Friend" class="friend-avatar">
-                        </div>
+                <div class="bg-gray-50 rounded-lg shadow-sm overflow-hidden">
+                    <div class="h-24 bg-gray-200"></div>
+                    <div class="relative">
+                        <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="Friend" class="w-20 h-20 rounded-full border-4 border-white absolute -top-10 left-1/2 transform -translate-x-1/2">
                     </div>
-                    <div class="friend-card-body">
-                        <h3 class="friend-name">James Taylor</h3>
-                        <div class="friend-location">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Amsterdam, Netherlands</span>
+                    <div class="p-4 pt-12 text-center">
+                        <h3 class="font-semibold text-gray-800">James Taylor</h3>
+                        <div class="text-sm text-gray-600 flex items-center justify-center">
+                            <i class="fas fa-map-marker-alt mr-1"></i> Amsterdam, Netherlands
                         </div>
-                        <div class="friend-info">Cycling, Coffee, Digital nomad</div>
-                        <div class="mutual-friends">
-                            <div class="mutual-avatars">
-                                <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Mutual Friend" class="mutual-avatar">
-                                <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Mutual Friend" class="mutual-avatar">
-                                <img src="https://randomuser.me/api/portraits/women/29.jpg" alt="Mutual Friend" class="mutual-avatar">
-                                <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Mutual Friend" class="mutual-avatar">
+                        <div class="text-sm text-gray-500 mt-1">Cycling, Coffee, Digital nomad</div>
+                        <div class="flex justify-center mt-2">
+                            <div class="flex -space-x-2">
+                                <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
+                                <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
+                                <img src="https://randomuser.me/api/portraits/women/29.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
+                                <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
                             </div>
-                            <span>4 mutual friends</span>
+                            <span class="text-sm text-gray-600 ml-2">4 mutual friends</span>
                         </div>
-                        <div class="friend-actions">
-                            <button class="btn btn-outline friend-action-btn">Message</button>
-                            <button class="btn btn-primary friend-action-btn">Profile</button>
+                        <div class="mt-4 flex justify-center gap-2">
+                            <button class="border border-gray-300 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-100">Message</button>
+                            <button class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600">Profile</button>
                         </div>
                     </div>
                 </div>
-
                 <!-- Friend 7 -->
-                <div class="friend-card">
-                    <div class="friend-card-header">
-                        <div class="friend-cover"></div>
-                        <div class="friend-avatar-container">
-                            <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="Friend" class="friend-avatar">
-                        </div>
+                <div class="bg-gray-50 rounded-lg shadow-sm overflow-hidden">
+                    <div class="h-24 bg-gray-200"></div>
+                    <div class="relative">
+                        <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="Friend" class="w-20 h-20 rounded-full border-4 border-white absolute -top-10 left-1/2 transform -translate-x-1/2">
                     </div>
-                    <div class="friend-card-body">
-                        <h3 class="friend-name">Isabella Johnson</h3>
-                        <div class="friend-location">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Rome, Italy</span>
+                    <div class="p-4 pt-12 text-center">
+                        <h3 class="font-semibold text-gray-800">Isabella Johnson</h3>
+                        <div class="text-sm text-gray-600 flex items-center justify-center">
+                            <i class="fas fa-map-marker-alt mr-1"></i> Rome, Italy
                         </div>
-                        <div class="friend-info">History, Architecture, Food</div>
-                        <div class="mutual-friends">
-                            <div class="mutual-avatars">
-                                <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="Mutual Friend" class="mutual-avatar">
+                        <div class="text-sm text-gray-500 mt-1">History, Architecture, Food</div>
+                        <div class="flex justify-center mt-2">
+                            <div class="flex -space-x-2">
+                                <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
                             </div>
-                            <span>1 mutual friend</span>
+                            <span class="text-sm text-gray-600 ml-2">1 mutual friend</span>
                         </div>
-                        <div class="friend-actions">
-                            <button class="btn btn-outline friend-action-btn">Message</button>
-                            <button class="btn btn-primary friend-action-btn">Profile</button>
+                        <div class="mt-4 flex justify-center gap-2">
+                            <button class="border border-gray-300 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-100">Message</button>
+                            <button class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600">Profile</button>
                         </div>
                     </div>
                 </div>
-
                 <!-- Friend 8 -->
-                <div class="friend-card">
-                    <div class="friend-card-header">
-                        <div class="friend-cover"></div>
-                        <div class="friend-avatar-container">
-                            <img src="https://randomuser.me/api/portraits/men/42.jpg" alt="Friend" class="friend-avatar">
-                        </div>
+                <div class="bg-gray-50 rounded-lg shadow-sm overflow-hidden">
+                    <div class="h-24 bg-gray-200"></div>
+                    <div class="relative">
+                        <img src="https://randomuser.me/api/portraits/men/42.jpg" alt="Friend" class="w-20 h-20 rounded-full border-4 border-white absolute -top-10 left-1/2 transform -translate-x-1/2">
                     </div>
-                    <div class="friend-card-body">
-                        <h3 class="friend-name">Alexander Kim</h3>
-                        <div class="friend-location">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Seoul, South Korea</span>
+                    <div class="p-4 pt-12 text-center">
+                        <h3 class="font-semibold text-gray-800">Alexander Kim</h3>
+                        <div class="text-sm text-gray-600 flex items-center justify-center">
+                            <i class="fas fa-map-marker-alt mr-1"></i> Seoul, South Korea
                         </div>
-                        <div class="friend-info">Technology, Street food, Photography</div>
-                        <div class="mutual-friends">
-                            <div class="mutual-avatars">
-                                <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Mutual Friend" class="mutual-avatar">
-                                <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Mutual Friend" class="mutual-avatar">
+                        <div class="text-sm text-gray-500 mt-1">Technology, Street food, Photography</div>
+                        <div class="flex justify-center mt-2">
+                            <div class="flex -space-x-2">
+                                <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
+                                <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
                             </div>
-                            <span>2 mutual friends</span>
+                            <span class="text-sm text-gray-600 ml-2">2 mutual friends</span>
                         </div>
-                        <div class="friend-actions">
-                            <button class="btn btn-outline friend-action-btn">Message</button>
-                            <button class="btn btn-primary friend-action-btn">Profile</button>
+                        <div class="mt-4 flex justify-center gap-2">
+                            <button class="border border-gray-300 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-100">Message</button>
+                            <button class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600">Profile</button>
                         </div>
                     </div>
                 </div>
@@ -376,78 +338,68 @@ $isLoggedIn = true;
         </div>
 
         <!-- Suggestions Section -->
-        <div class="content-section">
-            <div class="section-header">
-                <h2 class="section-title">People You May Know</h2>
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="mb-4">
+                <h2 class="text-xl font-semibold text-gray-800">People You May Know</h2>
             </div>
-
-            <div class="suggestion-list">
-                <!-- Suggestion 1 -->
-                <div class="suggestion-item">
-                    <img src="https://randomuser.me/api/portraits/women/85.jpg" alt="Suggestion" class="suggestion-avatar">
-                    <div class="suggestion-info">
-                        <div class="suggestion-name">Laura Williams</div>
-                        <div class="suggestion-details">Photographer from London</div>
-                        <div class="suggestion-reason">
-                            <i class="fas fa-user-friends"></i>
-                            <span>Friends with Emma Johnson and 2 others</span>
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <img src="https://randomuser.me/api/portraits/women/85.jpg" alt="Suggestion" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <div class="font-semibold text-gray-800">Laura Williams</div>
+                            <div class="text-sm text-gray-600">Photographer from London</div>
+                            <div class="text-sm text-gray-600"><i class="fas fa-user-friends mr-1"></i> Friends with Emma Johnson and 2 others</div>
                         </div>
                     </div>
-                    <button class="btn btn-primary">
-                        <i class="fas fa-user-plus"></i> Add
+                    <button class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 flex items-center">
+                        <i class="fas fa-user-plus mr-2"></i> Add
                     </button>
                 </div>
-
-                <!-- Suggestion 2 -->
-                <div class="suggestion-item">
-                    <img src="https://randomuser.me/api/portraits/men/92.jpg" alt="Suggestion" class="suggestion-avatar">
-                    <div class="suggestion-info">
-                        <div class="suggestion-name">Daniel Lee</div>
-                        <div class="suggestion-details">Travel blogger from Vancouver</div>
-                        <div class="suggestion-reason">
-                            <i class="fas fa-user-friends"></i>
-                            <span>Friends with Michael Brown and 3 others</span>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <img src="https://randomuser.me/api/portraits/men/92.jpg" alt="Suggestion" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <div class="font-semibold text-gray-800">Daniel Lee</div>
+                            <div class="text-sm text-gray-600">Travel blogger from Vancouver</div>
+                            <div class="text-sm text-gray-600"><i class="fas fa-user-friends mr-1"></i> Friends with Michael Brown and 3 others</div>
                         </div>
                     </div>
-                    <button class="btn btn-primary">
-                        <i class="fas fa-user-plus"></i> Add
+                    <button class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 flex items-center">
+                        <i class="fas fa-user-plus mr-2"></i> Add
                     </button>
                 </div>
-
-                <!-- Suggestion 3 -->
-                <div class="suggestion-item">
-                    <img src="https://randomuser.me/api/portraits/women/55.jpg" alt="Suggestion" class="suggestion-avatar">
-                    <div class="suggestion-info">
-                        <div class="suggestion-name">Sofia Rodriguez</div>
-                        <div class="suggestion-details">Language teacher from Madrid</div>
-                        <div class="suggestion-reason">
-                            <i class="fas fa-user-friends"></i>
-                            <span>Friends with Olivia Martinez</span>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <img src="https://randomuser.me/api/portraits/women/55.jpg" alt="Suggestion" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <div class="font-semibold text-gray-800">Sofia Rodriguez</div>
+                            <div class="text-sm text-gray-600">Language teacher from Madrid</div>
+                            <div class="text-sm text-gray-600"><i class="fas fa-user-friends mr-1"></i> Friends with Olivia Martinez</div>
                         </div>
                     </div>
-                    <button class="btn btn-primary">
-                        <i class="fas fa-user-plus"></i> Add
+                    <button class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 flex items-center">
+                        <i class="fas fa-user-plus mr-2"></i> Add
                     </button>
                 </div>
-
-                <!-- Suggestion 4 -->
-                <div class="suggestion-item">
-                    <img src="https://randomuser.me/api/portraits/men/67.jpg" alt="Suggestion" class="suggestion-avatar">
-                    <div class="suggestion-info">
-                        <div class="suggestion-name">Ahmed Hassan</div>
-                        <div class="suggestion-details">Tour guide from Cairo</div>
-                        <div class="suggestion-reason">
-                            <i class="fas fa-user-friends"></i>
-                            <span>Friends with James Taylor and 1 other</span>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <img src="https://randomuser.me/api/portraits/men/67.jpg" alt="Suggestion" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <div class="font-semibold text-gray-800">Ahmed Hassan</div>
+                            <div class="text-sm text-gray-600">Tour guide from Cairo</div>
+                            <div class="text-sm text-gray-600"><i class="fas fa-user-friends mr-1"></i> Friends with James Taylor and 1 other</div>
                         </div>
                     </div>
-                    <button class="btn btn-primary">
-                        <i class="fas fa-user-plus"></i> Add
+                    <button class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 flex items-center">
+                        <i class="fas fa-user-plus mr-2"></i> Add
                     </button>
                 </div>
             </div>
         </div>
     </div>
+</body>
+</html>
 
     <script>
 
@@ -467,607 +419,3 @@ $isLoggedIn = true;
     <?=loadPartial(name: 'footer'); ?>
 </body>
 </html>
-
-<style>
-        /* Global Styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Arial', sans-serif;
-            line-height: 1.6;
-            color: #333;
-            padding-top: 80px; /* Accommodate fixed header */
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* Header Styles */
-        header {
-            background-color: #fff;
-            padding: 10px 20px;
-            border-bottom: 1px solid #ddd;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 10;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease-in-out;
-        }
-
-        header.hide {
-            transform: translateY(-100%);
-        }
-
-        .header-container {
-            display: flex;
-            width: 100%;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-        }
-
-        .logo {
-            width: 40px;
-            height: 40px;
-            background-image: url('../homepage/homeImg/logo.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            border-radius: 50%;
-            margin-right: 20px;
-        }
-
-        nav ul {
-            list-style: none;
-            display: flex;
-            gap: 20px;
-        }
-
-        nav ul li a {
-            text-decoration: none;
-            color: #000;
-            font-size: 16px;
-            font-weight: 500;
-            padding: 10px 10px;
-            transition: all 0.3s ease;
-        }
-
-        nav ul li a:hover {
-            color: #e5941d;
-        }
-
-        nav ul li a.active {
-            font-weight: bold;
-            color: #e5941d;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .header-right select {
-            padding: 5px 10px;
-            margin-right: 30px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-
-        .user-menu {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-
-        .user-menu img {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            object-fit: cover;
-            cursor: pointer;
-            border: 2px solid #f5a623;
-        }
-
-        .notification-badge {
-            background-color: #e74c3c;
-            color: white;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: absolute;
-            top: -5px;
-            right: -5px;
-        }
-
-        /* Button Styles */
-        .btn {
-            background-color: #f5a623;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            cursor: pointer;
-            font-size: 1rem;
-            border-radius: 5px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.3s ease;
-            display: inline-block;
-            text-decoration: none;
-        }
-
-        .btn-primary {
-            background-color: #f5a623;
-        }
-
-        .btn-primary:hover {
-            background-color: #e5941d;
-        }
-
-        .btn-secondary {
-            background-color: #000;
-            color: #fff;
-        }
-
-        .btn-secondary:hover {
-            background-color: #e5941d;
-        }
-
-        .btn-success {
-            background-color: #2ecc71;
-            color: white;
-        }
-
-        .btn-success:hover {
-            background-color: #27ae60;
-        }
-
-        .btn-danger {
-            background-color: #e74c3c;
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background-color: #c0392b;
-        }
-
-        .btn-outline {
-            border: 1px solid #f5a623;
-            color: #f5a623;
-            background-color: transparent;
-        }
-
-        .btn-outline:hover {
-            background-color: #f5a623;
-            color: white;
-        }
-
-        /* Page Header */
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .page-title {
-            font-family: 'Volkhov', serif;
-            font-size: 2.5rem;
-            color: #2c3e50;
-        }
-
-        /* Search and Filters */
-        .friends-controls {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .search-box {
-            position: relative;
-            margin-bottom: 15px;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 10px 40px 10px 15px;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-            font-size: 14px;
-            background-color: #f5f5f5;
-        }
-
-        .search-icon {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #888;
-        }
-
-        .filter-group {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .filter-item {
-            flex: 1;
-            min-width: 150px;
-        }
-
-        .filter-select {
-            width: 100%;
-            padding: 8px 12px;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-            font-size: 14px;
-        }
-
-        /* Tabs */
-        .friends-tabs {
-            display: flex;
-            border-bottom: 1px solid #ddd;
-            margin-bottom: 20px;
-        }
-
-        .tab-item {
-            padding: 10px 20px;
-            cursor: pointer;
-            position: relative;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .tab-item:hover {
-            color: #f5a623;
-        }
-
-        .tab-item.active {
-            color: #f5a623;
-        }
-
-        .tab-item.active::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background-color: #f5a623;
-        }
-
-        .tab-badge {
-            background-color: #e74c3c;
-            color: white;
-            border-radius: 10px;
-            padding: 0 6px;
-            font-size: 12px;
-            margin-left: 5px;
-        }
-
-        /* Friends Grid */
-        .content-section {
-            margin-bottom: 30px;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .section-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #2c3e50;
-        }
-
-        .view-all {
-            color: #f5a623;
-            text-decoration: none;
-            font-size: 14px;
-            transition: color 0.3s ease;
-        }
-
-        .view-all:hover {
-            color: #e5941d;
-        }
-
-        .friends-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-        }
-
-        .friend-card {
-            background-color: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .friend-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .friend-card-header {
-            position: relative;
-        }
-
-        .friend-cover {
-            height: 80px;
-            width: 100%;
-            object-fit: cover;
-            background-color: #f5a623;
-        }
-
-        .friend-avatar-container {
-            position: absolute;
-            bottom: -40px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .friend-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid white;
-        }
-
-        .friend-card-body {
-            padding: 50px 15px 15px;
-            text-align: center;
-        }
-
-        .friend-name {
-            font-weight: 600;
-            font-size: 16px;
-            margin-bottom: 5px;
-        }
-
-        .friend-location {
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .friend-location i {
-            margin-right: 5px;
-            font-size: 12px;
-            color: #f5a623;
-        }
-
-        .friend-info {
-            margin-bottom: 15px;
-            font-size: 14px;
-            color: #555;
-        }
-
-        .mutual-friends {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 13px;
-            color: #666;
-            margin-bottom: 15px;
-        }
-
-        .mutual-avatars {
-            display: flex;
-            margin-right: 5px;
-        }
-
-        .mutual-avatar {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            border: 2px solid white;
-            margin-left: -5px;
-        }
-
-        .friend-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .friend-action-btn {
-            flex: 1;
-            padding: 6px 0;
-            font-size: 13px;
-            border-radius: 4px;
-        }
-
-        /* Friend Requests */
-        .friend-request {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .friend-request:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .request-avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-right: 15px;
-            border: 3px solid #f5a623;
-        }
-
-        .request-info {
-            flex: 1;
-        }
-
-        .request-name {
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .request-mutual {
-            font-size: 13px;
-            color: #666;
-            margin-bottom: 5px;
-        }
-
-        .request-time {
-            font-size: 12px;
-            color: #888;
-        }
-
-        .request-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        /* Suggestions */
-        .suggestion-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 15px;
-        }
-
-        .suggestion-item {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .suggestion-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .suggestion-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-right: 15px;
-            border: 2px solid #f5a623;
-        }
-
-        .suggestion-info {
-            flex: 1;
-        }
-
-        .suggestion-name {
-            font-weight: 600;
-            margin-bottom: 3px;
-        }
-
-        .suggestion-details {
-            font-size: 13px;
-            color: #666;
-            margin-bottom: 5px;
-        }
-
-        .suggestion-reason {
-            display: flex;
-            align-items: center;
-            font-size: 12px;
-            color: #888;
-        }
-
-        .suggestion-reason i {
-            margin-right: 5px;
-            font-size: 12px;
-            color: #f5a623;
-        }
-
-        .suggestion-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .friends-grid {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            }
-
-            .suggestion-list {
-                grid-template-columns: 1fr;
-            }
-
-            .filter-group {
-                flex-direction: column;
-            }
-
-            .request-actions {
-                flex-direction: column;
-            }
-
-            .friend-request {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .request-avatar {
-                margin-right: 0;
-                margin-bottom: 10px;
-            }
-
-            .request-actions {
-                margin-top: 10px;
-            }
-            
-            .header-container {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            nav ul {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            
-            .header-right {
-                width: 100%;
-                justify-content: center;
-            }
-        }
-    </style>

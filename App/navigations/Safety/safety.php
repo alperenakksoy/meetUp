@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Safety - SocialLoop</title>
-    <link rel="stylesheet" href="/css/safety.css">
+    <link rel="stylesheet" href="/public/css/safety.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Volkhov:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
@@ -17,11 +17,11 @@
                 <div class="logo"></div>
                 <nav>
                     <ul>
-                        <li><a href="../../homepage/index.html">Home</a></li>
-                        <li><a href="../aboutUs.html">About Us</a></li>
-                        <li><a href="../supportUs.html">Support Us</a></li>
-                        <li><a href="../Safety/safety.html">Safety</a></li>
-                        <li><a href="../howitworks.html">How It Works</a></li>
+                        <li><a href="../homepage/index.html">Home</a></li>
+                        <li><a href="/App/navigations/aboutUs.html">About Us</a></li>
+                        <li><a href="/App/navigations/supportUs.html">Support Us</a></li>
+                        <li><a href="/App/navigations/Safety/safety.html">Safety</a></li>
+                        <li><a href="/App/navigations/howitworks.html">How It Works</a></li>
                     </ul>
                 </nav>
             </div>
@@ -188,7 +188,7 @@
     </div>
 </div>
 <div class="secretbutton">
-    <a href="report.html"><button>reportpage</button></a>
+    <a href="/App/navigations/Safety/report.html"><button>reportpage</button></a>
 </div>
 
 <script>

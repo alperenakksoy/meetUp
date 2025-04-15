@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>How It Works - SocialLoop</title>
-    <link rel="stylesheet" href="../css/howItWorks.css">
+    <link rel="stylesheet" href="/public/css/howItWorks.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Volkhov:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
@@ -17,10 +17,10 @@
                 <nav>
                     <ul>
                         <li><a href="../homepage/index.html">Home</a></li>
-                        <li><a href="../navigations/aboutUs.html">About Us</a></li>
-                        <li><a href="../navigations/supportUs.html">Support Us</a></li>
-                        <li><a href="../navigations/Safety/safety.html">Safety</a></li>
-                        <li><a href="../navigations/howitworks.html">How It Works</a></li>
+                        <li><a href="/App/navigations/aboutUs.html">About Us</a></li>
+                        <li><a href="/App/navigations/supportUs.html">Support Us</a></li>
+                        <li><a href="/App/navigations/Safety/safety.html">Safety</a></li>
+                        <li><a href="/App/navigations/howitworks.html">How It Works</a></li>
                     </ul>
                 </nav>
             </div>

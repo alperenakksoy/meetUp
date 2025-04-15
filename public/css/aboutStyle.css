@@ -1,5 +1,5 @@
 /* Base styles (importing from main CSS) */
-@import url('../homepage/styles.css');
+@import url('/public/css/styles.css');
 
 /* About Hero Section */
 .about-hero {

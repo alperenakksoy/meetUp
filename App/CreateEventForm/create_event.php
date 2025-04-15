@@ -1,97 +1,66 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SocialLoop - Create Event</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Volkhov:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-</head>
-<body>
-    <!-- Header Navigation -->
-    <header>
-        <div class="header-container">
-            <div class="header-left">
-                <div class="logo"></div>
-                <nav>
-                    <ul>
-                        <li><a href="index.php">Home</a></li>
-                        <li><a href="events.php" class="active">Events</a></li>
-                        <li><a href="messages.php">Messages</a></li>
-                        <li><a href="friends.php">Friends</a></li>
-                        <li><a href="aboutUs.php">About Us</a></li>
-                    </ul>
-                </nav>
-            </div>
-            <div class="header-right">
-                <select>
-                    <option>English</option>
-                    <option>Turkish</option>
-                    <option>Spanish</option>
-                    <option>Arabic</option>
-                    <option>French</option>
-                </select>
-                <div class="user-menu">
-                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile Picture">
-                    <div class="notification-badge">3</div>
-                </div>
-            </div>
-        </div>
-    </header>
+<?php
+require_once __DIR__ . '/../../helpers.php';
 
-    <!-- Main Content -->
-    <div class="container">
+// Set page variables
+$pageTitle = 'Dashboard';
+$activePage = 'events';
+$isLoggedIn = true;
+?>
+<?php loadPartial('head') ?>
+
+<body>
+<?php loadPartial('header') ?>
+ <!-- Main Content -->
+ <div class="container max-w-3xl mx-auto px-5 mt-20">
         <!-- Page Header -->
-        <div class="page-header">
-            <h1 class="page-title">Create New Event</h1>
+        <div class="flex justify-between items-center mb-5">
+            <h1 class="font-volkhov text-4xl text-[#2c3e50]">Create New Event</h1>
         </div>
 
         <!-- Create Event Form -->
-        <form class="create-event-form" action="process_event.php" method="POST" enctype="multipart/form-data">
+        <form class="bg-white rounded-lg shadow p-8 mb-8" action="process_event.php" method="POST" enctype="multipart/form-data">
             <!-- Basic Information Section -->
-            <div class="form-section">
-                <h3>Basic Information</h3>
-                <div class="form-group">
-                    <label for="event_title">Event Title *</label>
-                    <input type="text" id="event_title" name="event_title" class="form-control" required>
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold mb-4 pb-2.5 border-b border-gray-100 text-[#2c3e50]">Basic Information</h3>
+                <div class="mb-5">
+                    <label for="event_title" class="block mb-2 font-medium">Event Title *</label>
+                    <input type="text" id="event_title" name="event_title" class="w-full py-2.5 px-4 border border-gray-300 rounded focus:border-[#f5a623] focus:outline-none text-base" required>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label for="event_date">Date *</label>
-                            <input type="date" id="event_date" name="event_date" class="form-control" required>
+                <div class="flex gap-4 mb-5">
+                    <div class="flex-1">
+                        <div class="mb-5">
+                            <label for="event_date" class="block mb-2 font-medium">Date *</label>
+                            <input type="date" id="event_date" name="event_date" class="w-full py-2.5 px-4 border border-gray-300 rounded focus:border-[#f5a623] focus:outline-none text-base" required>
                         </div>
                     </div>
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label for="event_time">Time *</label>
-                            <input type="time" id="event_time" name="event_time" class="form-control" required>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label for="event_end_date">End Date</label>
-                            <input type="date" id="event_end_date" name="event_end_date" class="form-control">
-                            <span class="info-text">Optional for multi-day events</span>
-                        </div>
-                    </div>
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label for="event_end_time">End Time</label>
-                            <input type="time" id="event_end_time" name="event_end_time" class="form-control">
+                    <div class="flex-1">
+                        <div class="mb-5">
+                            <label for="event_time" class="block mb-2 font-medium">Time *</label>
+                            <input type="time" id="event_time" name="event_time" class="w-full py-2.5 px-4 border border-gray-300 rounded focus:border-[#f5a623] focus:outline-none text-base" required>
                         </div>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="event_category">Category *</label>
-                    <select id="event_category" name="event_category" class="form-control" required>
+                <div class="flex gap-4 mb-5">
+                    <div class="flex-1">
+                        <div class="mb-5">
+                            <label for="event_end_date" class="block mb-2 font-medium">End Date</label>
+                            <input type="date" id="event_end_date" name="event_end_date" class="w-full py-2.5 px-4 border border-gray-300 rounded focus:border-[#f5a623] focus:outline-none text-base">
+                            <span class="block text-sm text-gray-600 mt-1">Optional for multi-day events</span>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <div class="mb-5">
+                            <label for="event_end_time" class="block mb-2 font-medium">End Time</label>
+                            <input type="time" id="event_end_time" name="event_end_time" class="w-full py-2.5 px-4 border border-gray-300 rounded focus:border-[#f5a623] focus:outline-none text-base">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-5">
+                    <label for="event_category" class="block mb-2 font-medium">Category *</label>
+                    <select id="event_category" name="event_category" class="w-full py-2.5 px-4 border border-gray-300 rounded focus:border-[#f5a623] focus:outline-none text-base" required>
                         <option value="">Select a category</option>
                         <option value="coffee">Coffee & Drinks</option>
                         <option value="cultural">Cultural</option>
@@ -104,110 +73,110 @@
                     </select>
                 </div>
 
-                <div class="form-group">
-                    <label for="event_capacity">Capacity</label>
-                    <input type="number" id="event_capacity" name="event_capacity" min="1" max="999" class="form-control capacity-input">
-                    <span class="info-text">Maximum number of attendees (leave blank for unlimited)</span>
+                <div class="mb-5">
+                    <label for="event_capacity" class="block mb-2 font-medium">Capacity</label>
+                    <input type="number" id="event_capacity" name="event_capacity" min="1" max="999" class="w-24 py-2.5 px-4 border border-gray-300 rounded focus:border-[#f5a623] focus:outline-none text-base">
+                    <span class="block text-sm text-gray-600 mt-1">Maximum number of attendees (leave blank for unlimited)</span>
                 </div>
             </div>
 
             <!-- Location Section -->
-            <div class="form-section">
-                <h3>Location</h3>
-                <div class="form-group">
-                    <label for="event_location_name">Venue/Location Name *</label>
-                    <input type="text" id="event_location_name" name="event_location_name" class="form-control" required>
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold mb-4 pb-2.5 border-b border-gray-100 text-[#2c3e50]">Location</h3>
+                <div class="mb-5">
+                    <label for="event_location_name" class="block mb-2 font-medium">Venue/Location Name *</label>
+                    <input type="text" id="event_location_name" name="event_location_name" class="w-full py-2.5 px-4 border border-gray-300 rounded focus:border-[#f5a623] focus:outline-none text-base" required>
                 </div>
 
-                <div class="form-group">
-                    <label for="event_location_address">Address *</label>
-                    <input type="text" id="event_location_address" name="event_location_address" class="form-control" required>
+                <div class="mb-5">
+                    <label for="event_location_address" class="block mb-2 font-medium">Address *</label>
+                    <input type="text" id="event_location_address" name="event_location_address" class="w-full py-2.5 px-4 border border-gray-300 rounded focus:border-[#f5a623] focus:outline-none text-base" required>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label for="event_city">City *</label>
-                            <input type="text" id="event_city" name="event_city" class="form-control" required>
+                <div class="flex gap-4 mb-5">
+                    <div class="flex-1">
+                        <div class="mb-5">
+                            <label for="event_city" class="block mb-2 font-medium">City *</label>
+                            <input type="text" id="event_city" name="event_city" class="w-full py-2.5 px-4 border border-gray-300 rounded focus:border-[#f5a623] focus:outline-none text-base" required>
                         </div>
                     </div>
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label for="event_country">Country *</label>
-                            <input type="text" id="event_country" name="event_country" class="form-control" required>
+                    <div class="flex-1">
+                        <div class="mb-5">
+                            <label for="event_country" class="block mb-2 font-medium">Country *</label>
+                            <input type="text" id="event_country" name="event_country" class="w-full py-2.5 px-4 border border-gray-300 rounded focus:border-[#f5a623] focus:outline-none text-base" required>
                         </div>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="event_location_details">Location Details</label>
-                    <textarea id="event_location_details" name="event_location_details" class="form-control" placeholder="Provide additional details that will help attendees find the venue (e.g., 'The café is on the second floor' or 'Look for the blue door')"></textarea>
+                <div class="mb-5">
+                    <label for="event_location_details" class="block mb-2 font-medium">Location Details</label>
+                    <textarea id="event_location_details" name="event_location_details" class="w-full py-2.5 px-4 border border-gray-300 rounded focus:border-[#f5a623] focus:outline-none text-base min-h-[120px] resize-y" placeholder="Provide additional details that will help attendees find the venue (e.g., 'The café is on the second floor' or 'Look for the blue door')"></textarea>
                 </div>
             </div>
 
             <!-- Description Section -->
-            <div class="form-section">
-                <h3>Description</h3>
-                <div class="form-group">
-                    <label for="event_description">Event Description *</label>
-                    <textarea id="event_description" name="event_description" class="form-control" required placeholder="Tell potential attendees about your event. What will happen? What should they expect? Why should they join?"></textarea>
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold mb-4 pb-2.5 border-b border-gray-100 text-[#2c3e50]">Description</h3>
+                <div class="mb-5">
+                    <label for="event_description" class="block mb-2 font-medium">Event Description *</label>
+                    <textarea id="event_description" name="event_description" class="w-full py-2.5 px-4 border border-gray-300 rounded focus:border-[#f5a623] focus:outline-none text-base min-h-[120px] resize-y" required placeholder="Tell potential attendees about your event. What will happen? What should they expect? Why should they join?"></textarea>
                 </div>
 
-                <div class="form-group">
-                    <label>Tags</label>
-                    <div class="tag-input-container">
-                        <div class="tag">Coffee <button type="button">×</button></div>
-                        <div class="tag">Networking <button type="button">×</button></div>
+                <div class="mb-5">
+                    <label class="block mb-2 font-medium">Tags</label>
+                    <div class="tag-input-container flex flex-wrap gap-2.5 mb-2.5">
+                        <div class="bg-gray-100 py-1 px-2.5 rounded-full text-sm flex items-center">Coffee <button type="button" class="ml-1 text-gray-600">×</button></div>
+                        <div class="bg-gray-100 py-1 px-2.5 rounded-full text-sm flex items-center">Networking <button type="button" class="ml-1 text-gray-600">×</button></div>
                     </div>
-                    <div class="tag-input">
-                        <input type="text" id="tag_input" class="form-control" placeholder="Add a tag">
-                        <button type="button" id="add_tag" class="btn-primary">Add</button>
+                    <div class="flex gap-2.5">
+                        <input type="text" id="tag_input" class="flex-1 py-2 px-4 border border-gray-300 rounded focus:border-[#f5a623] focus:outline-none text-sm" placeholder="Add a tag">
+                        <button type="button" id="add_tag" class="bg-[#f5a623] text-white py-2 px-4 rounded font-medium cursor-pointer transition-colors hover:bg-[#e5941d]">Add</button>
                     </div>
-                    <span class="info-text">Tags help your event get discovered</span>
+                    <span class="block text-sm text-gray-600 mt-1">Tags help your event get discovered</span>
                 </div>
             </div>
 
             <!-- Image Section -->
-            <div class="form-section">
-                <h3>Event Image</h3>
-                <div class="form-group">
-                    <label for="event_image">Upload Cover Image</label>
-                    <input type="file" id="event_image" name="event_image" class="form-control" accept="image/*">
-                    <span class="info-text">Recommended size: 1200×600 pixels. Max file size: 5MB</span>
-                    <div class="form-image-preview">
-                        <div class="placeholder-image">
-                            <i class="fas fa-image fa-3x"></i>
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold mb-4 pb-2.5 border-b border-gray-100 text-[#2c3e50]">Event Image</h3>
+                <div class="mb-5">
+                    <label for="event_image" class="block mb-2 font-medium">Upload Cover Image</label>
+                    <input type="file" id="event_image" name="event_image" class="w-full py-2.5 px-4 border border-gray-300 rounded focus:border-[#f5a623] focus:outline-none text-base" accept="image/*">
+                    <span class="block text-sm text-gray-600 mt-1">Recommended size: 1200×600 pixels. Max file size: 5MB</span>
+                    <div class="form-image-preview mt-4 border border-dashed border-gray-300 rounded p-4 text-center">
+                        <div class="placeholder-image w-full h-[200px] bg-gray-100 flex items-center justify-center text-gray-600 rounded">
+                            <i class="fas fa-image text-4xl"></i>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Settings Section -->
-            <div class="form-section">
-                <h3>Settings</h3>
-                <div class="form-group">
-                    <label>Visibility</label>
-                    <div class="checkbox-group">
-                        <label class="checkbox-label">
-                            <input type="radio" name="event_visibility" value="public" checked>
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold mb-4 pb-2.5 border-b border-gray-100 text-[#2c3e50]">Settings</h3>
+                <div class="mb-5">
+                    <label class="block mb-2 font-medium">Visibility</label>
+                    <div class="flex flex-col gap-2.5">
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="event_visibility" value="public" checked class="mr-2.5">
                             Public (Anyone can find and join)
                         </label>
-                        <label class="checkbox-label">
-                            <input type="radio" name="event_visibility" value="friends">
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="event_visibility" value="friends" class="mr-2.5">
                             Friends Only (Only visible to your friends)
                         </label>
-                        <label class="checkbox-label">
-                            <input type="radio" name="event_visibility" value="private">
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="event_visibility" value="private" class="mr-2.5">
                             Private (By invitation only)
                         </label>
                     </div>
                 </div>
                 
-                <div class="form-group">
-                    <label>Approval Settings</label>
-                    <div class="checkbox-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="require_approval" value="1">
+                <div class="mb-5">
+                    <label class="block mb-2 font-medium">Approval Settings</label>
+                    <div class="flex flex-col gap-2.5">
+                        <label class="flex items-center cursor-pointer">
+                            <input type="checkbox" name="require_approval" value="1" class="mr-2.5">
                             Require approval for attendees
                         </label>
                     </div>
@@ -215,9 +184,9 @@
             </div>
 
             <!-- Form Actions -->
-            <div class="form-actions">
-                <button type="button" class="btn btn-secondary">Save as Draft</button>
-                <button type="submit" class="btn btn-primary">Create Event</button>
+            <div class="flex justify-between pt-4 border-t border-gray-100">
+                <button type="button" class="bg-white text-gray-700 border border-gray-300 py-3 px-6 rounded font-medium hover:bg-gray-100">Save as Draft</button>
+                <button type="submit" class="bg-[#f5a623] text-white py-3 px-6 rounded font-medium hover:bg-[#e5941d]">Create Event</button>
             </div>
         </form>
     </div>
@@ -235,8 +204,8 @@
                 if (tagText) {
                     // Create tag element
                     const tag = document.createElement('div');
-                    tag.className = 'tag';
-                    tag.innerHTML = `${tagText} <button type="button">×</button>`;
+                    tag.className = 'bg-gray-100 py-1 px-2.5 rounded-full text-sm flex items-center';
+                    tag.innerHTML = `${tagText} <button type="button" class="ml-1 text-gray-600">×</button>`;
                     
                     // Add delete functionality
                     const deleteBtn = tag.querySelector('button');
@@ -261,7 +230,7 @@
             });
             
             // Initialize existing tag deletion
-            document.querySelectorAll('.tag button').forEach(btn => {
+            document.querySelectorAll('.tag-input-container button').forEach(btn => {
                 btn.addEventListener('click', function() {
                     this.parentElement.remove();
                 });
@@ -276,7 +245,7 @@
                     const reader = new FileReader();
                     
                     reader.onload = function(e) {
-                        imagePreview.innerHTML = `<img src="${e.target.result}" alt="Event Image Preview" style="max-width: 100%; max-height: 200px; border-radius: 5px;">`;
+                        imagePreview.innerHTML = `<img src="${e.target.result}" alt="Event Image Preview" class="max-w-full max-h-[200px] rounded">`;
                     };
                     
                     reader.readAsDataURL(this.files[0]);
@@ -331,363 +300,7 @@
             }
         });
     </script>
+    <?=loadPartial('scripts'); ?>
+    <?=loadPartial(name: 'footer'); ?>
 </body>
 </html>
-<style>
-        /* Global Styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Arial', sans-serif;
-            line-height: 1.6;
-            color: #333;
-            padding-top: 80px; /* Accommodate fixed header */
-            background-color: #f5f8fa;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* Header Styles */
-        header {
-            background-color: #fff;
-            padding: 10px 20px;
-            border-bottom: 1px solid #ddd;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 10;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease-in-out;
-        }
-
-        header.hide {
-            transform: translateY(-100%);
-        }
-
-        .header-container {
-            display: flex;
-            width: 100%;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-        }
-
-        .logo {
-            width: 40px;
-            height: 40px;
-            background-image: url('../homepage/homeImg/logo.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            border-radius: 50%;
-            margin-right: 20px;
-        }
-
-        nav ul {
-            list-style: none;
-            display: flex;
-            gap: 20px;
-        }
-
-        nav ul li a {
-            text-decoration: none;
-            color: #000;
-            font-size: 16px;
-            font-weight: 500;
-            padding: 10px 10px;
-            transition: all 0.3s ease;
-        }
-
-        nav ul li a:hover {
-            color: #e5941d;
-        }
-
-        nav ul li a.active {
-            font-weight: bold;
-            color: #e5941d;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .header-right select {
-            padding: 5px 10px;
-            margin-right: 30px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-
-        .user-menu {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-
-        .user-menu img {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            object-fit: cover;
-            cursor: pointer;
-            border: 2px solid #f5a623;
-        }
-
-        .notification-badge {
-            background-color: #e74c3c;
-            color: white;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: absolute;
-            top: -5px;
-            right: -5px;
-        }
-
-        /* Page Header */
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .page-title {
-            font-family: 'Volkhov', serif;
-            font-size: 2.5rem;
-            color: #2c3e50;
-        }
-
-        /* Form Styles */
-        .create-event-form {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-            margin-bottom: 30px;
-        }
-
-        .form-section {
-            margin-bottom: 25px;
-        }
-
-        .form-section h3 {
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
-            color: #2c3e50;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        .form-group .info-text {
-            display: block;
-            font-size: 0.85rem;
-            color: #666;
-            margin-top: 5px;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 10px 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-        }
-
-        .form-control:focus {
-            border-color: #f5a623;
-            outline: none;
-        }
-
-        textarea.form-control {
-            min-height: 120px;
-            resize: vertical;
-        }
-
-        .form-row {
-            display: flex;
-            gap: 15px;
-        }
-
-        .form-col {
-            flex: 1;
-        }
-
-        .capacity-input {
-            width: 100px;
-        }
-
-        .tag-input-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .tag {
-            display: inline-flex;
-            align-items: center;
-            background-color: #f0f0f0;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-        }
-
-        .tag button {
-            background: none;
-            border: none;
-            margin-left: 5px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            color: #666;
-        }
-
-        .tag-input {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .tag-input input {
-            flex: 1;
-            padding: 8px 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-
-        .tag-input button {
-            background-color: #f5a623;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .checkbox-group {
-            margin-top: 15px;
-        }
-
-        .checkbox-label {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-            cursor: pointer;
-        }
-
-        .checkbox-label input {
-            margin-right: 10px;
-        }
-
-        .form-image-preview {
-            margin-top: 15px;
-            border: 1px dashed #ddd;
-            border-radius: 5px;
-            padding: 15px;
-            text-align: center;
-        }
-
-        .placeholder-image {
-            width: 100%;
-            height: 200px;
-            background-color: #f0f0f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #666;
-            border-radius: 5px;
-        }
-
-        .form-actions {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 30px;
-        }
-
-        /* Button Styles */
-        .btn {
-            display: inline-block;
-            text-decoration: none;
-            padding: 12px 24px;
-            border-radius: 5px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1rem;
-            border: none;
-        }
-
-        .btn-primary {
-            background-color: #f5a623;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: #e5941d;
-        }
-
-        .btn-secondary {
-            background-color: #fff;
-            color: #333;
-            border: 1px solid #ddd;
-        }
-
-        .btn-secondary:hover {
-            background-color: #f5f5f5;
-        }
-
-        /* Responsive Styles */
-        @media (max-width: 768px) {
-            .form-row {
-                flex-direction: column;
-                gap: 20px;
-            }
-            
-            .header-container {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            nav ul {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            
-            .header-right {
-                width: 100%;
-                justify-content: center;
-            }
-        }
-    </style>
