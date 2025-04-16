@@ -1,143 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Support Us - SocialLoop</title>
-    <link rel="stylesheet" href="../../public/css/supportStyle.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Volkhov:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-</head>
-<body>
-    <header>
-        <div class="header-container">
-            <div class="header-left">
-                <div class="logo"></div>
-                <nav>
-                    <ul>
-                        <li><a href="../homepage/index.html">Home</a></li>
-                        <li><a href="/App/navigations/aboutUs.html">About Us</a></li>
-                        <li><a href="/App/navigations/supportUs.html">Support Us</a></li>
-                        <li><a href="/App/navigations/Safety/safety.html">Safety</a></li>
-                        <li><a href="/App/navigations/howitworks.html">How It Works</a></li>
-                    </ul>
-                </nav>
-            </div>
-            <div class="header-right">
-                <select>
-                    <option>English</option>
-                    <option>Turkish</option>
-                    <option>Spanish</option>
-                    <option>Arabic</option>
-                    <option>French</option>
-                    <option>Italian</option>
-                    <option>German</option>
-                </select>
-                <a href="../loginScreen/loginIndex.html">
-                <button class="login-btn">Log in</button>
-              </a>
-              <a href="../registerScreen/registerIndex.html">
-                <button class="signup-btn">Sign Up</button>
-            </a>
-            </div>
-        </div>
-    </header>
+<?php require_once __DIR__ . '/../../helpers.php'; ?>
+<?=loadWelcomePartial('headWl'); ?>
+<body class="font-sans text-gray-800">
 
+ <!-- Header -->
+ <?=loadWelcomePartial('headerWl'); ?>
+   
     <!-- Hero Section -->
-    <section class="support-hero">
-        <div class="support-hero-content">
-            <h1>Support Us</h1>
-            <p class="subtitle">Your help makes our mission possible</p>
+    <section class="bg-primary h-[50vh] flex items-center justify-center text-center text-white mt-[60px]">
+        <div class="max-w-2xl px-5">
+            <h1 class="text-4xl md:text-5xl mb-5 font-volkhov font-bold">Support Us</h1>
+            <p class="text-xl opacity-90">Your help makes our mission possible</p>
         </div>
     </section>
 
     <!-- Contribution Section -->
-    <section class="contribution">
-        <div class="container">
-            <div class="contribution-content">
-                <h2>Ways to Contribute</h2>
-                <p>SocialLoop thrives thanks to the support of our amazing community. Here's how you can help:</p>
-                <ul class="contribution-list">
-                    <li>💡 <strong>Donate:</strong> Help us keep our platform running smoothly.</li>
-                    <li>📢 <strong>Spread the Word:</strong> Share SocialLoop with your friends and family.</li>
-                    <li>🤝 <strong>Volunteer:</strong> Join us in organizing events and moderating discussions.</li>
+    <section class="py-20 bg-white">
+        <div class="max-w-6xl mx-auto px-5">
+            <div class="text-center">
+                <h2 class="text-2xl md:text-4xl text-[#2c2c54] mb-8 font-bold">Ways to Contribute</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-8">SocialLoop thrives thanks to the support of our amazing community. Here's how you can help:</p>
+                
+                <ul class="list-none max-w-2xl mx-auto mt-10">
+                    <li class="text-lg text-gray-600 mb-5">💡 <strong class="font-semibold">Donate:</strong> Help us keep our platform running smoothly.</li>
+                    <li class="text-lg text-gray-600 mb-5">📢 <strong class="font-semibold">Spread the Word:</strong> Share SocialLoop with your friends and family.</li>
+                    <li class="text-lg text-gray-600 mb-5">🤝 <strong class="font-semibold">Volunteer:</strong> Join us in organizing events and moderating discussions.</li>
                 </ul>
             </div>
         </div>
     </section>
 
     <!-- Call-to-Action Section -->
-    <section class="cta">
-        <div class="container">
-            <h2>Make a Difference Today</h2>
-            <a href="#" class="cta-btn">Contribute Now</a>
+    <section class="py-10 bg-primary text-white text-center">
+        <div class="max-w-6xl mx-auto px-5">
+            <h2 class="text-2xl md:text-4xl mb-5 font-bold">Make a Difference Today</h2>
+            <a href="#" class="inline-block py-4 px-8 bg-white text-primary text-lg font-bold rounded-lg transition-all duration-300 hover:bg-gray-100">Contribute Now</a>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-section logo-section">
-                <h2>SocialLoop</h2>
-                <p>Connects people for spontaneous hangouts and real-time socializing.</p>
-            </div>
-            <div class="footer-section">
-                <h3>Company</h3>
-                <ul>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Careers</a></li>
-                    <li><a href="#">Support Us</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Contact</h3>
-                <ul>
-                    <li><a href="#">Help/FAQ</a></li>
-                    <li><a href="#">Emergency</a></li>
-                    <li><a href="#">Safety</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>More</h3>
-                <ul>
-                    <li><a href="#">Report</a></li>
-                    <li><a href="#">Tips for Socializing</a></li>
-                    <li><a href="#">Advices for Improve</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>All rights reserved @socialloop.co</p>
-        </div>
-    </footer>
+    <?=loadWelcomePartial('footerWl'); ?>
 </body>
-<script>
-     let lastScroll = 0;
-  let isScrollingDown = false;
-  
-  window.addEventListener('scroll', () => {
-      const currentScroll = window.pageYOffset;
-      const header = document.querySelector('header');
-      const scrollThreshold = 100; // Adjust this value as needed
-      
-      if (currentScroll <= 0) {
-          header.classList.remove('hide');
-          return;
-      }
-  
-      if (currentScroll > scrollThreshold) { // Only start hiding after threshold
-          if (currentScroll > lastScroll && !isScrollingDown) {
-              // Scrolling down
-              header.classList.add('hide');
-              isScrollingDown = true;
-          } else if (currentScroll < lastScroll && isScrollingDown) {
-              // Scrolling up
-              header.classList.remove('hide');
-              isScrollingDown = false;
-          }
-      }
-      lastScroll = currentScroll;
-  });
-</script>
 </html>

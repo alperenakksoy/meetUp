@@ -39,4 +39,13 @@
   }
  }
 
- 
+ function loadWelcomePartial($name){
+    $partialPath = basePath("App/views/welcomePartials/{$name}.php");
+    if(file_exists($partialPath)){
+       require $partialPath;
+   } else {
+      echo "view '{$name} not found!'";
+   }
+  }
+
+

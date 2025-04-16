@@ -1,67 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Report User - SocialLoop</title>
-    <link rel="stylesheet" href="/public/css/reportStyle.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Volkhov:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-</head>
-<body>
-    <!-- Header (Same as main page) -->
-    <header>
-        <div class="header-container">
-            <div class="header-left">
-                <div class="logo"></div>
-                <nav>
-                    <ul>
-                        <li><a href="../homepage/index.html">Home</a></li>
-                        <li><a href="/App/navigations/aboutUs.html">About Us</a></li>
-                        <li><a href="/App/navigations/supportUs.html">Support Us</a></li>
-                        <li><a href="/App/navigations/Safety/safety.html">Safety</a></li>
-                        <li><a href="/App/navigations/howitworks.html">How It Works</a></li>
-                    </ul>
-                </nav>
-            </div>
-            <div class="header-right">
-                <select>
-                    <option>English</option>
-                    <option>Turkish</option>
-                    <option>Spanish</option>
-                    <option>Arabic</option>
-                    <option>French</option>
-                    <option>Italian</option>
-                    <option>German</option>
-                </select>
-                <button class="login-btn">Log in</button>
-                <button class="signup-btn">Sign Up</button>
-            </div>
-        </div>
-    </header>
+<?php require_once __DIR__ . '/../../../helpers.php'; ?>
+<?=loadWelcomePartial('headWl'); ?>
 
+<body class="font-sans text-gray-800 bg-lightbg">
+ <!-- Header -->
+ <?=loadWelcomePartial('headerWl'); ?>
+    
     <!-- Report Section -->
-    <section class="report-section">
-        <div class="container">
-            <div class="report-container">
-                <div class="goback">
-                    <a href="safety.html"><button class="goback-btn">Go Back</button></a>
+    <section class="py-20 bg-lightbg min-h-[calc(100vh-60px)] mt-[60px]">
+        <div class="max-w-2xl mx-auto px-5">
+            <div class="bg-white rounded-xl shadow-lg p-10">
+                <div class="mb-5">
+                    <a href="safety.php">
+                        <button class="py-2.5 px-5 bg-gray-200 hover:bg-primary hover:text-white transition-colors duration-300 rounded">Go Back</button>
+                    </a>
                 </div>
-                <div class="report-header">
-                    <h1>Report a User</h1>
-                    <p>Help us maintain a safe community by reporting inappropriate behavior</p>
+                <div class="text-center mb-10">
+                    <h1 class="text-2xl md:text-4xl text-[#2c2c54] mb-4 font-volkhov font-bold">Report a User</h1>
+                    <p class="text-gray-600 text-lg">Help us maintain a safe community by reporting inappropriate behavior</p>
                 </div>
 
-                <form class="report-form">
-                    <div class="form-group">
-                        <label for="reported-username">Username of Reported User*</label>
-                        <input type="text" id="reported-username" required placeholder="Enter username">
+                <form class="max-w-xl mx-auto">
+                    <div class="mb-6">
+                        <label for="reported-username" class="block mb-2 text-[#2c2c54] font-medium">Username of Reported User*</label>
+                        <input 
+                            type="text" 
+                            id="reported-username" 
+                            required 
+                            placeholder="Enter username"
+                            class="w-full py-3 px-4 border border-gray-300 rounded-lg text-base text-gray-800 transition-all focus:outline-none focus:border-primary"
+                        >
                     </div>
 
-                    <div class="form-group">
-                        <label for="report-type">Type of Report*</label>
-                        <select id="report-type" required>
+                    <div class="mb-6">
+                        <label for="report-type" class="block mb-2 text-[#2c2c54] font-medium">Type of Report*</label>
+                        <select 
+                            id="report-type" 
+                            required
+                            class="w-full py-3 px-4 border border-gray-300 rounded-lg text-base text-gray-800 transition-all focus:outline-none focus:border-primary"
+                        >
                             <option value="">Select a reason</option>
                             <option value="harassment">Harassment or Bullying</option>
                             <option value="inappropriate">Inappropriate Behavior</option>
@@ -72,37 +48,66 @@
                         </select>
                     </div>
 
-                    <div class="form-group">
-                        <label for="event-date">Date of Incident*</label>
-                        <input type="date" id="event-date" required>
+                    <div class="mb-6">
+                        <label for="event-date" class="block mb-2 text-[#2c2c54] font-medium">Date of Incident*</label>
+                        <input 
+                            type="date" 
+                            id="event-date" 
+                            required
+                            class="w-full py-3 px-4 border border-gray-300 rounded-lg text-base text-gray-800 transition-all focus:outline-none focus:border-primary"
+                        >
                     </div>
 
-                    <div class="form-group">
-                        <label for="event-location">Event or Chat where it happened*</label>
-                        <input type="text" id="event-location" required placeholder="Event name or chat">
+                    <div class="mb-6">
+                        <label for="event-location" class="block mb-2 text-[#2c2c54] font-medium">Event or Chat where it happened*</label>
+                        <input 
+                            type="text" 
+                            id="event-location" 
+                            required 
+                            placeholder="Event name or chat"
+                            class="w-full py-3 px-4 border border-gray-300 rounded-lg text-base text-gray-800 transition-all focus:outline-none focus:border-primary"
+                        >
                     </div>
 
-                    <div class="form-group">
-                        <label for="description">Detailed Description*</label>
-                        <textarea id="description" required placeholder="Please provide specific details about what happened"></textarea>
+                    <div class="mb-6">
+                        <label for="description" class="block mb-2 text-[#2c2c54] font-medium">Detailed Description*</label>
+                        <textarea 
+                            id="description" 
+                            required 
+                            placeholder="Please provide specific details about what happened"
+                            class="w-full py-3 px-4 border border-gray-300 rounded-lg text-base text-gray-800 transition-all focus:outline-none focus:border-primary h-[150px] resize-y"
+                        ></textarea>
                     </div>
 
-                    <div class="form-group">
-                        <label for="evidence">Evidence (Optional)</label>
-                        <input type="file" id="evidence" accept="image/*">
-                        <small>You can upload screenshots or other relevant images</small>
+                    <div class="mb-6">
+                        <label for="evidence" class="block mb-2 text-[#2c2c54] font-medium">Evidence (Optional)</label>
+                        <input 
+                            type="file" 
+                            id="evidence" 
+                            accept="image/*"
+                            class="w-full py-3 px-4 border border-gray-300 rounded-lg text-base text-gray-800 transition-all focus:outline-none focus:border-primary"
+                        >
+                        <small class="block mt-1 text-gray-600 text-sm">You can upload screenshots or other relevant images</small>
                     </div>
 
-                    <div class="form-group checkbox-group">
-                        <input type="checkbox" id="terms" required>
-                        <label for="terms">I confirm this report is truthful and accurate</label>
+                    <div class="mb-6 flex items-center gap-2.5">
+                        <input 
+                            type="checkbox" 
+                            id="terms" 
+                            required
+                            class="w-4 h-4"
+                        >
+                        <label for="terms" class="text-base text-gray-700">I confirm this report is truthful and accurate</label>
                     </div>
 
-                    <div class="form-group">
-                        <button type="submit" class="submit-btn">Submit Report</button>
+                    <div class="mb-6">
+                        <button 
+                            type="submit" 
+                            class="w-full py-4 bg-primary text-white border-none rounded-lg text-lg font-semibold cursor-pointer transition-all duration-300 hover:bg-[#e5941d]"
+                        >Submit Report</button>
                     </div>
 
-                    <p class="form-footer">
+                    <p class="text-center text-gray-600 text-sm leading-relaxed">
                         Our team will review your report and take appropriate action within 24 hours.
                         For immediate assistance, please contact emergency services.
                     </p>
@@ -111,73 +116,7 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-section logo-section">
-                <h2>SocialLoop</h2>
-                <p>Connects people for spontaneous hangouts and real-time socializing.</p>
-            </div>
-            <div class="footer-section">
-                <h3>Company</h3>
-                <ul>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Careers</a></li>
-                    <li><a href="#">Support Us</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Contact</h3>
-                <ul>
-                    <li><a href="#">Help/FAQ</a></li>
-                    <li><a href="#">Emergency</a></li>
-                    <li><a href="#">Safety</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>More</h3>
-                <ul>
-                    <li><a href="#">Report</a></li>
-                    <li><a href="#">Tips for Socializing</a></li>
-                    <li><a href="#">Advices for Improve</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>All rights reserved @socialloop.co</p>
-        </div>
-    </footer>
+    <?=loadWelcomePartial('footerWl'); ?>
+
 </body>
-
-
-<script>
-    let lastScroll = 0;
- let isScrollingDown = false;
- 
- window.addEventListener('scroll', () => {
-     const currentScroll = window.pageYOffset;
-     const header = document.querySelector('header');
-     const scrollThreshold = 100; // Adjust this value as needed
-     
-     if (currentScroll <= 0) {
-         header.classList.remove('hide');
-         return;
-     }
- 
-     if (currentScroll > scrollThreshold) { // Only start hiding after threshold
-         if (currentScroll > lastScroll && !isScrollingDown) {
-             // Scrolling down
-             header.classList.add('hide');
-             isScrollingDown = true;
-         } else if (currentScroll < lastScroll && isScrollingDown) {
-             // Scrolling up
-             header.classList.remove('hide');
-             isScrollingDown = false;
-         }
-     }
-     lastScroll = currentScroll;
- });
-</script>
-
-
 </html>

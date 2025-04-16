@@ -1,11 +1,13 @@
 <?php
 require_once __DIR__ . '/../../helpers.php';
 
+
 // Set page variables
 $pageTitle = 'Dashboard';
 $activePage = 'home';
 $isLoggedIn = true;
 ?>
+<?=loadPartial(name: 'scripts'); ?>
 <?php loadPartial('head') ?>
 
 <body>
@@ -389,8 +391,12 @@ $isLoggedIn = true;
                 }
             });
         });
-    </script>
-        <?=loadPartial('scripts'); ?>
+        //ScrollDown Function
+        document.addEventListener('DOMContentLoaded', () => {
+        initHeaderScrollBehavior();  // Call only if this feature is needed
+    });
+    </script>      
     <?=loadPartial(name: 'footer'); ?>
+
 </body>
 </html>

@@ -1,76 +1,36 @@
+<?php require_once __DIR__ . '/../../helpers.php'; ?>
+<?=loadWelcomePartial('headWl'); ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us - SocialLoop</title>
-    <link rel="stylesheet" href="../../public/css/aboutStyle.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Volkhov:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-</head>
-<body>
-    <header>
-        <div class="header-container">
-            <div class="header-left">
-                <div class="logo"></div>
-                <nav>
-                    <ul>
-                        <li><a href="../homepage/index.php">Home</a></li>
-                        <li><a href="/App/navigations/aboutUs.php">About Us</a></li>
-                        <li><a href="/App/navigations/supportUs.php">Support Us</a></li>
-                        <li><a href="/App/navigations/Safety/safety.php">Safety</a></li>
-                        <li><a href="/App/navigations/howitworks.php">How It Works</a></li>
-                    </ul>
-                </nav>
-            </div>
-            <div class="header-right">
-                <select>
-                    <option>English</option>
-                    <option>Turkish</option>
-                    <option>Spanish</option>
-                    <option>Arabic</option>
-                    <option>French</option>
-                    <option>Italian</option>
-                    <option>German</option>
-                </select>
-                <a href="../loginScreen/loginIndex.html">
-                <button class="login-btn">Log in</button>
-              </a>
-              <a href="../registerScreen/registerIndex.html">
-                <button class="signup-btn">Sign Up</button>
-            </a>
-            </div>
-        </div>
-    </header>
+<body class="font-sans text-gray-800">
+<?=loadWelcomePartial('headerWl'); ?>
 
     <!-- Hero Section -->
-    <section class="about-hero">
-        <div class="about-hero-content">
-            <h1>Our Story</h1>
-            <p class="subtitle">Building Connections, Creating Memories</p>
+    <section class="bg-primary h-[50vh] flex items-center justify-center text-center text-white mt-[60px]">
+        <div class="max-w-2xl px-5">
+            <h1 class="text-4xl md:text-5xl mb-5 font-volkhov font-bold">Our Story</h1>
+            <p class="text-xl opacity-90">Building Connections, Creating Memories</p>
         </div>
     </section>
 
     <!-- Mission Section -->
-    <section class="mission">
-        <div class="container">
-            <div class="mission-content">
-                <h2>Our Mission</h2>
-                <p>SocialLoop was born from a simple idea: making it easier for people to connect in real life. We believe that the best experiences come from genuine human connections and shared adventures.</p>
-                <div class="stats">
-                    <div class="stat-item">
-                        <h3>50K+</h3>
-                        <p>Active Users</p>
+    <section class="py-20 bg-white">
+        <div class="max-w-6xl mx-auto px-5">
+            <div class="text-center">
+                <h2 class="text-2xl md:text-4xl text-[#2c2c54] mb-8 font-bold">Our Mission</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-12">SocialLoop was born from a simple idea: making it easier for people to connect in real life. We believe that the best experiences come from genuine human connections and shared adventures.</p>
+                
+                <div class="flex flex-col md:flex-row justify-center gap-16 mt-12">
+                    <div class="text-center">
+                        <h3 class="text-3xl md:text-4xl text-primary font-bold mb-2">50K+</h3>
+                        <p class="text-gray-600">Active Users</p>
                     </div>
-                    <div class="stat-item">
-                        <h3>100+</h3>
-                        <p>Cities</p>
+                    <div class="text-center">
+                        <h3 class="text-3xl md:text-4xl text-primary font-bold mb-2">100+</h3>
+                        <p class="text-gray-600">Cities</p>
                     </div>
-                    <div class="stat-item">
-                        <h3>10K+</h3>
-                        <p>Events Created</p>
+                    <div class="text-center">
+                        <h3 class="text-3xl md:text-4xl text-primary font-bold mb-2">10K+</h3>
+                        <p class="text-gray-600">Events Created</p>
                     </div>
                 </div>
             </div>
@@ -78,136 +38,78 @@
     </section>
 
     <!-- Values Section -->
-    <section class="values">
-        <div class="container">
-            <h2>Our Values</h2>
-            <div class="values-grid">
-                <div class="value-card">
-                    <div class="icon" style="background-color: #FFD666;">
-                        <img src="../navigations/aboutUsImg/safetyFirsty.png" alt="Safety icon">
+    <section class="py-20 bg-gray-100">
+        <div class="max-w-6xl mx-auto px-5">
+            <h2 class="text-2xl md:text-4xl text-[#2c2c54] mb-12 font-bold text-center">Our Values</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10">
+                <div class="bg-white p-8 rounded-2xl text-center shadow-md hover:transform hover:-translate-y-2 transition-transform duration-300">
+                    <div class="w-20 h-20 bg-[#FFD666] rounded-full flex items-center justify-center mx-auto mb-5">
+                        <img src="../navigations/aboutUsImg/safetyFirsty.png" alt="Safety icon" class="w-12 h-12 object-contain">
                     </div>
-                    <h3>Safety First</h3>
-                    <p>We prioritize user safety through verification systems and community guidelines.</p>
+                    <h3 class="text-xl font-bold text-[#2c2c54] mb-4">Safety First</h3>
+                    <p class="text-gray-600 leading-relaxed">We prioritize user safety through verification systems and community guidelines.</p>
                 </div>
-                <div class="value-card">
-                    <div class="icon" style="background-color: #FF8666;">
-                        <img src="../navigations/aboutUsImg/communityIcon.png" alt="Community icon">
+                
+                <div class="bg-white p-8 rounded-2xl text-center shadow-md hover:transform hover:-translate-y-2 transition-transform duration-300">
+                    <div class="w-20 h-20 bg-[#FF8666] rounded-full flex items-center justify-center mx-auto mb-5">
+                        <img src="../navigations/aboutUsImg/communityIcon.png" alt="Community icon" class="w-12 h-12 object-contain">
                     </div>
-                    <h3>Community-Driven</h3>
-                    <p>Our platform thrives on the diverse perspectives and experiences of our users.</p>
+                    <h3 class="text-xl font-bold text-[#2c2c54] mb-4">Community-Driven</h3>
+                    <p class="text-gray-600 leading-relaxed">Our platform thrives on the diverse perspectives and experiences of our users.</p>
                 </div>
-                <div class="value-card">
-                    <div class="icon" style="background-color: #66B8FF;">
-                        <img src="../navigations/aboutUsImg/Innovationicon.png" alt="Innovation icon">
+                
+                <div class="bg-white p-8 rounded-2xl text-center shadow-md hover:transform hover:-translate-y-2 transition-transform duration-300">
+                    <div class="w-20 h-20 bg-[#66B8FF] rounded-full flex items-center justify-center mx-auto mb-5">
+                        <img src="../navigations/aboutUsImg/Innovationicon.png" alt="Innovation icon" class="w-12 h-12 object-contain">
                     </div>
-                    <h3>Innovation</h3>
-                    <p>We continuously evolve our platform to enhance user experience and connection.</p>
+                    <h3 class="text-xl font-bold text-[#2c2c54] mb-4">Innovation</h3>
+                    <p class="text-gray-600 leading-relaxed">We continuously evolve our platform to enhance user experience and connection.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Team Section -->
-    <section class="team">
-        <div class="container">
-            <h2>Meet Our Team</h2>
-            <div class="team-grid">
-                <div class="team-member">
-                    <img src="../navigations/aboutUsImg/founder.jpg" alt="Team member">
-                    <h3>Ahmet Alperen Aksoy</h3>
-                    <p>Founder & CEO</p>
+    <section class="py-20 bg-white">
+        <div class="max-w-6xl mx-auto px-5">
+            <h2 class="text-2xl md:text-4xl text-[#2c2c54] mb-12 font-bold text-center">Meet Our Team</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-10 justify-items-center">
+                <div class="text-center">
+                    <img src="../navigations/aboutUsImg/founder.jpg" alt="Team member" class="w-48 h-48 rounded-full mx-auto mb-5 object-cover">
+                    <h3 class="text-xl font-bold text-[#2c2c54] mb-2">Ahmet Alperen Aksoy</h3>
+                    <p class="text-gray-600">Founder & CEO</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Contact Section -->
-    <section class="contact">
-        <div class="container">
-            <h2>Get in Touch</h2>
-            <div class="contact-content">
-                <div class="contact-info">
-                    <h3>We'd love to hear from you</h3>
-                    <p>Have questions or suggestions? Reach out to us!</p>
-                    <div class="contact-details">
-                        <p>📧 contact@socialloop.com</p>
-                        <p>📍 Istanbul, Turkey</p>
+    <section class="py-20 bg-gray-100">
+        <div class="max-w-6xl mx-auto px-5">
+            <h2 class="text-2xl md:text-4xl text-[#2c2c54] mb-12 font-bold text-center">Get in Touch</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+                <div>
+                    <h3 class="text-2xl font-bold text-[#2c2c54] mb-4">We'd love to hear from you</h3>
+                    <p class="text-lg text-gray-600 mb-8">Have questions or suggestions? Reach out to us!</p>
+                    <div class="space-y-3">
+                        <p class="text-lg text-gray-700">📧 contact@socialloop.com</p>
+                        <p class="text-lg text-gray-700">📍 Istanbul, Turkey</p>
                     </div>
                 </div>
-                <form class="contact-form">
-                    <input type="text" placeholder="Your Name" required>
-                    <input type="email" placeholder="Your Email" required>
-                    <textarea placeholder="Your Message" required></textarea>
-                    <button type="submit">Send Message</button>
+                
+                <form class="space-y-4">
+                    <input type="text" placeholder="Your Name" required class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                    <input type="email" placeholder="Your Email" required class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                    <textarea placeholder="Your Message" required class="w-full p-4 border border-gray-300 rounded-lg h-40 resize-y focus:outline-none focus:ring-2 focus:ring-primary"></textarea>
+                    <button type="submit" class="py-4 px-8 bg-primary text-white font-semibold rounded-lg hover:bg-[#d88619] transition-colors duration-300">Send Message</button>
                 </form>
             </div>
         </div>
     </section>
 
-    <!-- Footer (Same as main page) -->
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-section logo-section">
-                <h2>SocialLoop</h2>
-                <p>Connects people for spontaneous hangouts and real-time socializing.</p>
-            </div>
-            <div class="footer-section">
-                <h3>Company</h3>
-                <ul>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Careers</a></li>
-                    <li><a href="#">Support Us</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Contact</h3>
-                <ul>
-                    <li><a href="#">Help/FAQ</a></li>
-                    <li><a href="#">Emergency</a></li>
-                    <li><a href="#">Safety</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>More</h3>
-                <ul>
-                    <li><a href="#">Report</a></li>
-                    <li><a href="#">Tips for Socializing</a></li>
-                    <li><a href="#">Advices for Improve</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>All rights reserved @socialloop.co</p>
-        </div>
-    </footer>
+    <?=loadWelcomePartial('footerWl'); ?>
 </body>
-<script>
-    let lastScroll = 0;
- let isScrollingDown = false;
- 
- window.addEventListener('scroll', () => {
-     const currentScroll = window.pageYOffset;
-     const header = document.querySelector('header');
-     const scrollThreshold = 100; // Adjust this value as needed
-     
-     if (currentScroll <= 0) {
-         header.classList.remove('hide');
-         return;
-     }
- 
-     if (currentScroll > scrollThreshold) { // Only start hiding after threshold
-         if (currentScroll > lastScroll && !isScrollingDown) {
-             // Scrolling down
-             header.classList.add('hide');
-             isScrollingDown = true;
-         } else if (currentScroll < lastScroll && isScrollingDown) {
-             // Scrolling up
-             header.classList.remove('hide');
-             isScrollingDown = false;
-         }
-     }
-     lastScroll = currentScroll;
- });
-</script>
-
 </html>

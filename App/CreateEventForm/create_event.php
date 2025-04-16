@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../../helpers.php';
-
+loadPartial('scripts');
 // Set page variables
 $pageTitle = 'Dashboard';
 $activePage = 'events';
@@ -251,32 +251,6 @@ $isLoggedIn = true;
                     reader.readAsDataURL(this.files[0]);
                 }
             });
-        });
-
-        // Scroll behavior for header
-        let lastScroll = 0;
-        let isScrollingDown = false;
-        
-        window.addEventListener('scroll', () => {
-            const currentScroll = window.pageYOffset;
-            const header = document.querySelector('header');
-            const scrollThreshold = 100;
-            
-            if (currentScroll <= 0) {
-                header.classList.remove('hide');
-                return;
-            }
-        
-            if (currentScroll > scrollThreshold) {
-                if (currentScroll > lastScroll && !isScrollingDown) {
-                    header.classList.add('hide');
-                    isScrollingDown = true;
-                } else if (currentScroll < lastScroll && isScrollingDown) {
-                    header.classList.remove('hide');
-                    isScrollingDown = false;
-                }
-            }
-            lastScroll = currentScroll;
         });
 
         // Form validation

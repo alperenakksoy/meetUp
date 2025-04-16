@@ -1,125 +1,90 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>How It Works - SocialLoop</title>
-    <link rel="stylesheet" href="/public/css/howItWorks.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Volkhov:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-</head>
-<body>
-    <header>
-        <div class="header-container">
-            <div class="header-left">
-                <div class="logo"></div>
-                <nav>
-                    <ul>
-                        <li><a href="../homepage/index.html">Home</a></li>
-                        <li><a href="/App/navigations/aboutUs.html">About Us</a></li>
-                        <li><a href="/App/navigations/supportUs.html">Support Us</a></li>
-                        <li><a href="/App/navigations/Safety/safety.html">Safety</a></li>
-                        <li><a href="/App/navigations/howitworks.html">How It Works</a></li>
-                    </ul>
-                </nav>
-            </div>
-            <div class="header-right">
-                <select>
-                    <option>English</option>
-                    <option>Turkish</option>
-                    <option>Spanish</option>
-                    <option>Arabic</option>
-                    <option>French</option>
-                    <option>Italian</option>
-                    <option>German</option>
-                </select>
-                <a href="../loginScreen/loginIndex.html">
-                <button class="login-btn">Log in</button>
-              </a>
-              <a href="../registerScreen/registerIndex.html">
-                <button class="signup-btn">Sign Up</button>
-            </a>
-            </div>
-        </div>
-    </header>
+<?php require_once __DIR__ . '/../../helpers.php'; ?>
+<?=loadWelcomePartial('headWl'); ?>
+<body class="font-sans text-gray-800">
+    <!-- Header -->
+    <?=loadWelcomePartial('headerWl'); ?>
+
     <!-- Hero Section -->
-    <section class="how-hero">
-        <div class="how-hero-content">
-            <h1>How SocialLoop Works</h1>
-            <p class="subtitle">Your Guide to Making Meaningful Connections</p>
+    <section class="bg-primary h-[50vh] flex items-center justify-center text-center text-white mt-[60px]">
+        <div class="max-w-2xl px-5">
+            <h1 class="text-4xl md:text-5xl mb-5 font-volkhov font-bold">How SocialLoop Works</h1>
+            <p class="text-xl opacity-90">Your Guide to Making Meaningful Connections</p>
         </div>
     </section>
 
     <!-- Steps Section -->
-    <section class="steps">
-        <div class="container">
-            <div class="step-card">
-                <div class="step-number">1</div>
-                <div class="step-content">
-                    <h2>Create Your Profile</h2>
-                    <p>Sign up and create your profile with your interests, photos, and a bio. Verify your account to build trust in the community.</p>
-                    <div class="step-features">
-                        <div class="feature">
-                            <img src="../navigations/howItWorksImg/profileIcon.png" alt="Profile icon">
-                            <span>Add your interests</span>
-                        </div>
-                        <div class="feature">
-                            <img src="../navigations/howItWorksImg/verify.png" alt="Verify icon">
-                            <span>Verify your account</span>
-                        </div>
-                        <div class="feature">
-                            <img src="../navigations/howItWorksImg/bio.png" alt="Bio icon">
-                            <span>Write your bio</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="step-card">
-                <div class="step-number">2</div>
-                <div class="step-content">
-                    <h2>Create or Join Events</h2>
-                    <p>Host your own events or join existing ones. From coffee meetups to city explorations, find activities that interest you.</p>
-                    <div class="event-types">
-                        <span class="event-tag">☕ Coffee</span>
-                        <span class="event-tag">🍺 Drinks</span>
-                        <span class="event-tag">🏛️ Museums</span>
-                        <span class="event-tag">🚶 Walking</span>
-                        <span class="event-tag">⚽ Sports</span>
-                        <span class="event-tag">🍽️ Dining</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="step-card">
-                <div class="step-number">3</div>
-                <div class="step-content">
-                    <h2>Connect & Chat</h2>
-                    <p>Request to join events or approve join requests for your events. Chat with participants and share contact details safely.</p>
-                    <div class="connect-options">
-                        <div class="connect-item">
-                            <img src="../navigations/howItWorksImg/chatt.png" alt="Chat icon">
-                            <span>Group Chat</span>
-                        </div>
-                        <div class="connect-item">
-                            <img src="../navigations/howItWorksImg/social.png" alt="Social icon">
-                            <span>Social Links</span>
+    <section class="py-20 bg-white">
+        <div class="max-w-6xl mx-auto px-5">
+            <div class="mb-16 flex flex-col gap-16">
+                <!-- Step 1 -->
+                <div class="flex flex-col md:flex-row gap-10 p-10 bg-white rounded-2xl shadow-lg">
+                    <div class="text-6xl font-volkhov font-bold text-primary min-w-[80px] flex items-center justify-center">1</div>
+                    <div class="flex-1">
+                        <h2 class="text-2xl md:text-3xl text-[#2c2c54] mb-6 font-bold">Create Your Profile</h2>
+                        <p class="text-lg text-gray-600 mb-8">Sign up and create your profile with your interests, photos, and a bio. Verify your account to build trust in the community.</p>
+                        <div class="flex flex-wrap gap-8">
+                            <div class="flex items-center gap-3">
+                                <img src="../navigations/howItWorksImg/profileIcon.png" alt="Profile icon" class="w-6 h-6 object-contain">
+                                <span class="text-gray-700">Add your interests</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <img src="../navigations/howItWorksImg/verify.png" alt="Verify icon" class="w-6 h-6 object-contain">
+                                <span class="text-gray-700">Verify your account</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <img src="../navigations/howItWorksImg/bio.png" alt="Bio icon" class="w-6 h-6 object-contain">
+                                <span class="text-gray-700">Write your bio</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="step-card">
-                <div class="step-number">4</div>
-                <div class="step-content">
-                    <h2>Meet & Review</h2>
-                    <p>Meet in person and enjoy the event! Afterward, leave reviews and comments about your experience and make lasting connections.</p>
-                    <div class="review-preview">
-                        <div class="rating">
-                            ⭐⭐⭐⭐⭐
+                <!-- Step 2 -->
+                <div class="flex flex-col md:flex-row gap-10 p-10 bg-white rounded-2xl shadow-lg">
+                    <div class="text-6xl font-volkhov font-bold text-primary min-w-[80px] flex items-center justify-center">2</div>
+                    <div class="flex-1">
+                        <h2 class="text-2xl md:text-3xl text-[#2c2c54] mb-6 font-bold">Create or Join Events</h2>
+                        <p class="text-lg text-gray-600 mb-8">Host your own events or join existing ones. From coffee meetups to city explorations, find activities that interest you.</p>
+                        <div class="flex flex-wrap gap-4">
+                            <span class="px-4 py-2 bg-gray-100 rounded-full text-gray-700">☕ Coffee</span>
+                            <span class="px-4 py-2 bg-gray-100 rounded-full text-gray-700">🍺 Drinks</span>
+                            <span class="px-4 py-2 bg-gray-100 rounded-full text-gray-700">🏛️ Museums</span>
+                            <span class="px-4 py-2 bg-gray-100 rounded-full text-gray-700">🚶 Walking</span>
+                            <span class="px-4 py-2 bg-gray-100 rounded-full text-gray-700">⚽ Sports</span>
+                            <span class="px-4 py-2 bg-gray-100 rounded-full text-gray-700">🍽️ Dining</span>
                         </div>
-                        <p class="review-text">"Great experience! Made new friends and explored the city together!"</p>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="flex flex-col md:flex-row gap-10 p-10 bg-white rounded-2xl shadow-lg">
+                    <div class="text-6xl font-volkhov font-bold text-primary min-w-[80px] flex items-center justify-center">3</div>
+                    <div class="flex-1">
+                        <h2 class="text-2xl md:text-3xl text-[#2c2c54] mb-6 font-bold">Connect & Chat</h2>
+                        <p class="text-lg text-gray-600 mb-8">Request to join events or approve join requests for your events. Chat with participants and share contact details safely.</p>
+                        <div class="flex gap-10">
+                            <div class="flex items-center gap-3">
+                                <img src="../navigations/howItWorksImg/chatt.png" alt="Chat icon" class="w-6 h-6 object-contain">
+                                <span class="text-gray-700">Group Chat</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <img src="../navigations/howItWorksImg/social.png" alt="Social icon" class="w-6 h-6 object-contain">
+                                <span class="text-gray-700">Social Links</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="flex flex-col md:flex-row gap-10 p-10 bg-white rounded-2xl shadow-lg">
+                    <div class="text-6xl font-volkhov font-bold text-primary min-w-[80px] flex items-center justify-center">4</div>
+                    <div class="flex-1">
+                        <h2 class="text-2xl md:text-3xl text-[#2c2c54] mb-6 font-bold">Meet & Review</h2>
+                        <p class="text-lg text-gray-600 mb-8">Meet in person and enjoy the event! Afterward, leave reviews and comments about your experience and make lasting connections.</p>
+                        <div class="bg-gray-50 p-5 rounded-lg">
+                            <div class="text-primary text-xl mb-2">⭐⭐⭐⭐⭐</div>
+                            <p class="italic text-gray-600">"Great experience! Made new friends and explored the city together!"</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -127,104 +92,46 @@
     </section>
 
     <!-- Safety Tips -->
-    <section class="safety-tips">
-        <div class="container">
-            <h2>Safety First</h2>
-            <div class="tips-grid">
-                <div class="tip-card">
-                    <img src="../navigations/howItWorksImg/location.png" alt="Public place icon">
-                    <h3>Meet in Public Places</h3>
-                    <p>Always meet in well-lit, public locations with plenty of people around.</p>
+    <section class="py-20 bg-gray-100">
+        <div class="max-w-6xl mx-auto px-5">
+            <h2 class="text-2xl md:text-4xl text-[#2c2c54] mb-12 font-bold text-center">Safety First</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-2xl text-center shadow-md">
+                    <img src="../navigations/howItWorksImg/location.png" alt="Public place icon" class="w-8 h-8 object-contain mx-auto mb-5">
+                    <h3 class="text-xl font-bold text-[#2c2c54] mb-4">Meet in Public Places</h3>
+                    <p class="text-gray-600">Always meet in well-lit, public locations with plenty of people around.</p>
                 </div>
-                <div class="tip-card">
-                    <img src="../navigations/howItWorksImg/share.png" alt="Share icon">
-                    <h3>Share Your Plans</h3>
-                    <p>Let friends or family know about your meetup plans and location.</p>
+                
+                <div class="bg-white p-8 rounded-2xl text-center shadow-md">
+                    <img src="../navigations/howItWorksImg/share.png" alt="Share icon" class="w-8 h-8 object-contain mx-auto mb-5">
+                    <h3 class="text-xl font-bold text-[#2c2c54] mb-4">Share Your Plans</h3>
+                    <p class="text-gray-600">Let friends or family know about your meetup plans and location.</p>
                 </div>
-                <div class="tip-card">
-                    <img src="../navigations/howItWorksImg/reportIcon.png" alt="Report icon">
-                    <h3>Report Concerns</h3>
-                    <p>Use our reporting system if you encounter any suspicious behavior.</p>
+                
+                <div class="bg-white p-8 rounded-2xl text-center shadow-md">
+                    <img src="../navigations/howItWorksImg/reportIcon.png" alt="Report icon" class="w-8 h-8 object-contain mx-auto mb-5">
+                    <h3 class="text-xl font-bold text-[#2c2c54] mb-4">Report Concerns</h3>
+                    <p class="text-gray-600">Use our reporting system if you encounter any suspicious behavior.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- CTA Section -->
-    <section class="cta">
-        <div class="container">
-            <h2>Ready to Start Your Journey?</h2>
-            <p>Join our community and start making meaningful connections today!</p>
-            <div class="cta-buttons">
-                <button class="primary-btn">Create Account</button>
-                <button class="secondary-btn">Browse Events</button>
+    <section class="py-20 bg-white text-center">
+        <div class="max-w-6xl mx-auto px-5">
+            <h2 class="text-2xl md:text-4xl text-[#2c2c54] mb-5 font-bold">Ready to Start Your Journey?</h2>
+            <p class="text-lg text-gray-600 mb-8">Join our community and start making meaningful connections today!</p>
+            <div class="flex flex-wrap gap-6 justify-center">
+                <button class="py-4 px-8 bg-primary text-white text-lg font-bold rounded-lg hover:bg-[#d88619] transition-colors duration-300">Create Account</button>
+                <button class="py-4 px-8 bg-transparent text-primary border-2 border-primary text-lg font-bold rounded-lg hover:bg-primary hover:text-white transition-colors duration-300">Browse Events</button>
             </div>
         </div>
     </section>
 
-    <!-- Footer (Same as main page) -->
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-section logo-section">
-                <h2>SocialLoop</h2>
-                <p>Connects people for spontaneous hangouts and real-time socializing.</p>
-            </div>
-            <div class="footer-section">
-                <h3>Company</h3>
-                <ul>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Careers</a></li>
-                    <li><a href="#">Support Us</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Contact</h3>
-                <ul>
-                    <li><a href="#">Help/FAQ</a></li>
-                    <li><a href="#">Emergency</a></li>
-                    <li><a href="#">Safety</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>More</h3>
-                <ul>
-                    <li><a href="#">Report</a></li>
-                    <li><a href="#">Tips for Socializing</a></li>
-                    <li><a href="#">Advices for Improve</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>All rights reserved @socialloop.co</p>
-        </div>
-    </footer>
+    <!-- Footer -->
+    <?=loadWelcomePartial('footerWl'); ?>
+
 </body>
-<script>
-    let lastScroll = 0;
- let isScrollingDown = false;
- 
- window.addEventListener('scroll', () => {
-     const currentScroll = window.pageYOffset;
-     const header = document.querySelector('header');
-     const scrollThreshold = 100; // Adjust this value as needed
-     
-     if (currentScroll <= 0) {
-         header.classList.remove('hide');
-         return;
-     }
- 
-     if (currentScroll > scrollThreshold) { // Only start hiding after threshold
-         if (currentScroll > lastScroll && !isScrollingDown) {
-             // Scrolling down
-             header.classList.add('hide');
-             isScrollingDown = true;
-         } else if (currentScroll < lastScroll && isScrollingDown) {
-             // Scrolling up
-             header.classList.remove('hide');
-             isScrollingDown = false;
-         }
-     }
-     lastScroll = currentScroll;
- });
-</script>
 </html>

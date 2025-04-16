@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/../../helpers.php';
-require_once __DIR__ . '/../../script_helpers.php';
 
 // Set page variables
 $pageTitle = 'Dashboard';
