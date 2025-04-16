@@ -6,159 +6,162 @@ $pageTitle = 'Dashboard';
 $activePage = 'events';
 $isLoggedIn = true;
 ?>
-<?php loadPartial('head') ?>
 
-<body>
-<?php loadPartial('header') ?>
+<?php loadPartial('head') ?>
+<body class="bg-gray-50 pt-20">
+    <!-- Header Navigation -->
+    <?php loadPartial('header') ?>
+
     <!-- Main Content -->
-    <div class="container">
-        <div class="profile-section">
+    <div class="container mx-auto px-4 py-6">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
             <!-- Left Sidebar - Profile Information -->
-            <div class="profile-sidebar">
-                <div class="profile-info">
-                    <div class="profile-photo-container">
-                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile Picture" class="profile-photo">
+            <div class="lg:col-span-1 bg-white rounded-lg shadow-sm p-6 lg:sticky lg:top-24 self-start">
+                <div class="text-center pb-6 border-b border-gray-100">
+                    <div class="mx-auto mb-4">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile Picture" class="w-36 h-36 rounded-full border-4 border-gray-100 mx-auto">
                     </div>
-                    <h1 class="profile-name">Ahmet Alperen Aksoy</h1>
-                    <div class="profile-location">
-                        <i class="fas fa-map-marker-alt"></i>
-                        Istanbul, Turkey
+                    <h1 class="text-xl font-bold font-volkhov text-gray-800 mb-1">Ahmet Alperen Aksoy</h1>
+                    <div class="flex items-center justify-center text-gray-600 mb-4">
+                        <i class="fas fa-map-marker-alt text-orange-500 mr-1"></i>
+                        <span>Istanbul, Turkey</span>
                     </div>
-                    <div class="profile-stats">
-                        <div class="stat-item">
-                            <div class="stat-value">24</div>
-                            <div class="stat-label">Events</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value">156</div>
-                            <div class="stat-label">Friends</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value">42</div>
-                            <div class="stat-label">References</div>
-                        </div>
+                    <div class="flex justify-between mb-4">
+                   
+                   <a href="">  <div class="text-center hover:scale-110 transition-transform duration-200 cursor-pointer">
+                            <div class="text-xl font-bold text-orange-500">24</div>
+                            <div class="text-xs text-gray-500">Events</div>
+                        </div></a>
+                        
+                    <a href="/App/userHome/friends.php"> <div class="text-center hover:scale-110 transition-transform duration-200 cursor-pointer">
+                            <div class="text-xl font-bold text-orange-500">156</div>
+                            <div class="text-xs text-gray-500">Friends</div>
+                        </div></a>
+                        
+                    <a href="/../App/profileNavs/references.php"> <div class="text-center hover:scale-110 transition-transform duration-200 cursor-pointer">
+                            <div class="text-xl font-bold text-orange-500">42</div>
+                            <div class="text-xs text-gray-500">References</div>
+                        </div></a>
                     </div>
-                    <div class="profile-actions">
-                        <a href="edit_profile.php" class="btn btn-primary edit-profile-btn">
-                            <i class="fas fa-edit"></i> Edit Profile
-                        </a>
-                    </div>
+                    <a href="/../App/profileNavs/edit_profile.php" class="block w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-md text-center transition-colors">
+                        <i class="fas fa-edit mr-1"></i> Edit Profile
+                    </a>
                 </div>
 
                 <!-- User Details -->
-                <div class="user-details">
-                    <div class="detail-section">
-                        <h3>Personal Information</h3>
-                        <div class="detail-item">
-                            <i class="fas fa-user"></i>
+                <div class="mt-6">
+                    <div class="mb-4">
+                        <h3 class="text-gray-800 font-medium border-b border-gray-100 pb-2 mb-3 font-volkhov">Personal Information</h3>
+                        <div class="flex items-center text-sm text-gray-600 mb-2">
+                            <i class="fas fa-user text-orange-500 w-5 mr-2"></i>
                             <span>27 years old</span>
                         </div>
-                        <div class="detail-item">
-                            <i class="fas fa-briefcase"></i>
+                        <div class="flex items-center text-sm text-gray-600 mb-2">
+                            <i class="fas fa-briefcase text-orange-500 w-5 mr-2"></i>
                             <span>Software Engineer</span>
                         </div>
-                        <div class="detail-item">
-                            <i class="fas fa-clock"></i>
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-clock text-orange-500 w-5 mr-2"></i>
                             <span>Member since January 2023</span>
                         </div>
                     </div>
 
-                    <div class="detail-section">
-                        <h3>About Me</h3>
-                        <p>Software engineering graduate passionate about travel, technology, and bringing people together. Created SocialLoop as my B.Sc. thesis project to help travelers connect with locals through shared experiences.</p>
+                    <div class="mb-4">
+                        <h3 class="text-gray-800 font-medium border-b border-gray-100 pb-2 mb-3 font-volkhov">About Me</h3>
+                        <p class="text-sm text-gray-600">Software engineering graduate passionate about travel, technology, and bringing people together. Created SocialLoop as my B.Sc. thesis project to help travelers connect with locals through shared experiences.</p>
                     </div>
 
-                    <div class="detail-section">
-                        <h3>Interests</h3>
-                        <div class="interests-list">
-                            <span class="interest-tag">Travel</span>
-                            <span class="interest-tag">Photography</span>
-                            <span class="interest-tag">Hiking</span>
-                            <span class="interest-tag">Coffee</span>
-                            <span class="interest-tag">Technology</span>
-                            <span class="interest-tag">Languages</span>
-                            <span class="interest-tag">Culture</span>
+                    <div>
+                        <h3 class="text-gray-800 font-medium border-b border-gray-100 pb-2 mb-3 font-volkhov">Interests</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-gray-100 hover:bg-orange-500 hover:text-white text-gray-800 px-3 py-1 rounded-full text-xs transition-colors cursor-pointer">Travel</span>
+                            <span class="bg-gray-100 hover:bg-orange-500 hover:text-white text-gray-800 px-3 py-1 rounded-full text-xs transition-colors cursor-pointer">Photography</span>
+                            <span class="bg-gray-100 hover:bg-orange-500 hover:text-white text-gray-800 px-3 py-1 rounded-full text-xs transition-colors cursor-pointer">Hiking</span>
+                            <span class="bg-gray-100 hover:bg-orange-500 hover:text-white text-gray-800 px-3 py-1 rounded-full text-xs transition-colors cursor-pointer">Coffee</span>
+                            <span class="bg-gray-100 hover:bg-orange-500 hover:text-white text-gray-800 px-3 py-1 rounded-full text-xs transition-colors cursor-pointer">Technology</span>
+                            <span class="bg-gray-100 hover:bg-orange-500 hover:text-white text-gray-800 px-3 py-1 rounded-full text-xs transition-colors cursor-pointer">Languages</span>
+                            <span class="bg-gray-100 hover:bg-orange-500 hover:text-white text-gray-800 px-3 py-1 rounded-full text-xs transition-colors cursor-pointer">Culture</span>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Main Content Area -->
-            <div class="profile-main">
+            <div class="lg:col-span-3 space-y-6">
                 <!-- Events Section -->
-                <div class="content-box">
-                    <div class="content-header">
-                        <h2><i class="fas fa-calendar-alt"></i> My Events</h2>
-                        <a href="events.php" class="view-all">View All</a>
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <div class="flex justify-between items-center p-4 border-b border-gray-100">
+                        <h2 class="text-lg font-semibold text-gray-800 font-volkhov"><i class="fas fa-calendar-alt text-orange-500 mr-2"></i> My Events</h2>
+                        <a href="events.php" class="text-orange-500 hover:text-orange-600 text-sm hover:underline">View All</a>
                     </div>
-                    <div class="events-list">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
                         <!-- Event 1 -->
-                        <div class="event-card">
-                            <img src="/api/placeholder/400/150" alt="Event Image" class="event-image">
-                            <div class="event-details">
-                                <h3 class="event-title">Coffee & Cultural Exchange</h3>
-                                <div class="event-date">
-                                    <i class="far fa-calendar"></i>
-                                    April 5, 2025 • 15:00
+                        <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
+                            <img src="/api/placeholder/400/150" alt="Event Image" class="w-full h-36 object-cover">
+                            <div class="p-3">
+                                <h3 class="font-semibold text-gray-800 mb-2">Coffee & Cultural Exchange</h3>
+                                <div class="flex items-center text-sm text-gray-600 mb-1">
+                                    <i class="far fa-calendar text-orange-500 w-4 mr-2"></i>
+                                    <span>April 5, 2025 • 15:00</span>
                                 </div>
-                                <div class="event-location">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    Kadıköy, Istanbul
+                                <div class="flex items-center text-sm text-gray-600 mb-3">
+                                    <i class="fas fa-map-marker-alt text-orange-500 w-4 mr-2"></i>
+                                    <span>Kadıköy, Istanbul</span>
                                 </div>
-                                <div class="event-participants">
-                                    <div class="participant-avatars">
-                                        <img src="https://randomuser.me/api/portraits/women/63.jpg" alt="Participant" class="participant-avatar">
-                                        <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Participant" class="participant-avatar">
-                                        <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Participant" class="participant-avatar">
+                                <div class="flex items-center">
+                                    <div class="flex -space-x-2">
+                                        <img src="https://randomuser.me/api/portraits/women/63.jpg" alt="Participant" class="w-7 h-7 rounded-full border-2 border-white">
+                                        <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Participant" class="w-7 h-7 rounded-full border-2 border-white">
+                                        <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Participant" class="w-7 h-7 rounded-full border-2 border-white">
                                     </div>
-                                    <span class="participant-count">+4 going</span>
+                                    <span class="text-xs text-gray-500 ml-2">+4 going</span>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Event 2 -->
-                        <div class="event-card">
-                            <img src="/api/placeholder/400/150" alt="Event Image" class="event-image">
-                            <div class="event-details">
-                                <h3 class="event-title">Hiking Belgrad Forest</h3>
-                                <div class="event-date">
-                                    <i class="far fa-calendar"></i>
-                                    April 8, 2025 • 09:00
+                        <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
+                            <img src="/api/placeholder/400/150" alt="Event Image" class="w-full h-36 object-cover">
+                            <div class="p-3">
+                                <h3 class="font-semibold text-gray-800 mb-2">Hiking Belgrad Forest</h3>
+                                <div class="flex items-center text-sm text-gray-600 mb-1">
+                                    <i class="far fa-calendar text-orange-500 w-4 mr-2"></i>
+                                    <span>April 8, 2025 • 09:00</span>
                                 </div>
-                                <div class="event-location">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    Belgrad Forest, Istanbul
+                                <div class="flex items-center text-sm text-gray-600 mb-3">
+                                    <i class="fas fa-map-marker-alt text-orange-500 w-4 mr-2"></i>
+                                    <span>Belgrad Forest, Istanbul</span>
                                 </div>
-                                <div class="event-participants">
-                                    <div class="participant-avatars">
-                                        <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Participant" class="participant-avatar">
-                                        <img src="https://randomuser.me/api/portraits/women/29.jpg" alt="Participant" class="participant-avatar">
+                                <div class="flex items-center">
+                                    <div class="flex -space-x-2">
+                                        <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Participant" class="w-7 h-7 rounded-full border-2 border-white">
+                                        <img src="https://randomuser.me/api/portraits/women/29.jpg" alt="Participant" class="w-7 h-7 rounded-full border-2 border-white">
                                     </div>
-                                    <span class="participant-count">+6 going</span>
+                                    <span class="text-xs text-gray-500 ml-2">+6 going</span>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Event 3 -->
-                        <div class="event-card">
-                            <img src="/api/placeholder/400/150" alt="Event Image" class="event-image">
-                            <div class="event-details">
-                                <h3 class="event-title">Historical Istanbul Tour</h3>
-                                <div class="event-date">
-                                    <i class="far fa-calendar"></i>
-                                    April 10, 2025 • 10:00
+                        <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
+                            <img src="/api/placeholder/400/150" alt="Event Image" class="w-full h-36 object-cover">
+                            <div class="p-3">
+                                <h3 class="font-semibold text-gray-800 mb-2">Historical Istanbul Tour</h3>
+                                <div class="flex items-center text-sm text-gray-600 mb-1">
+                                    <i class="far fa-calendar text-orange-500 w-4 mr-2"></i>
+                                    <span>April 10, 2025 • 10:00</span>
                                 </div>
-                                <div class="event-location">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    Sultanahmet, Istanbul
+                                <div class="flex items-center text-sm text-gray-600 mb-3">
+                                    <i class="fas fa-map-marker-alt text-orange-500 w-4 mr-2"></i>
+                                    <span>Sultanahmet, Istanbul</span>
                                 </div>
-                                <div class="event-participants">
-                                    <div class="participant-avatars">
-                                        <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="Participant" class="participant-avatar">
-                                        <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="Participant" class="participant-avatar">
-                                        <img src="https://randomuser.me/api/portraits/women/55.jpg" alt="Participant" class="participant-avatar">
+                                <div class="flex items-center">
+                                    <div class="flex -space-x-2">
+                                        <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="Participant" class="w-7 h-7 rounded-full border-2 border-white">
+                                        <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="Participant" class="w-7 h-7 rounded-full border-2 border-white">
+                                        <img src="https://randomuser.me/api/portraits/women/55.jpg" alt="Participant" class="w-7 h-7 rounded-full border-2 border-white">
                                     </div>
-                                    <span class="participant-count">+8 going</span>
+                                    <span class="text-xs text-gray-500 ml-2">+8 going</span>
                                 </div>
                             </div>
                         </div>
@@ -166,115 +169,115 @@ $isLoggedIn = true;
                 </div>
 
                 <!-- Friends Section -->
-                <div class="content-box">
-                    <div class="content-header">
-                        <h2><i class="fas fa-users"></i> Friends</h2>
-                        <a href="friends.php" class="view-all">View All</a>
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <div class="flex justify-between items-center p-4 border-b border-gray-100">
+                        <h2 class="text-lg font-semibold text-gray-800 font-volkhov"><i class="fas fa-users text-orange-500 mr-2"></i> Friends</h2>
+                        <a href="friends.php" class="text-orange-500 hover:text-orange-600 text-sm hover:underline">View All</a>
                     </div>
-                    <div class="friends-grid">
+                    <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-4 p-4">
                         <!-- Friend 1 -->
-                        <div class="friend-item">
-                            <img src="https://randomuser.me/api/portraits/women/63.jpg" alt="Friend" class="friend-avatar">
-                            <div class="friend-name">Emma</div>
+                        <div class="text-center cursor-pointer hover:-translate-y-1 transition-transform">
+                            <img src="https://randomuser.me/api/portraits/women/63.jpg" alt="Friend" class="w-14 h-14 rounded-full border-2 border-gray-100 mx-auto mb-1">
+                            <div class="text-xs text-gray-800 truncate">Emma</div>
                         </div>
                         <!-- Friend 2 -->
-                        <div class="friend-item">
-                            <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Friend" class="friend-avatar">
-                            <div class="friend-name">David</div>
+                        <div class="text-center cursor-pointer hover:-translate-y-1 transition-transform">
+                            <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Friend" class="w-14 h-14 rounded-full border-2 border-gray-100 mx-auto mb-1">
+                            <div class="text-xs text-gray-800 truncate">David</div>
                         </div>
                         <!-- Friend 3 -->
-                        <div class="friend-item">
-                            <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Friend" class="friend-avatar">
-                            <div class="friend-name">Sophie</div>
+                        <div class="text-center cursor-pointer hover:-translate-y-1 transition-transform">
+                            <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Friend" class="w-14 h-14 rounded-full border-2 border-gray-100 mx-auto mb-1">
+                            <div class="text-xs text-gray-800 truncate">Sophie</div>
                         </div>
                         <!-- Friend 4 -->
-                        <div class="friend-item">
-                            <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Friend" class="friend-avatar">
-                            <div class="friend-name">Michael</div>
+                        <div class="text-center cursor-pointer hover:-translate-y-1 transition-transform">
+                            <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Friend" class="w-14 h-14 rounded-full border-2 border-gray-100 mx-auto mb-1">
+                            <div class="text-xs text-gray-800 truncate">Michael</div>
                         </div>
                         <!-- Friend 5 -->
-                        <div class="friend-item">
-                            <img src="https://randomuser.me/api/portraits/women/29.jpg" alt="Friend" class="friend-avatar">
-                            <div class="friend-name">Olivia</div>
+                        <div class="text-center cursor-pointer hover:-translate-y-1 transition-transform">
+                            <img src="https://randomuser.me/api/portraits/women/29.jpg" alt="Friend" class="w-14 h-14 rounded-full border-2 border-gray-100 mx-auto mb-1">
+                            <div class="text-xs text-gray-800 truncate">Olivia</div>
                         </div>
                         <!-- Friend 6 -->
-                        <div class="friend-item">
-                            <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="Friend" class="friend-avatar">
-                            <div class="friend-name">James</div>
+                        <div class="text-center cursor-pointer hover:-translate-y-1 transition-transform">
+                            <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="Friend" class="w-14 h-14 rounded-full border-2 border-gray-100 mx-auto mb-1">
+                            <div class="text-xs text-gray-800 truncate">James</div>
                         </div>
                         <!-- Friend 7 -->
-                        <div class="friend-item">
-                            <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="Friend" class="friend-avatar">
-                            <div class="friend-name">Isabella</div>
+                        <div class="text-center cursor-pointer hover:-translate-y-1 transition-transform">
+                            <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="Friend" class="w-14 h-14 rounded-full border-2 border-gray-100 mx-auto mb-1">
+                            <div class="text-xs text-gray-800 truncate">Isabella</div>
                         </div>
                         <!-- Friend 8 -->
-                        <div class="friend-item">
-                            <img src="https://randomuser.me/api/portraits/men/42.jpg" alt="Friend" class="friend-avatar">
-                            <div class="friend-name">Alexander</div>
+                        <div class="text-center cursor-pointer hover:-translate-y-1 transition-transform">
+                            <img src="https://randomuser.me/api/portraits/men/42.jpg" alt="Friend" class="w-14 h-14 rounded-full border-2 border-gray-100 mx-auto mb-1">
+                            <div class="text-xs text-gray-800 truncate">Alexander</div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Messages Section -->
-                <div class="content-box">
-                    <div class="content-header">
-                        <h2><i class="fas fa-envelope"></i> Messages</h2>
-                        <a href="messages.php" class="view-all">View All</a>
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <div class="flex justify-between items-center p-4 border-b border-gray-100">
+                        <h2 class="text-lg font-semibold text-gray-800 font-volkhov"><i class="fas fa-envelope text-orange-500 mr-2"></i> Messages</h2>
+                        <a href="messages.php" class="text-orange-500 hover:text-orange-600 text-sm hover:underline">View All</a>
                     </div>
-                    <div class="message-list">
+                    <div>
                         <!-- Message 1 - Unread -->
-                        <div class="message-item unread">
-                            <img src="https://randomuser.me/api/portraits/women/63.jpg" alt="Contact" class="message-avatar">
-                            <div class="message-content">
-                                <div class="message-header">
-                                    <span class="message-sender">Emma Johnson</span>
-                                    <span class="message-time">10:30 AM</span>
+                        <div class="flex p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer bg-orange-50">
+                            <img src="https://randomuser.me/api/portraits/women/63.jpg" alt="Contact" class="w-12 h-12 rounded-full border-2 border-gray-100 mr-3">
+                            <div class="flex-1 min-w-0">
+                                <div class="flex justify-between mb-1">
+                                    <span class="font-semibold text-gray-800 truncate">Emma Johnson</span>
+                                    <span class="text-xs text-gray-500">10:30 AM</span>
                                 </div>
-                                <div class="message-preview">
-                                    <span class="message-status"></span>
+                                <div class="text-sm text-gray-800 truncate">
+                                    <span class="inline-block w-2 h-2 bg-orange-500 rounded-full mr-1"></span>
                                     Hey Ahmet! I'm excited about the coffee meetup tomorrow. Is it still at Kadıköy?
                                 </div>
                             </div>
                         </div>
 
                         <!-- Message 2 - Unread -->
-                        <div class="message-item unread">
-                            <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Contact" class="message-avatar">
-                            <div class="message-content">
-                                <div class="message-header">
-                                    <span class="message-sender">David Wilson</span>
-                                    <span class="message-time">Yesterday</span>
+                        <div class="flex p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer bg-orange-50">
+                            <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Contact" class="w-12 h-12 rounded-full border-2 border-gray-100 mr-3">
+                            <div class="flex-1 min-w-0">
+                                <div class="flex justify-between mb-1">
+                                    <span class="font-semibold text-gray-800 truncate">David Wilson</span>
+                                    <span class="text-xs text-gray-500">Yesterday</span>
                                 </div>
-                                <div class="message-preview">
-                                    <span class="message-status"></span>
+                                <div class="text-sm text-gray-800 truncate">
+                                    <span class="inline-block w-2 h-2 bg-orange-500 rounded-full mr-1"></span>
                                     I found this amazing hidden spot in Balat that would be perfect for a photo walk event!
                                 </div>
                             </div>
                         </div>
 
                         <!-- Message 3 -->
-                        <div class="message-item">
-                            <img src="https://randomuser.me/api/portraits/women/29.jpg" alt="Contact" class="message-avatar">
-                            <div class="message-content">
-                                <div class="message-header">
-                                    <span class="message-sender">Olivia Martinez</span>
-                                    <span class="message-time">2 days ago</span>
+                        <div class="flex p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer">
+                            <img src="https://randomuser.me/api/portraits/women/29.jpg" alt="Contact" class="w-12 h-12 rounded-full border-2 border-gray-100 mr-3">
+                            <div class="flex-1 min-w-0">
+                                <div class="flex justify-between mb-1">
+                                    <span class="font-semibold text-gray-800 truncate">Olivia Martinez</span>
+                                    <span class="text-xs text-gray-500">2 days ago</span>
                                 </div>
-                                <div class="message-preview">
+                                <div class="text-sm text-gray-600 truncate">
                                     Thanks for showing me around Istanbul last week! I had such a great time exploring...
                                 </div>
                             </div>
                         </div>
 
                         <!-- Message 4 -->
-                        <div class="message-item">
-                            <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Contact" class="message-avatar">
-                            <div class="message-content">
-                                <div class="message-header">
-                                    <span class="message-sender">Michael Brown</span>
-                                    <span class="message-time">3 days ago</span>
+                        <div class="flex p-4 hover:bg-gray-50 cursor-pointer">
+                            <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Contact" class="w-12 h-12 rounded-full border-2 border-gray-100 mr-3">
+                            <div class="flex-1 min-w-0">
+                                <div class="flex justify-between mb-1">
+                                    <span class="font-semibold text-gray-800 truncate">Michael Brown</span>
+                                    <span class="text-xs text-gray-500">3 days ago</span>
                                 </div>
-                                <div class="message-preview">
+                                <div class="text-sm text-gray-600 truncate">
                                     Hey! Are you going to join the hiking trip this weekend? We need to confirm the numbers.
                                 </div>
                             </div>
@@ -284,42 +287,40 @@ $isLoggedIn = true;
             </div>
         </div>
     </div>
-
-    <script>
+    <?=loadPartial(name: 'footer'); ?>
+<script>
         // Add click events to cards for navigation
         document.addEventListener('DOMContentLoaded', function() {
             // Make event cards clickable to navigate to event details
-            const eventCards = document.querySelectorAll('.event-card');
+            const eventCards = document.querySelectorAll('.bg-white.rounded-lg.shadow-sm');
             eventCards.forEach(card => {
                 card.addEventListener('click', function() {
-                    const eventTitle = this.querySelector('.event-title').textContent;
+                    const eventTitle = this.querySelector('h3').textContent;
                     // In a real app, this would use an event ID instead of title
                     window.location.href = `event_details.php?title=${encodeURIComponent(eventTitle)}`;
                 });
             });
             
             // Make friend items clickable to navigate to friend profiles
-            const friendItems = document.querySelectorAll('.friend-item');
+            const friendItems = document.querySelectorAll('.text-center.cursor-pointer');
             friendItems.forEach(item => {
                 item.addEventListener('click', function() {
-                    const friendName = this.querySelector('.friend-name').textContent;
+                    const friendName = this.querySelector('div').textContent;
                     // In a real app, this would use a user ID instead of name
                     window.location.href = `profile.php?name=${encodeURIComponent(friendName)}`;
                 });
             });
             
             // Make message items clickable to open conversation
-            const messageItems = document.querySelectorAll('.message-item');
+            const messageItems = document.querySelectorAll('.flex.p-4');
             messageItems.forEach(item => {
                 item.addEventListener('click', function() {
-                    const senderName = this.querySelector('.message-sender').textContent;
+                    const senderName = this.querySelector('.font-semibold').textContent;
                     // In a real app, this would use a conversation ID
                     window.location.href = `messages.php?conversation=${encodeURIComponent(senderName)}`;
                 });
             });
         });
     </script>
-    <?=loadPartial('scripts'); ?>
-    <?=loadPartial(name: 'footer'); ?>
 </body>
 </html>

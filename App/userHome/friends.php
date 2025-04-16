@@ -46,7 +46,6 @@ $isLoggedIn = true;
                     <option value="">Sort By</option>
                     <option value="recent">Recently Added</option>
                     <option value="name">Name (A-Z)</option>
-                    <option value="mutual">Mutual Friends</option>
                 </select>
             </div>
         </div>
@@ -54,12 +53,9 @@ $isLoggedIn = true;
         <!-- Tabs -->
         <div class="flex border-b mb-6">
             <div class="px-4 py-2 text-orange-600 border-b-2 border-orange-600 cursor-pointer">All Friends</div>
-            <div class="px-4 py-2 text-gray-600 hover:text-orange-600 cursor-pointer">Recently Added</div>
-            <div class="px-4 py-2 text-gray-600 hover:text-orange-600 cursor-pointer">Birthday This Month</div>
             <div class="px-4 py-2 text-gray-600 hover:text-orange-600 cursor-pointer flex items-center">
                 Requests <span class="ml-2 bg-red-500 text-white text-xs rounded-full px-2 py-1">3</span>
             </div>
-            <div class="px-4 py-2 text-gray-600 hover:text-orange-600 cursor-pointer">Suggestions</div>
         </div>
 
         <!-- Friend Requests Section -->
@@ -337,66 +333,6 @@ $isLoggedIn = true;
             </div>
         </div>
 
-        <!-- Suggestions Section -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-            <div class="mb-4">
-                <h2 class="text-xl font-semibold text-gray-800">People You May Know</h2>
-            </div>
-            <div class="space-y-4">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <img src="https://randomuser.me/api/portraits/women/85.jpg" alt="Suggestion" class="w-12 h-12 rounded-full mr-4">
-                        <div>
-                            <div class="font-semibold text-gray-800">Laura Williams</div>
-                            <div class="text-sm text-gray-600">Photographer from London</div>
-                            <div class="text-sm text-gray-600"><i class="fas fa-user-friends mr-1"></i> Friends with Emma Johnson and 2 others</div>
-                        </div>
-                    </div>
-                    <button class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 flex items-center">
-                        <i class="fas fa-user-plus mr-2"></i> Add
-                    </button>
-                </div>
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <img src="https://randomuser.me/api/portraits/men/92.jpg" alt="Suggestion" class="w-12 h-12 rounded-full mr-4">
-                        <div>
-                            <div class="font-semibold text-gray-800">Daniel Lee</div>
-                            <div class="text-sm text-gray-600">Travel blogger from Vancouver</div>
-                            <div class="text-sm text-gray-600"><i class="fas fa-user-friends mr-1"></i> Friends with Michael Brown and 3 others</div>
-                        </div>
-                    </div>
-                    <button class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 flex items-center">
-                        <i class="fas fa-user-plus mr-2"></i> Add
-                    </button>
-                </div>
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <img src="https://randomuser.me/api/portraits/women/55.jpg" alt="Suggestion" class="w-12 h-12 rounded-full mr-4">
-                        <div>
-                            <div class="font-semibold text-gray-800">Sofia Rodriguez</div>
-                            <div class="text-sm text-gray-600">Language teacher from Madrid</div>
-                            <div class="text-sm text-gray-600"><i class="fas fa-user-friends mr-1"></i> Friends with Olivia Martinez</div>
-                        </div>
-                    </div>
-                    <button class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 flex items-center">
-                        <i class="fas fa-user-plus mr-2"></i> Add
-                    </button>
-                </div>
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <img src="https://randomuser.me/api/portraits/men/67.jpg" alt="Suggestion" class="w-12 h-12 rounded-full mr-4">
-                        <div>
-                            <div class="font-semibold text-gray-800">Ahmed Hassan</div>
-                            <div class="text-sm text-gray-600">Tour guide from Cairo</div>
-                            <div class="text-sm text-gray-600"><i class="fas fa-user-friends mr-1"></i> Friends with James Taylor and 1 other</div>
-                        </div>
-                    </div>
-                    <button class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 flex items-center">
-                        <i class="fas fa-user-plus mr-2"></i> Add
-                    </button>
-                </div>
-            </div>
-        </div>
     </div>
 </body>
 </html>

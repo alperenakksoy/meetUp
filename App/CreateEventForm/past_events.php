@@ -15,7 +15,7 @@ $isLoggedIn = true;
     <!-- Page Header -->
     <div class="flex justify-between items-center mb-5">
         <h1 class="font-volkhov text-4xl text-[#2c3e50]">Past Events Archive</h1>
-        <a href="event_management.php" class="bg-[#f5a623] text-white py-2.5 px-5 rounded flex items-center gap-2 hover:bg-[#e5941d] transition-colors">
+        <a href="event_management.php" class="bg-orange-500 text-white py-2.5 px-5 rounded flex items-center gap-2 hover:bg-orange-400 transition-colors">
             <i class="fas fa-arrow-left"></i> Back to Management
         </a>
     </div>

@@ -31,8 +31,6 @@ $isLoggedIn = true;
                 <div class="flex border-b border-gray-200">
                     <div class="px-4 py-3 bg-orange-500 text-white font-medium cursor-pointer">Upcoming Events</div>
                     <div class="px-4 py-3 text-gray-600 hover:bg-gray-100 font-medium cursor-pointer">Past Events</div>
-                    <div class="px-4 py-3 text-gray-600 hover:bg-gray-100 font-medium cursor-pointer">Drafts</div>
-                    <div class="px-4 py-3 text-gray-600 hover:bg-gray-100 font-medium cursor-pointer">Cancelled</div>
                 </div>
 
                 <!-- Tab Content: Upcoming Events -->

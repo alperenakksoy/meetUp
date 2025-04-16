@@ -11,7 +11,7 @@ $isLoggedIn = true;
 <body>
 <?php loadPartial('header') ?>
 <!-- Main Content -->
-<div class="container mx-auto px-4 py-6 max-w-7xl mt-15">
+<div class="container mx-auto px-4 py-6 max-w-7xl mt-20">
     <!-- Page Header -->
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold text-gray-800">Events</h1>
@@ -22,12 +22,9 @@ $isLoggedIn = true;
 
     <!-- Event Categories -->
     <div class="flex space-x-2 mb-6 overflow-x-auto pb-2">
-        <div class="bg-orange-500 text-white px-4 py-2 rounded-full text-sm font-medium cursor-pointer">All Events</div>
-        <div class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-full text-sm font-medium cursor-pointer">My Events</div>
-        <div class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-full text-sm font-medium cursor-pointer">Attending</div>
-        <div class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-full text-sm font-medium cursor-pointer">Saved</div>
-        <div class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-full text-sm font-medium cursor-pointer">Past Events</div>
-    </div>
+    <a href="App/CreateEventForm/all_events.php" class="bg-orange-500 text-white px-4 py-2 rounded-full text-sm font-medium cursor-pointer hover:bg-orange-600 inline-block">All Events</a>
+    <a href="App/CreateEventForm/attending.php" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-full text-sm font-medium cursor-pointer inline-block">Attending</a>
+    <a href="/App/CreateEventForm/past_events.php" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-full text-sm font-medium cursor-pointer inline-block">Past Events</a></div>
 
     <!-- Filters -->
     <div class="mb-6">
@@ -60,17 +57,7 @@ $isLoggedIn = true;
                 </select>
             </div>
         </div>
-        <div class="flex flex-wrap gap-2">
-            <div class="bg-orange-500 text-white px-3 py-1 rounded-full text-xs font-medium cursor-pointer">Popular</div>
-            <div class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-3 py-1 rounded-full text-xs font-medium cursor-pointer">This Week</div>
-            <div class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-3 py-1 rounded-full text-xs font-medium cursor-pointer">Weekends</div>
-            <div class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-3 py-1 rounded-full text-xs font-medium cursor-pointer">Free</div>
-            <div class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-3 py-1 rounded-full text-xs font-medium cursor-pointer">Morning</div>
-            <div class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-3 py-1 rounded-full text-xs font-medium cursor-pointer">Evening</div>
-            <div class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-3 py-1 rounded-full text-xs font-medium cursor-pointer">Beginner Friendly</div>
-        </div>
-    </div>
-
+       
     <!-- Events Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         <!-- Event Card 1 -->

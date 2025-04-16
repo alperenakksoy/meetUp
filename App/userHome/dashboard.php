@@ -47,11 +47,8 @@ $isLoggedIn = true;
                 </a>
             </div>
             <div class="border-t border-gray-200 px-6 py-4">
-                <a href="userHome/profile.php" class="flex items-center py-2 text-gray-700 hover:text-orange-600">
+                <a href="/App/userHome/profile.php" class="flex items-center py-2 text-gray-700 hover:text-orange-600">
                     <i class="fas fa-user mr-3"></i> View My Profile
-                </a>
-                <a href="saved_events.php" class="flex items-center py-2 text-gray-700 hover:text-orange-600">
-                    <i class="fas fa-bookmark mr-3"></i> Saved Events
                 </a>
                 <a href="past_events.php" class="flex items-center py-2 text-gray-700 hover:text-orange-600">
                     <i class="fas fa-history mr-3"></i> Past Events
