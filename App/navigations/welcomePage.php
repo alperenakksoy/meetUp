@@ -1,5 +1,5 @@
 <?php require_once __DIR__ . '/../../helpers.php'; ?>
-<?=loadWelcomePartial('headWl'); ?>s
+<?=loadWelcomePartial('headWl'); ?>
   <style>
     /* Custom styles that are hard to replicate with Tailwind */
     .header-hide {
@@ -317,33 +317,6 @@
 
 
   <script>
-    // Header scroll behavior
-    let lastScroll = 0;
-    let isScrollingDown = false;
-    
-    window.addEventListener('scroll', () => {
-        const currentScroll = window.pageYOffset;
-        const header = document.querySelector('header');
-        const scrollThreshold = 100;
-        
-        if (currentScroll <= 0) {
-            header.classList.remove('header-hide');
-            return;
-        }
-    
-        if (currentScroll > scrollThreshold) {
-            if (currentScroll > lastScroll && !isScrollingDown) {
-                // Scrolling down
-                header.classList.add('header-hide');
-                isScrollingDown = true;
-            } else if (currentScroll < lastScroll && isScrollingDown) {
-                // Scrolling up
-                header.classList.remove('header-hide');
-                isScrollingDown = false;
-            }
-        }
-        lastScroll = currentScroll;
-    });
 
     // Popup functionality
     document.addEventListener('DOMContentLoaded', function() {

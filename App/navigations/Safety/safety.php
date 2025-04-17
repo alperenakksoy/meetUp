@@ -17,7 +17,7 @@
     <section class="py-20 bg-white">
         <div class="max-w-6xl mx-auto px-5">
             <div class="text-center">
-                <h2 class="text-2xl md:text-4xl text-[#2c2c54] mb-8 font-bold">Safety Guidelines</h2>
+                <a href="/App/navigations/Safety/community_guideliness.php"><h2 class="text-2xl md:text-4xl text-[#2c2c54] mb-8 font-bold hover:scale-110 transition-transform duration-200 cursor-pointer">Safety Guidelines</h2></a>
                 <p class="text-lg text-gray-600 max-w-2xl mx-auto">We are committed to fostering a safe and respectful community. Please follow these guidelines:</p>
                 <ul class="list-none mt-8">
                     <li class="text-lg text-gray-600 mb-5">✔️ Respect others' boundaries and privacy.</li>
@@ -33,9 +33,9 @@
     <!-- Reporting Section -->
     <section class="py-20 bg-gray-100">
         <div class="max-w-6xl mx-auto px-5 text-center">
-            <h2 class="text-2xl md:text-4xl text-[#2c2c54] mb-5 font-bold">Report an Issue</h2>
+            <h2 class="text-2xl md:text-4xl text-[#2c2c54] mb-5 font-bold ">Report an Issue</h2>
             <p class="text-lg text-gray-600 max-w-xl mx-auto mb-8">If you encounter a problem, let us know so we can take immediate action.</p>
-            <a href="report.php" class="inline-block px-8 py-4 bg-primary text-white text-lg font-bold rounded-lg transition-colors duration-300 hover:bg-[#e5941d]">Report Now</a>
+            <a href="report.php" class="inline-block px-8 py-4 bg-primary text-white text-lg font-bold rounded-lg transition-colors duration-300 hover:bg-[#e5941d] hover:scale-110 transition-transform duration-200 cursor-pointer">Report Now</a>
         </div>
     </section>
 

@@ -16,8 +16,8 @@
     <section class="py-20 bg-white">
         <div class="max-w-6xl mx-auto px-5">
             <div class="text-center">
-                <h2 class="text-2xl md:text-4xl text-[#2c2c54] mb-8 font-bold">Our Mission</h2>
-                <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-12">SocialLoop was born from a simple idea: making it easier for people to connect in real life. We believe that the best experiences come from genuine human connections and shared adventures.</p>
+                <h2 class="text-2xl md:text-4xl text-[#2c2c54] mb-8 font-bold ">Our Mission</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-12 hover:scale-110 transition-transform duration-200">SocialLoop was born from a simple idea: making it easier for people to connect in real life. We believe that the best experiences come from genuine human connections and shared adventures.</p>
                 
                 <div class="flex flex-col md:flex-row justify-center gap-16 mt-12">
                     <div class="text-center">
@@ -33,6 +33,8 @@
                         <p class="text-gray-600">Events Created</p>
                     </div>
                 </div>
+               <a href="/../App/navigations/Safety/community_guideliness.php"><h2 class="text-1xl md:text-2xl text-[#2c2c54] mt-10 font-bold hover:scale-110 transition-transform duration-200 cursor-pointer">Check Our Guidelines</h2></a>
+
             </div>
         </div>
     </section>
