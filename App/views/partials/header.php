@@ -13,7 +13,6 @@ loadPartial('scripts');
                     <li><a href="events.php" class="no-underline text-[#e5941d] text-base font-bold py-2.5 px-2.5 transition-all duration-300">Events</a></li>
                     <li><a href="messages.php" class="no-underline text-black text-base font-medium py-2.5 px-2.5 transition-all duration-300 hover:text-[#e5941d]">Messages</a></li>
                     <li><a href="/App/userHome/friends.php" class="no-underline text-black text-base font-medium py-2.5 px-2.5 transition-all duration-300 hover:text-[#e5941d]">Friends</a></li>
-                    <li><a href="../navigations/aboutUs.html" class="no-underline text-black text-base font-medium py-2.5 px-2.5 transition-all duration-300 hover:text-[#e5941d]">About Us</a></li>
                 </ul>
             </nav>
         </div>

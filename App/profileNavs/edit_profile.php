@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../helpers.php';
+require  '../../helpers.php';
 
 // Set page variables
 $pageTitle = 'Edit Profile';
@@ -26,11 +26,9 @@ $user = [
 <?php loadPartial('head') ?>
 
 <body class="bg-gray-50 pt-20">
-    <!-- Header Navigation -->
-    <?php loadPartial('header') ?>
 
     <!-- Main Content -->
-    <div class="container mx-auto px-4 py-8">
+    <div class="container mx-auto px-4">
         <div class="max-w-4xl mx-auto">
             <!-- Page Header -->
             <div class="flex items-center justify-between mb-6">

@@ -138,11 +138,8 @@ usort($references, function($a, $b) {
 <?php loadPartial('head') ?>
 
 <body class="bg-gray-50 pt-20">
-    <!-- Header Navigation -->
-    <?php loadPartial('header') ?>
-
     <!-- Main Content -->
-    <div class="container mx-auto px-4 py-8">
+    <div class="container mx-auto px-4 ">
         <div class="max-w-6xl mx-auto">
             <!-- Page Header -->
             <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">

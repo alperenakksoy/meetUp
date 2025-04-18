@@ -48,4 +48,45 @@
    }
   }
 
+ /** Inspect value(s)
+  * @param mixed $value 
+  * @return void
+  */
+  function inspect($value){
+   echo '<pre>';
+   var_dump($value);
+   echo '</pre>';
+  }
+/** Inspect value(s) and die
+ * @param mixed $value 
+ * @return void
+ */
+function inspectAndDie($value): void {
+   echo '<pre>';
+   var_dump($value);
+   echo '</pre>';
+   die(); // Ensure output is printed before termination
+}
 
+/**   
+ * Sanitize Data TO prevent instert a code in to the post method for security
+ * 
+ * @return string $dirty
+ * @return string
+ */
+
+ function sanitize($dirty){
+   return filter_var(trim($dirty),FILTER_SANITIZE_SPECIAL_CHARS);
+ }
+
+ /**
+  * Redirect to a given URL
+  * 
+  * @param string $url
+  * @return void
+  */
+
+  function redirect($url){
+   header("Location: {$url}");
+   exit;
+  }
