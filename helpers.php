@@ -15,7 +15,7 @@
   * @return void
   */
   function loadView($name,$data=[]){
-   $viewPath =  basePath("App/views/{$name}.view.php");
+   $viewPath =  basePath("App/views/listings/{$name}.view.php");
 
    if(file_exists($viewPath)){
       extract($data); // allows us to access data

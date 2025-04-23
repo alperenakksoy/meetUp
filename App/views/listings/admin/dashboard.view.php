@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../helpers.php';
+require_once dirname(__DIR__, 4) . '/helpers.php';
 
 // Check if user is admin - in a real application, you would verify admin credentials
 // For now, setting a hardcoded variable

@@ -1,4 +1,3 @@
-<?php require_once __DIR__ . '/../helpers.php'; ?>
 <?=loadWelcomePartial('headWl'); ?>
 <body class="bg-lightbg min-h-screen flex flex-col items-center pt-20">
     <!-- Header -->
