@@ -1,5 +1,4 @@
 <?php
-require_once __DIR__ . '/../../helpers.php';
 loadPartial('scripts');
 // Set page variables
 $pageTitle = 'Dashboard';

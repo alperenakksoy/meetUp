@@ -23,7 +23,8 @@
    } else {
       echo "view '{$name} not found!'";
    }
-  }
+  } 
+  
 
   /**
  * Load a partial

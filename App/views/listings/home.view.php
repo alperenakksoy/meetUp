@@ -1,7 +1,4 @@
 <?php
-require_once __DIR__ . '/../../helpers.php';
-
-
 // Set page variables
 $pageTitle = 'Dashboard';
 $activePage = 'home';
@@ -42,7 +39,7 @@ $isLoggedIn = true;
                         <div class="text-sm text-gray-500">Rating</div>
                     </div>
                 </div>
-                <a href="create_event.php" class="block mt-6 bg-orange-600 hover:bg-orange-700 text-white text-center py-2 px-4 rounded-lg transition duration-200">
+                <a href="/listings/create" class="block mt-6 bg-orange-600 hover:bg-orange-700 text-white text-center py-2 px-4 rounded-lg transition duration-200">
                     <i class="fas fa-plus mr-2"></i> Create New Event
                 </a>
             </div>
