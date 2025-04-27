@@ -105,7 +105,7 @@ class Router {
                 
                 if ($match) {
                     // Found a matching route - instantiate controller and call method
-                    $controller = 'App\\Controllers\\' . $route['controller'];
+                    $controller = 'App\\controllers\\' . $route['controller'];
                     $controllerMethod = $route['controllerMethod'];
                     
                     $controllerInstance = new $controller();

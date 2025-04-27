@@ -1,0 +1,16 @@
+{
+    "name" : "alperenaksoy/socialloop",
+    "description": "Socilazing App",
+    "authors":[
+        {
+            "name":"Alperen Aksoy",
+            "email": "alperenaksoy611@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Framework\\":"Framework/",
+            "App\\":"App/"
+        }
+    }
+}
