@@ -1,17 +1,10 @@
 <?php
 session_start();
-
+require '../helpers.php';
 // Require the Composer autoloader
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Framework\Router;
-use Framework\Database;
-
-// Load configuration
-$config = require basePath('config/db.php');
-
-// Initialize database
-$db = new Database($config['database']);
 
 // Initialize router
 $router = new Router();
