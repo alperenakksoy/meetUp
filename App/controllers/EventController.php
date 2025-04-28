@@ -7,7 +7,8 @@ class EventController extends BaseController {
     protected $eventModel;
     
     public function __construct() {
-        $this->eventModel = new Event();
+        // $this->eventModel = new Event();
+        loadView('events/show');
     }
     
     public function index() {

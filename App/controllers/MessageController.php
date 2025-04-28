@@ -7,11 +7,12 @@ class MessageController extends BaseController {
     protected $messageModel;
     
     public function __construct() {
-        $this->messageModel = new Message();
+        // $this->messageModel = new Message();
+       
     }
-    
     public function index() {
         // Show all messages/conversations
+        loadView('messages/index');
     }
     
     public function send() {

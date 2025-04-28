@@ -6,9 +6,9 @@ use App\Models\User;
 class UserController extends BaseController {
     protected $userModel;
     
-    public function __construct() {
-        $this->userModel = new User();
-    }
+    // public function __construct() {
+    //     $this->userModel = new User();
+    // }
     
     public function profile($params) {
         // Show user profile
@@ -23,7 +23,7 @@ class UserController extends BaseController {
     }
     
     public function friends() {
-        // Show user's friends
+        loadView('users/friends');
     }
     
     public function references($params) {

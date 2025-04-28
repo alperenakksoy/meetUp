@@ -7,10 +7,10 @@
             "email": "alperenaksoy611@gmail.com"
         }
     ],
-    "autoload": {
-        "psr-4": {
-            "Framework\\":"Framework/",
-            "App\\":"App/"
-        }
+   "autoload": {
+    "psr-4": {
+        "Framework\\":"App/Framework/",
+        "App\\":"App/"
     }
+}
 }
