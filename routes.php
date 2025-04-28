@@ -22,11 +22,11 @@ $router->get('/users/references/{id}', 'UserController@references');
 $router->get('/events', 'EventController@index');
 $router->get('/events/create', 'EventController@create');
 $router->post('/events', 'EventController@store');
+$router->get('/events/past', 'EventController@pastEvents');
 $router->get('/events/{id}', 'EventController@show');
 $router->get('/events/edit/{id}', 'EventController@edit');
 $router->put('/events/{id}', 'EventController@update');
 $router->delete('/events/{id}', 'EventController@destroy');
-$router->get('/events/past', 'EventController@pastEvents');
 $router->get('/events/reviews/{id}', 'EventController@reviews');
 $router->get('/events/management', 'EventController@management');
 

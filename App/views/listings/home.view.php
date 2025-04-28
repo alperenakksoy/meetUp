@@ -39,15 +39,15 @@ $isLoggedIn = true;
                         <div class="text-sm text-gray-500">Rating</div>
                     </div>
                 </div>
-                <a href="/listings/create" class="block mt-6 bg-orange-600 hover:bg-orange-700 text-white text-center py-2 px-4 rounded-lg transition duration-200">
+                <a href="/events/create" class="block mt-6 bg-orange-600 hover:bg-orange-700 text-white text-center py-2 px-4 rounded-lg transition duration-200">
                     <i class="fas fa-plus mr-2"></i> Create New Event
                 </a>
             </div>
             <div class="border-t border-gray-200 px-6 py-4">
-                <a href="/App/userHome/profile.php" class="flex items-center py-2 text-gray-700 hover:text-orange-600">
+                <a href="/users/profile/{id}" class="flex items-center py-2 text-gray-700 hover:text-orange-600">
                     <i class="fas fa-user mr-3"></i> View My Profile
                 </a>
-                <a href="past_events.php" class="flex items-center py-2 text-gray-700 hover:text-orange-600">
+                <a href="/events/past" class="flex items-center py-2 text-gray-700 hover:text-orange-600">
                     <i class="fas fa-history mr-3"></i> Past Events
                 </a>
                 <a href="notifications.php" class="flex items-center py-2 text-gray-700 hover:text-orange-600">

@@ -1,5 +1,4 @@
 <?php
-require  '../../helpers.php';
 
 // Set page variables
 $pageTitle = 'Edit Profile';

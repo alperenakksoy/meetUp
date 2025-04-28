@@ -8,15 +8,16 @@ class EventController extends BaseController {
     
     public function __construct() {
         // $this->eventModel = new Event();
-        loadView('events/show');
+
     }
     
     public function index() {
-        // Show all events
+        loadView('events/index');
     }
     
     public function create() {
-        // Show event creation form
+        loadView('events/create');
+
     }
     
     public function store() {
@@ -24,7 +25,7 @@ class EventController extends BaseController {
     }
     
     public function show($params) {
-        // Show single event
+        loadView('events/show');
     }
     
     public function edit($params) {
@@ -40,7 +41,7 @@ class EventController extends BaseController {
     }
     
     public function pastEvents() {
-        // Show past events
+        loadView('events/past');
     }
     
     public function reviews($params) {

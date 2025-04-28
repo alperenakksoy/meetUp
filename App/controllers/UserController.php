@@ -11,7 +11,7 @@ class UserController extends BaseController {
     // }
     
     public function profile($params) {
-        // Show user profile
+        loadView('users/profile');
     }
     
     public function edit($params) {
@@ -27,6 +27,6 @@ class UserController extends BaseController {
     }
     
     public function references($params) {
-        // Show user's references
+        loadView('users/references');
     }
 }

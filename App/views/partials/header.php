@@ -30,7 +30,7 @@ loadPartial('scripts');
                 <div class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</div>
             </div>
             
-            <a href="/../../App/userHome/profile.php">
+            <a href="/users/profile/{id}">
                 <div class="profile-image hover:scale-110 transition-transform duration-200 cursor-pointer">
                     <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile Picture" class="w-9 h-9 rounded-full border-2 border-orange-500">
                 </div>

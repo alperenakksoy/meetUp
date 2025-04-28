@@ -1,5 +1,4 @@
 <?php
-require_once __DIR__ . '/../../helpers.php';
 
 // Set page variables
 $pageTitle = 'Dashboard';
@@ -28,17 +27,17 @@ $isLoggedIn = true;
                     </div>
                     <div class="flex justify-between mb-4">
                    
-                   <a href="">  <div class="text-center hover:scale-110 transition-transform duration-200 cursor-pointer">
+                   <a href="/events/past">  <div class="text-center hover:scale-110 transition-transform duration-200 cursor-pointer">
                             <div class="text-xl font-bold text-orange-500">24</div>
                             <div class="text-xs text-gray-500">Events</div>
                         </div></a>
                         
-                    <a href="/App/userHome/friends.php"> <div class="text-center hover:scale-110 transition-transform duration-200 cursor-pointer">
+                    <a href="/users/friends"> <div class="text-center hover:scale-110 transition-transform duration-200 cursor-pointer">
                             <div class="text-xl font-bold text-orange-500">156</div>
                             <div class="text-xs text-gray-500">Friends</div>
                         </div></a>
                         
-                    <a href="/../App/profileNavs/references.php"> <div class="text-center hover:scale-110 transition-transform duration-200 cursor-pointer">
+                    <a href="/users/references/{id}"> <div class="text-center hover:scale-110 transition-transform duration-200 cursor-pointer">
                             <div class="text-xl font-bold text-orange-500">42</div>
                             <div class="text-xs text-gray-500">References</div>
                         </div></a>
@@ -214,73 +213,6 @@ $isLoggedIn = true;
                         <div class="text-center cursor-pointer hover:-translate-y-1 transition-transform">
                             <img src="https://randomuser.me/api/portraits/men/42.jpg" alt="Friend" class="w-14 h-14 rounded-full border-2 border-gray-100 mx-auto mb-1">
                             <div class="text-xs text-gray-800 truncate">Alexander</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Messages Section -->
-                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-                    <div class="flex justify-between items-center p-4 border-b border-gray-100">
-                        <h2 class="text-lg font-semibold text-gray-800 font-volkhov"><i class="fas fa-envelope text-orange-500 mr-2"></i> Messages</h2>
-                        <a href="messages.php" class="text-orange-500 hover:text-orange-600 text-sm hover:underline">View All</a>
-                    </div>
-                    <div>
-                        <!-- Message 1 - Unread -->
-                        <div class="flex p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer bg-orange-50">
-                            <img src="https://randomuser.me/api/portraits/women/63.jpg" alt="Contact" class="w-12 h-12 rounded-full border-2 border-gray-100 mr-3">
-                            <div class="flex-1 min-w-0">
-                                <div class="flex justify-between mb-1">
-                                    <span class="font-semibold text-gray-800 truncate">Emma Johnson</span>
-                                    <span class="text-xs text-gray-500">10:30 AM</span>
-                                </div>
-                                <div class="text-sm text-gray-800 truncate">
-                                    <span class="inline-block w-2 h-2 bg-orange-500 rounded-full mr-1"></span>
-                                    Hey Ahmet! I'm excited about the coffee meetup tomorrow. Is it still at Kadıköy?
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Message 2 - Unread -->
-                        <div class="flex p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer bg-orange-50">
-                            <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Contact" class="w-12 h-12 rounded-full border-2 border-gray-100 mr-3">
-                            <div class="flex-1 min-w-0">
-                                <div class="flex justify-between mb-1">
-                                    <span class="font-semibold text-gray-800 truncate">David Wilson</span>
-                                    <span class="text-xs text-gray-500">Yesterday</span>
-                                </div>
-                                <div class="text-sm text-gray-800 truncate">
-                                    <span class="inline-block w-2 h-2 bg-orange-500 rounded-full mr-1"></span>
-                                    I found this amazing hidden spot in Balat that would be perfect for a photo walk event!
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Message 3 -->
-                        <div class="flex p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer">
-                            <img src="https://randomuser.me/api/portraits/women/29.jpg" alt="Contact" class="w-12 h-12 rounded-full border-2 border-gray-100 mr-3">
-                            <div class="flex-1 min-w-0">
-                                <div class="flex justify-between mb-1">
-                                    <span class="font-semibold text-gray-800 truncate">Olivia Martinez</span>
-                                    <span class="text-xs text-gray-500">2 days ago</span>
-                                </div>
-                                <div class="text-sm text-gray-600 truncate">
-                                    Thanks for showing me around Istanbul last week! I had such a great time exploring...
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Message 4 -->
-                        <div class="flex p-4 hover:bg-gray-50 cursor-pointer">
-                            <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Contact" class="w-12 h-12 rounded-full border-2 border-gray-100 mr-3">
-                            <div class="flex-1 min-w-0">
-                                <div class="flex justify-between mb-1">
-                                    <span class="font-semibold text-gray-800 truncate">Michael Brown</span>
-                                    <span class="text-xs text-gray-500">3 days ago</span>
-                                </div>
-                                <div class="text-sm text-gray-600 truncate">
-                                    Hey! Are you going to join the hiking trip this weekend? We need to confirm the numbers.
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>

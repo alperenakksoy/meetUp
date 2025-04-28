@@ -12,8 +12,8 @@ class MessageController extends BaseController {
     }
     public function index() {
         // Show all messages/conversations
-        loadView('messages/index');
-    }
+        loadView('messages/index'); 
+       }
     
     public function send() {
         // Process sending a message
