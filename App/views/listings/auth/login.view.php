@@ -28,13 +28,13 @@
                     <input type="checkbox" class="mr-0.5">
                     Remember me
                 </label>
-                <a href="../login_registerScreen/forgotpassword/forgot.php" class="text-black no-underline hover:underline">Forgot password?</a>
+                <a href="/forgot-password" class="text-black no-underline hover:underline">Forgot password?</a>
             </div>
 
             <button type="submit" id="loginBtn" class="w-full h-[45px] border-none outline-none rounded-3xl cursor-pointer text-base font-semibold">Login</button>
 
             <div class="register-link py-2.5 text-center">
-                <p>Don't have an account? <a href="../login_registerScreen/registerIndex.php" class="text-black no-underline font-semibold hover:underline"> Register</a></p>
+                <p>Don't have an account? <a href="/register" class="text-black no-underline font-semibold hover:underline"> Register</a></p>
             </div>
         </form>
     </div>

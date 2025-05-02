@@ -86,6 +86,7 @@ $isLoggedIn = true;
                 </div>
             </div>
 
+<<<<<<< HEAD
             <div class="mb-6">
                 <h3 class="text-lg font-semibold mb-4 pb-2 border-b border-gray-100">Rating</h3>
                 <div class="space-y-2">
@@ -112,6 +113,8 @@ $isLoggedIn = true;
                 </div>
             </div>
 
+=======
+>>>>>>> 3b2d076 (updated)
             <div class="flex gap-2">
                 <button class="bg-[#f5a623] text-white py-2 px-4 rounded flex-1 hover:bg-[#e5941d] transition-colors">Apply Filters</button>
                 <button class="bg-white text-gray-700 border border-gray-300 py-2 px-4 rounded flex-1 hover:bg-gray-100 transition-colors">Reset</button>
@@ -169,13 +172,13 @@ $isLoggedIn = true;
                         </div>
                         <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm mb-3">
                             <div class="flex items-center">
-                                <i class="fas fa-users text-[#f5a623] mr-1"></i> 18/25 Attended
+                                <i class="fas fa-users text-[#f5a623] mr-1"></i> <?=$event->attendee_count ?? 0?>/<?=$event->capacity ?? 25?> Attended
                             </div>
                             <div class="flex items-center">
-                                <i class="fas fa-comment text-[#f5a623] mr-1"></i> 12 Reviews
+                                <i class="fas fa-comment text-[#f5a623] mr-1"></i> <?=$event->review_count?> Reviews
                             </div>
                             <div class="flex items-center">
-                                <i class="fas fa-star text-[#f5a623] mr-1"></i> 4.8/5 Rating
+                                <i class="fas fa-star text-[#f5a623] mr-1"></i><?=number_format($event->average_rating ?? 0,1)?>/5 Rating
                             </div>
                         </div>
                     </div>

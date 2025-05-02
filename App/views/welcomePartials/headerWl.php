@@ -46,10 +46,10 @@ $languages = ['English', 'Turkish', 'Spanish', 'Arabic', 'French', 'Italian', 'G
                     <option><?php echo $language; ?></option>
                 <?php endforeach; ?>
             </select>
-            <a href="../../login_registerScreen/loginIndex.php">
+            <a href="/login">
                 <button class="py-1.5 px-4 rounded cursor-pointer font-bold transition-all duration-300 border border-black bg-white text-black hover:bg-primary hover:text-white hover:border-primary">Log in</button>
             </a>
-            <a href="../../login_registerScreen/registerIndex.php">
+            <a href="/register">
                 <button class="py-1.5 px-4 rounded cursor-pointer font-bold transition-all duration-300 bg-black text-white hover:bg-primary">Sign Up</button>
             </a>
         </div>

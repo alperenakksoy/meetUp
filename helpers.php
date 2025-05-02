@@ -91,20 +91,3 @@ function inspectAndDie($value): void {
    header("Location: {$url}");
    exit;
   }
-
-  /**
-   * Rewrite the date format in MONTH DAY, YEAR
-   * @param string $date
-   */
-  function reDate($date){
-   return date('F j, Y', strtotime($date));
-  }
-
-
-  /**
-   * Rewrite the TIME format in HOURS:MINUTE IN 24H FORMAT 15:00
-   * @param string $time
-   */
-  function reTime($time){
-   return date('H:i', strtotime($time));
-  }

@@ -23,7 +23,11 @@ class Event extends BaseModel {
     
     // Get past events
     public function getPastEvents($limit = 10, $offset = 0) {
-        $query = "SELECT e.*, u.first_name, u.last_name, u.profile_picture 
+        $query = "SELECT e.*, u.first_name, u.last_name, u.profile_picture,
+                (SELECT COUNT(*) FROM event_attendees WHERE event_id = e.event_id 
+                 AND status IN ('attending', 'approved')) as attendee_count,
+                (SELECT COUNT(*) FROM reviews WHERE event_id = e.event_id) as review_count,
+                (SELECT AVG(rating) FROM reviews WHERE event_id = e.event_id) as average_rating
                 FROM {$this->table} e
                 JOIN users u ON e.host_id = u.user_id
                 WHERE e.event_date < CURDATE() 
@@ -101,5 +105,24 @@ class Event extends BaseModel {
     public function updateEventStatusToPast() {
         $query = "UPDATE {$this->table} SET status = 'past' WHERE event_date < CURDATE() AND status = 'upcoming'";
         return $this->db->query($query);
+    }
+
+    // Get reviews for an event
+    public function getEventReviews($eventId) {
+        $query = "SELECT r.*, 
+                u_reviewer.first_name as reviewer_first_name, 
+                u_reviewer.last_name as reviewer_last_name,
+                u_reviewer.profile_picture as reviewer_profile_picture,
+                u_reviewer.city as reviewer_city,
+                u_reviewer.country as reviewer_country,
+                u_reviewed.first_name as reviewed_first_name,
+                u_reviewed.last_name as reviewed_last_name
+                FROM reviews r
+                JOIN users u_reviewer ON r.reviewer_id = u_reviewer.user_id
+                JOIN users u_reviewed ON r.reviewed_id = u_reviewed.user_id
+                WHERE r.event_id = :event_id
+                ORDER BY r.created_at DESC";
+        $params = ['event_id' => $eventId];
+        return $this->db->query($query, $params)->fetchAll();
     }
 }

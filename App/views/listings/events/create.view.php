@@ -1,4 +1,5 @@
 <?php
+
 loadPartial('scripts');
 // Set page variables
 $pageTitle = 'Dashboard';
@@ -17,7 +18,7 @@ $isLoggedIn = true;
         </div>
 
         <!-- Create Event Form -->
-        <form class="bg-white rounded-lg shadow p-8 mb-8" action="process_event.php" method="POST" enctype="multipart/form-data">
+        <form class="bg-white rounded-lg shadow p-8 mb-8" action="/events" method="POST" enctype="multipart/form-data">
             <!-- Basic Information Section -->
             <div class="mb-6">
                 <h3 class="text-lg font-semibold mb-4 pb-2.5 border-b border-gray-100 text-[#2c3e50]">Basic Information</h3>

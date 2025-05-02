@@ -2,6 +2,8 @@
 namespace App\Controllers;
 
 use App\Models\Event;
+use App\Models\EventTag;
+use App\Models\UserActivity;
 
 class EventController extends BaseController {
     protected $eventModel;
@@ -27,7 +29,7 @@ class EventController extends BaseController {
     }
     
     public function store() {
-        // Process event creation
+      
     }
     
     public function show($params) {
@@ -58,10 +60,37 @@ class EventController extends BaseController {
     }
     
     public function reviews($params) {
+<<<<<<< HEAD
         $event = $this->eventModel->getEventWithDetails($params['id']);
         loadView('events/reviews',[
             'event' => $event
         ]);
+=======
+        
+        $event = $this->eventModel->getEventWithDetails($params['id']);
+        $reviews = $this->eventModel->getEventReviews($params['id']);
+          // Calculate statistics
+    $totalReviews = count($reviews);
+    $averageRating = 0;
+    $ratingCounts = [1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
+    
+    if($totalReviews > 0) {
+        $totalRating = 0;
+        foreach($reviews as $review) {
+            $totalRating += $review->rating;
+            $ratingCounts[$review->rating]++;
+        }
+        $averageRating = $totalRating / $totalReviews;
+    }
+
+    loadView('events/reviews',[
+        'event' => $event,
+        'reviews'=> $reviews,
+        'totalReviews' => $totalReviews,
+        'averageRating' => $averageRating,
+        'ratingCounts' => $ratingCounts
+    ]);
+>>>>>>> 3b2d076 (updated)
     }
     
     public function management() {
