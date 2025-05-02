@@ -11,6 +11,7 @@ class BaseController {
         $this->db = new Database($config['database']);
     }
     
+    
     protected function requireAuth() {
         if (!isset($_SESSION['user_id'])) {
             redirect('/login');

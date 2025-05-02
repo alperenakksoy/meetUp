@@ -32,7 +32,7 @@ $user = [
             <!-- Page Header -->
             <div class="flex items-center justify-between mb-6">
                 <h1 class="text-2xl font-bold text-gray-800 font-volkhov">Edit Profile</h1>
-                <a href="/../App/userHome/profile.php" class="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded-lg transition-colors">
+                <a href="/users/profile/{id}" class="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded-lg transition-colors">
                     <i class="fas fa-arrow-left mr-2"></i> Back to Profile
                 </a>
             </div>

@@ -35,18 +35,31 @@ class Database {
      * @return PDOStatement
      * @throws PDOException
      */
-    public function query($query,$params = []){
-        try{
+    public function query($query, $params = []) {
+        try {
             $sth = $this->conn->prepare($query);
+            
             // Bind named params
-            foreach($params as $param=>$value){
-                $sth->bindValue(':'.$param,$value);
+            foreach($params as $param => $value) {
+                // Determine the parameter type
+                $type = PDO::PARAM_STR; // Default to string
+                if(is_int($value)) {
+                    $type = PDO::PARAM_INT;
+                } else if(is_bool($value)) {
+                    $type = PDO::PARAM_BOOL;
+                } else if(is_null($value)) {
+                    $type = PDO::PARAM_NULL;
+                }
+                
+                // Bind with the correct type
+                $sth->bindValue(":{$param}", $value, $type);
             }
+            
             $sth->execute();
             return $sth;
-            
-        }catch(PDOException $e){
+        } catch(PDOException $e) {
             throw new Exception("Query failed to execute {$e->getMessage()}");
         }
     }
+    
 }

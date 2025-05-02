@@ -6,15 +6,19 @@ class Event extends BaseModel {
     
     // Get upcoming events
     public function getUpcomingEvents($limit = 10) {
-        $query = "SELECT e.*, u.first_name, u.last_name, u.profile_picture 
-                FROM {$this->table} e
-                JOIN users u ON e.host_id = u.user_id
-                WHERE e.event_date >= CURDATE() 
-                AND e.status = 'upcoming'
-                ORDER BY e.event_date ASC
-                LIMIT :limit";
-        $params = ['limit' => $limit];
-        return $this->db->query($query, $params)->fetchAll();
+        $limit = (int)$limit;
+        
+        $query = "SELECT e.*, u.first_name, u.last_name, u.profile_picture,
+                  (SELECT COUNT(*) FROM event_attendees WHERE event_id = e.event_id 
+                   AND status IN ('attending', 'approved')) as attendee_count
+                  FROM {$this->table} e
+                  JOIN users u ON e.host_id = u.user_id
+                  WHERE e.event_date >= CURDATE() 
+                  AND e.status = 'upcoming'
+                  ORDER BY e.event_date ASC
+                  LIMIT {$limit}";
+        
+        return $this->db->query($query)->fetchAll();
     }
     
     // Get past events

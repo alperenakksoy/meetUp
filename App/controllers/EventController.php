@@ -7,12 +7,18 @@ class EventController extends BaseController {
     protected $eventModel;
     
     public function __construct() {
-        // $this->eventModel = new Event();
+        $this->eventModel = new Event();
 
     }
     
     public function index() {
-        loadView('events/index');
+        // Get upcoming events from the model
+        $events = $this->eventModel->getUpcomingEvents();
+        
+        // Load view and pass events data to it
+        loadView('events/index', [
+            'events' => $events
+        ]);
     }
     
     public function create() {
@@ -25,7 +31,11 @@ class EventController extends BaseController {
     }
     
     public function show($params) {
-        loadView('events/show');
+      $event = $this->eventModel->getEventWithDetails($params['id']);
+
+        loadView('events/show',[
+            'event' => $event
+        ]);
     }
     
     public function edit($params) {
@@ -41,11 +51,17 @@ class EventController extends BaseController {
     }
     
     public function pastEvents() {
-        loadView('events/past');
+        $events = $this->eventModel->getPastEvents();
+        loadView('events/past',[
+            'events' => $events
+        ]);
     }
     
     public function reviews($params) {
-        // Show event reviews
+        $event = $this->eventModel->getEventWithDetails($params['id']);
+        loadView('events/reviews',[
+            'event' => $event
+        ]);
     }
     
     public function management() {

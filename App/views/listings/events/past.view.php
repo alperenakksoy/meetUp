@@ -14,8 +14,8 @@ $isLoggedIn = true;
     <!-- Page Header -->
     <div class="flex justify-between items-center mb-5">
         <h1 class="font-volkhov text-4xl text-[#2c3e50]">Past Events Archive</h1>
-        <a href="event_management.php" class="bg-orange-500 text-white py-2.5 px-5 rounded flex items-center gap-2 hover:bg-orange-400 transition-colors">
-            <i class="fas fa-arrow-left"></i> Back to Management
+        <a href="/events" class="bg-orange-500 text-white py-2.5 px-5 rounded flex items-center gap-2 hover:bg-orange-400 transition-colors">
+            <i class="fas fa-arrow-left"></i> Back to Events
         </a>
     </div>
 
@@ -112,21 +112,6 @@ $isLoggedIn = true;
                 </div>
             </div>
 
-            <div class="mb-6">
-                <h3 class="text-lg font-semibold mb-4 pb-2 border-b border-gray-100">Popular Tags</h3>
-                <div class="flex flex-wrap gap-2">
-                    <div class="bg-gray-100 px-3 py-1 rounded-full text-sm cursor-pointer hover:bg-[#f5a623] hover:text-white transition-colors">Coffee</div>
-                    <div class="bg-gray-100 px-3 py-1 rounded-full text-sm cursor-pointer hover:bg-[#f5a623] hover:text-white transition-colors">Cultural</div>
-                    <div class="bg-gray-100 px-3 py-1 rounded-full text-sm cursor-pointer hover:bg-[#f5a623] hover:text-white transition-colors">Hiking</div>
-                    <div class="bg-gray-100 px-3 py-1 rounded-full text-sm cursor-pointer hover:bg-[#f5a623] hover:text-white transition-colors">Language</div>
-                    <div class="bg-gray-100 px-3 py-1 rounded-full text-sm cursor-pointer hover:bg-[#f5a623] hover:text-white transition-colors">Food</div>
-                    <div class="bg-gray-100 px-3 py-1 rounded-full text-sm cursor-pointer hover:bg-[#f5a623] hover:text-white transition-colors">Music</div>
-                    <div class="bg-gray-100 px-3 py-1 rounded-full text-sm cursor-pointer hover:bg-[#f5a623] hover:text-white transition-colors">Networking</div>
-                    <div class="bg-gray-100 px-3 py-1 rounded-full text-sm cursor-pointer hover:bg-[#f5a623] hover:text-white transition-colors">Outdoor</div>
-                    <div class="bg-gray-100 px-3 py-1 rounded-full text-sm cursor-pointer hover:bg-[#f5a623] hover:text-white transition-colors">Travel</div>
-                </div>
-            </div>
-
             <div class="flex gap-2">
                 <button class="bg-[#f5a623] text-white py-2 px-4 rounded flex-1 hover:bg-[#e5941d] transition-colors">Apply Filters</button>
                 <button class="bg-white text-gray-700 border border-gray-300 py-2 px-4 rounded flex-1 hover:bg-gray-100 transition-colors">Reset</button>
@@ -163,18 +148,24 @@ $isLoggedIn = true;
 
             <!-- Events List View (Default) -->
             <div class="space-y-4" id="events-list-view">
+                <?php if(count($events)>0): ?>
+                    <?php foreach($events as $event):?>
                 <!-- Event 1 -->
                 <div class="bg-white rounded-lg shadow flex flex-col md:flex-row overflow-hidden transform transition-transform hover:scale-[1.01]">
                     <img src="/api/placeholder/200/150" alt="Event" class="w-full md:w-48 h-40 object-cover">
                     <div class="p-4 flex-1">
                         <div class="mb-2">
                             <span class="inline-block bg-[#3498db] text-white text-xs px-2 py-1 rounded mr-2">Hosted</span>
-                            <h3 class="inline-block text-lg font-semibold">Bosphorus Sunset Cruise</h3>
+                            <h3 class="inline-block text-lg font-semibold"><?=$event->title?></h3>
                         </div>
                         <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-600 mb-3">
-                            <span><i class="far fa-calendar mr-1"></i> Mar 18, 2025</span>
-                            <span><i class="far fa-clock mr-1"></i> 17:30 - 20:30</span>
-                            <span><i class="fas fa-map-marker-alt mr-1"></i> Eminönü, Istanbul</span>
+                            <span><i class="far fa-calendar mr-1"></i><?= reDate($event->event_date);?></span>
+                            <span><i class="far fa-clock mr-1"></i>
+                            <?= reTime($event->start_time); ?> -
+                            <?= reTime($event->end_time ?? ''); ?>
+                        </span>
+                            <span><i class="fas fa-map-marker-alt mr-1"></i><?= $event->location_name ?>,
+                             <?= $event->city ?>, <?= $event->country ?></span>
                         </div>
                         <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm mb-3">
                             <div class="flex items-center">
@@ -189,150 +180,18 @@ $isLoggedIn = true;
                         </div>
                     </div>
                     <div class="p-4 flex md:flex-col gap-2 justify-end bg-gray-50">
-                        <a href="event_details.php?id=1" class="bg-white border border-gray-300 text-gray-700 py-2 px-3 rounded text-sm flex items-center gap-1 hover:bg-gray-100 transition-colors">
+                        <a href="/events/reviews/<?=$event->event_id?>" class="bg-white border border-gray-300 text-gray-700 py-2 px-3 rounded text-sm flex items-center gap-1 hover:bg-gray-100 transition-colors">
                             <i class="fas fa-eye"></i> View
                         </a>
-                        <a href="event_reviews.php?id=1" class="bg-white border border-gray-300 text-gray-700 py-2 px-3 rounded text-sm flex items-center gap-1 hover:bg-gray-100 transition-colors">
-                            <i class="fas fa-star"></i> Reviews
-                        </a>
-                        <a href="#" class="bg-white border border-gray-300 text-gray-700 py-2 px-3 rounded text-sm flex items-center gap-1 hover:bg-gray-100 transition-colors">
-                            <i class="fas fa-copy"></i> Recreate
-                        </a>
                     </div>
                 </div>
-
-                <!-- Event 2 -->
-                <div class="bg-white rounded-lg shadow flex flex-col md:flex-row overflow-hidden transform transition-transform hover:scale-[1.01]">
-                    <img src="/api/placeholder/200/150" alt="Event" class="w-full md:w-48 h-40 object-cover">
-                    <div class="p-4 flex-1">
-                        <div class="mb-2">
-                            <span class="inline-block bg-[#2ecc71] text-white text-xs px-2 py-1 rounded mr-2">Attended</span>
-                            <h3 class="inline-block text-lg font-semibold">Language Exchange Meetup</h3>
-                        </div>
-                        <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-600 mb-3">
-                            <span><i class="far fa-calendar mr-1"></i> Mar 5, 2025</span>
-                            <span><i class="far fa-clock mr-1"></i> 19:00 - 22:00</span>
-                            <span><i class="fas fa-map-marker-alt mr-1"></i> Şişli, Istanbul</span>
-                        </div>
-                        <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm mb-3">
-                            <div class="flex items-center">
-                                <i class="fas fa-users text-[#f5a623] mr-1"></i> 14/20 Attended
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-user text-[#f5a623] mr-1"></i> Hosted by Sophia Klein
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-star text-[#f5a623] mr-1"></i> 4.5/5 Rating
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-4 flex md:flex-col gap-2 justify-end bg-gray-50">
-                        <a href="event_details.php?id=2" class="bg-white border border-gray-300 text-gray-700 py-2 px-3 rounded text-sm flex items-center gap-1 hover:bg-gray-100 transition-colors">
-                            <i class="fas fa-eye"></i> View
-                        </a>
-                        <a href="#" class="bg-white border border-gray-300 text-gray-700 py-2 px-3 rounded text-sm flex items-center gap-1 hover:bg-gray-100 transition-colors">
-                            <i class="fas fa-star"></i> Rate Event
-                        </a>
-                        <a href="#" class="bg-white border border-gray-300 text-gray-700 py-2 px-3 rounded text-sm flex items-center gap-1 hover:bg-gray-100 transition-colors">
-                            <i class="fas fa-envelope"></i> Contact Host
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Event 3 -->
-                <div class="bg-white rounded-lg shadow flex flex-col md:flex-row overflow-hidden transform transition-transform hover:scale-[1.01]">
-                    <img src="/api/placeholder/200/150" alt="Event" class="w-full md:w-48 h-40 object-cover">
-                    <div class="p-4 flex-1">
-                        <div class="mb-2">
-                            <span class="inline-block bg-[#3498db] text-white text-xs px-2 py-1 rounded mr-2">Hosted</span>
-                            <h3 class="inline-block text-lg font-semibold">Turkish Cooking Workshop</h3>
-                        </div>
-                        <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-600 mb-3">
-                            <span><i class="far fa-calendar mr-1"></i> Feb 20, 2025</span>
-                            <span><i class="far fa-clock mr-1"></i> 18:00 - 21:00</span>
-                            <span><i class="fas fa-map-marker-alt mr-1"></i> Beşiktaş, Istanbul</span>
-                        </div>
-                        <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm mb-3">
-                            <div class="flex items-center">
-                                <i class="fas fa-users text-[#f5a623] mr-1"></i> 10/12 Attended
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-comment text-[#f5a623] mr-1"></i> 8 Reviews
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-star text-[#f5a623] mr-1"></i> 4.9/5 Rating
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-4 flex md:flex-col gap-2 justify-end bg-gray-50">
-                        <a href="event_details.php?id=3" class="bg-white border border-gray-300 text-gray-700 py-2 px-3 rounded text-sm flex items-center gap-1 hover:bg-gray-100 transition-colors">
-                            <i class="fas fa-eye"></i> View
-                        </a>
-                        <a href="event_reviews.php?id=3" class="bg-white border border-gray-300 text-gray-700 py-2 px-3 rounded text-sm flex items-center gap-1 hover:bg-gray-100 transition-colors">
-                            <i class="fas fa-star"></i> Reviews
-                        </a>
-                        <a href="#" class="bg-white border border-gray-300 text-gray-700 py-2 px-3 rounded text-sm flex items-center gap-1 hover:bg-gray-100 transition-colors">
-                            <i class="fas fa-copy"></i> Recreate
-                        </a>
-                    </div>
-                </div>
-
-                <!-- More events... -->
-            </div>
-
-            <!-- Events Grid View (Hidden by Default) -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 hidden" id="events-grid-view">
-                <!-- Event 1 -->
-                <div class="bg-white rounded-lg shadow overflow-hidden transform transition-transform hover:scale-[1.03]">
-                    <img src="/api/placeholder/300/160" alt="Event" class="w-full h-40 object-cover">
-                    <div class="p-4">
-                        <div class="mb-2">
-                            <span class="inline-block bg-[#3498db] text-white text-xs px-2 py-1 rounded">Hosted</span>
-                        </div>
-                        <h3 class="text-lg font-semibold mb-3">Bosphorus Sunset Cruise</h3>
-                        <div class="space-y-1 text-sm text-gray-600 mb-3">
-                            <div><i class="far fa-calendar mr-1"></i> Mar 18, 2025</div>
-                            <div><i class="far fa-clock mr-1"></i> 17:30 - 20:30</div>
-                            <div><i class="fas fa-map-marker-alt mr-1"></i> Eminönü, Istanbul</div>
-                        </div>
-                        <div class="flex justify-between text-sm border-t border-gray-100 pt-3">
-                            <div class="flex items-center">
-                                <i class="fas fa-users text-[#f5a623] mr-1"></i> 18/25
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-star text-[#f5a623] mr-1"></i> 4.8/5
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Event 2 -->
-                <div class="bg-white rounded-lg shadow overflow-hidden transform transition-transform hover:scale-[1.03]">
-                    <img src="/api/placeholder/300/160" alt="Event" class="w-full h-40 object-cover">
-                    <div class="p-4">
-                        <div class="mb-2">
-                            <span class="inline-block bg-[#2ecc71] text-white text-xs px-2 py-1 rounded">Attended</span>
-                        </div>
-                        <h3 class="text-lg font-semibold mb-3">Language Exchange Meetup</h3>
-                        <div class="space-y-1 text-sm text-gray-600 mb-3">
-                            <div><i class="far fa-calendar mr-1"></i> Mar 5, 2025</div>
-                            <div><i class="far fa-clock mr-1"></i> 19:00 - 22:00</div>
-                            <div><i class="fas fa-map-marker-alt mr-1"></i> Şişli, Istanbul</div>
-                        </div>
-                        <div class="flex justify-between text-sm border-t border-gray-100 pt-3">
-                            <div class="flex items-center">
-                                <i class="fas fa-users text-[#f5a623] mr-1"></i> 14/20
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-star text-[#f5a623] mr-1"></i> 4.5/5
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- More grid items... -->
-            </div>
-
+                <?php endforeach;?>
+                <?php else: ?>
+                    <div class="col-span-3 text-center py-10">
+            <p class="text-gray-500">No Past events found.</p>
+            <a href="/events/" class="mt-4 inline-block bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded">Go Back to Events</a>
+        </div>
+        <?php endif; ?>
             <!-- Pagination -->
             <div class="flex justify-center mt-6">
                 <div class="flex">

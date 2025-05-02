@@ -14,10 +14,6 @@ class UserController extends BaseController {
         loadView('users/profile');
     }
     
-    public function edit($params) {
-        // Show edit profile form
-    }
-    
     public function update($params) {
         // Process profile update
     }
@@ -28,5 +24,9 @@ class UserController extends BaseController {
     
     public function references($params) {
         loadView('users/references');
+    }
+    public function settings() {
+        // Check if user is logged in
+      loadView('users/settings',[]);
     }
 }

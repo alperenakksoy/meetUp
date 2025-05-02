@@ -17,6 +17,7 @@ $router->get('/users/edit/{id}', 'UserController@edit');
 $router->put('/users/{id}', 'UserController@update');
 $router->get('/users/friends', 'UserController@friends');
 $router->get('/users/references/{id}', 'UserController@references');
+$router->get('/users/settings', 'UserController@settings');
 
 // Event routes
 $router->get('/events', 'EventController@index');

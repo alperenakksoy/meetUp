@@ -30,7 +30,7 @@ class AuthController extends BaseController {
     }
     
     public function logout() {
-        // Process logout
+        loadView('auth/login');
     }
     
     public function forgotForm() {

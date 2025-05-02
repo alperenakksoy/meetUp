@@ -20,11 +20,12 @@ $isLoggedIn = true;
                 <img src="CreateEventForm/event_image.webp" alt="Event Cover Image" class="w-full h-[300px] object-cover">
                 <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-5 text-white">
                     <span class="inline-block bg-[#f5a623] text-white px-3 py-1 rounded-full text-sm mb-2.5">Coffee & Cultural</span>
-                    <h1 class="text-3xl font-bold mb-2.5">Coffee & Cultural Exchange</h1>
+                    <h1 class="text-3xl font-bold mb-2.5"><?= $event->title ?></h1>
                     <div class="flex flex-wrap gap-4 text-sm">
-                        <span><i class="far fa-calendar mr-1"></i> April 5, 2025</span>
-                        <span><i class="far fa-clock mr-1"></i> 15:00 - 17:00</span>
-                        <span><i class="fas fa-map-marker-alt mr-1"></i> Kadıköy, Istanbul</span>
+                        <span><i class="far fa-calendar mr-1"></i><?= reDate($event->event_date); ?></span>
+                        <span><i class="far fa-clock mr-1"></i><?= reTime($event->start_time);?> : 
+                        <?= reTime($event->end_time);?></span>
+                        <span><i class="fas fa-map-marker-alt mr-1"></i> <?= $event->location_address ?>, <?= $event->city ?> / <?= $event->country?></span>
                     </div>
                 </div>
             </div>
@@ -33,59 +34,9 @@ $isLoggedIn = true;
             <div class="p-6">
                 <div class="mb-6">
                     <h3 class="text-xl font-semibold mb-4">About This Event</h3>
-                    <p class="mb-4">Join us for an afternoon of coffee and conversation! Share your travel stories, learn about Turkish culture, and make new friends in a cozy atmosphere.</p>
-                    
-                    <p class="mb-2">This event is perfect for:</p>
-                    <ul class="list-disc pl-5 mb-4">
-                        <li class="mb-1">Travelers looking to meet locals</li>
-                        <li class="mb-1">Expats wanting to share experiences</li>
-                        <li class="mb-1">Language enthusiasts practicing Turkish or English</li>
-                        <li class="mb-1">Coffee lovers interested in traditional Turkish coffee</li>
-                    </ul>
-
-                    <p class="mb-4">We'll meet at Mandabatmaz Coffee, one of Istanbul's hidden gems known for its authentic Turkish coffee prepared in the traditional way. The venue offers a relaxed environment perfect for conversations.</p>
-
-                    <p>Feel free to bring photos of your travels or home country to share. This is an inclusive event where everyone is welcome!</p>
+                    <p class="mb-4"><?= $event->description ?></p>
                 </div>
 
-                <div class="space-y-6 mb-6">
-                    <div class="flex items-start">
-                        <div class="w-10 h-10 bg-[rgba(245,166,35,0.1)] rounded-full flex items-center justify-center text-[#f5a623] mr-4 flex-shrink-0">
-                            <i class="fas fa-calendar-alt"></i>
-                        </div>
-                        <div>
-                            <div class="font-semibold mb-1">Date and Time</div>
-                            <p>Tuesday, April 5, 2025 <br> 3:00 PM - 5:00 PM (GMT+3)</p>
-                        </div>
-                    </div>
-
-                    <div class="flex items-start">
-                        <div class="w-10 h-10 bg-[rgba(245,166,35,0.1)] rounded-full flex items-center justify-center text-[#f5a623] mr-4 flex-shrink-0">
-                            <i class="fas fa-map-marker-alt"></i>
-                        </div>
-                        <div>
-                            <div class="font-semibold mb-1">Location</div>
-                            <p>Mandabatmaz Coffee<br>
-                            Olivia Geçidi No: 1, Beyoğlu<br>
-                            Kadıköy, Istanbul, Turkey</p>
-                        </div>
-                    </div>
-
-                    <div class="h-[200px] bg-gray-100 rounded-lg flex flex-col items-center justify-center text-gray-600 my-5">
-                        <i class="fas fa-map fa-3x mb-2"></i>
-                        <p>Interactive Map Would Display Here</p>
-                    </div>
-
-                    <div class="flex items-start">
-                        <div class="w-10 h-10 bg-[rgba(245,166,35,0.1)] rounded-full flex items-center justify-center text-[#f5a623] mr-4 flex-shrink-0">
-                            <i class="fas fa-info-circle"></i>
-                        </div>
-                        <div>
-                            <div class="font-semibold mb-1">Additional Information</div>
-                            <p>The café is on the second floor of the building. Look for the wooden door with a small coffee cup sign. We'll have a 'SocialLoop' sign on our table.</p>
-                        </div>
-                    </div>
-                </div>
 
                 <div class="flex flex-wrap gap-2.5 mt-6">
                     <span class="bg-gray-100 py-1 px-3 rounded-full text-sm">Coffee</span>

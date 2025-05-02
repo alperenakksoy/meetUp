@@ -71,12 +71,6 @@ $isLoggedIn = true;
                         <option value="other">Other</option>
                     </select>
                 </div>
-
-                <div class="mb-5">
-                    <label for="event_capacity" class="block mb-2 font-medium">Capacity</label>
-                    <input type="number" id="event_capacity" name="event_capacity" min="1" max="999" class="w-24 py-2.5 px-4 border border-gray-300 rounded focus:border-[#f5a623] focus:outline-none text-base">
-                    <span class="block text-sm text-gray-600 mt-1">Maximum number of attendees (leave blank for unlimited)</span>
-                </div>
             </div>
 
             <!-- Location Section -->
@@ -120,19 +114,6 @@ $isLoggedIn = true;
                     <label for="event_description" class="block mb-2 font-medium">Event Description *</label>
                     <textarea id="event_description" name="event_description" class="w-full py-2.5 px-4 border border-gray-300 rounded focus:border-[#f5a623] focus:outline-none text-base min-h-[120px] resize-y" required placeholder="Tell potential attendees about your event. What will happen? What should they expect? Why should they join?"></textarea>
                 </div>
-
-                <div class="mb-5">
-                    <label class="block mb-2 font-medium">Tags</label>
-                    <div class="tag-input-container flex flex-wrap gap-2.5 mb-2.5">
-                        <div class="bg-gray-100 py-1 px-2.5 rounded-full text-sm flex items-center">Coffee <button type="button" class="ml-1 text-gray-600">×</button></div>
-                        <div class="bg-gray-100 py-1 px-2.5 rounded-full text-sm flex items-center">Networking <button type="button" class="ml-1 text-gray-600">×</button></div>
-                    </div>
-                    <div class="flex gap-2.5">
-                        <input type="text" id="tag_input" class="flex-1 py-2 px-4 border border-gray-300 rounded focus:border-[#f5a623] focus:outline-none text-sm" placeholder="Add a tag">
-                        <button type="button" id="add_tag" class="bg-[#f5a623] text-white py-2 px-4 rounded font-medium cursor-pointer transition-colors hover:bg-[#e5941d]">Add</button>
-                    </div>
-                    <span class="block text-sm text-gray-600 mt-1">Tags help your event get discovered</span>
-                </div>
             </div>
 
             <!-- Image Section -->
@@ -149,130 +130,32 @@ $isLoggedIn = true;
                     </div>
                 </div>
             </div>
-
-            <!-- Settings Section -->
-            <div class="mb-6">
-                <h3 class="text-lg font-semibold mb-4 pb-2.5 border-b border-gray-100 text-[#2c3e50]">Settings</h3>
-                <div class="mb-5">
-                    <label class="block mb-2 font-medium">Visibility</label>
-                    <div class="flex flex-col gap-2.5">
-                        <label class="flex items-center cursor-pointer">
-                            <input type="radio" name="event_visibility" value="public" checked class="mr-2.5">
-                            Public (Anyone can find and join)
-                        </label>
-                        <label class="flex items-center cursor-pointer">
-                            <input type="radio" name="event_visibility" value="friends" class="mr-2.5">
-                            Friends Only (Only visible to your friends)
-                        </label>
-                        <label class="flex items-center cursor-pointer">
-                            <input type="radio" name="event_visibility" value="private" class="mr-2.5">
-                            Private (By invitation only)
-                        </label>
-                    </div>
-                </div>
-                
-                <div class="mb-5">
-                    <label class="block mb-2 font-medium">Approval Settings</label>
-                    <div class="flex flex-col gap-2.5">
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" name="require_approval" value="1" class="mr-2.5">
-                            Require approval for attendees
-                        </label>
-                    </div>
-                </div>
-            </div>
-
             <!-- Form Actions -->
             <div class="flex justify-between pt-4 border-t border-gray-100">
-                <button type="button" class="bg-white text-gray-700 border border-gray-300 py-3 px-6 rounded font-medium hover:bg-gray-100">Save as Draft</button>
-                <button type="submit" class="bg-[#f5a623] text-white py-3 px-6 rounded font-medium hover:bg-[#e5941d]">Create Event</button>
+            <a href="/events" class="bg-white text-gray-900 border border-gray-300 py-5 px-10 rounded font-medium hover:bg-gray-100 inline-block text-center">Go Back</a>
+            <button type="submit" class="bg-[#f5a623] text-white py-3 px-6 rounded font-medium hover:bg-[#e5941d]">Create Event</button>
             </div>
         </form>
     </div>
 
     <script>
-        // Script for tag input functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const tagInput = document.getElementById('tag_input');
-            const addTagBtn = document.getElementById('add_tag');
-            const tagContainer = document.querySelector('.tag-input-container');
-            
-            // Add tag function
-            const addTag = () => {
-                const tagText = tagInput.value.trim();
-                if (tagText) {
-                    // Create tag element
-                    const tag = document.createElement('div');
-                    tag.className = 'bg-gray-100 py-1 px-2.5 rounded-full text-sm flex items-center';
-                    tag.innerHTML = `${tagText} <button type="button" class="ml-1 text-gray-600">×</button>`;
-                    
-                    // Add delete functionality
-                    const deleteBtn = tag.querySelector('button');
-                    deleteBtn.addEventListener('click', function() {
-                        tag.remove();
-                    });
-                    
-                    // Add to container and clear input
-                    tagContainer.appendChild(tag);
-                    tagInput.value = '';
-                    tagInput.focus();
-                }
-            };
-            
-            // Add event listeners
-            addTagBtn.addEventListener('click', addTag);
-            tagInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    addTag();
-                }
-            });
-            
-            // Initialize existing tag deletion
-            document.querySelectorAll('.tag-input-container button').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    this.parentElement.remove();
-                });
-            });
-            
-            // Image preview functionality
-            const imageInput = document.getElementById('event_image');
-            const imagePreview = document.querySelector('.form-image-preview');
-            
-            imageInput.addEventListener('change', function() {
-                if (this.files && this.files[0]) {
-                    const reader = new FileReader();
-                    
-                    reader.onload = function(e) {
-                        imagePreview.innerHTML = `<img src="${e.target.result}" alt="Event Image Preview" class="max-w-full max-h-[200px] rounded">`;
-                    };
-                    
-                    reader.readAsDataURL(this.files[0]);
-                }
-            });
-        });
+    // Image preview functionality
+    const imageInput = document.getElementById('event_image');
+    const imagePreview = document.querySelector('.form-image-preview');
 
-        // Form validation
-        const form = document.querySelector('.create-event-form');
-        form.addEventListener('submit', function(e) {
-            const required = form.querySelectorAll('[required]');
-            let valid = true;
-            
-            required.forEach(field => {
-                if (!field.value.trim()) {
-                    valid = false;
-                    field.style.borderColor = '#e74c3c';
-                } else {
-                    field.style.borderColor = '#ddd';
-                }
-            });
-            
-            if (!valid) {
-                e.preventDefault();
-                alert('Please fill in all required fields');
-            }
-        });
-    </script>
+    imageInput.addEventListener('change', function () {
+        if (this.files && this.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                imagePreview.innerHTML = `<img src="${e.target.result}" alt="Preview" class="w-full h-[200px] object-cover rounded" />`;
+            };
+
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+</script>
+
     <?=loadPartial('scripts'); ?>
     <?=loadPartial(name: 'footer'); ?>
 </body>

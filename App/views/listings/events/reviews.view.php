@@ -26,8 +26,8 @@ $isLoggedIn = true;
     <!-- Page Header -->
     <div class="flex justify-between items-center mb-5">
         <h1 class="font-volkhov text-4xl text-[#2c3e50]">Event Reviews</h1>
-        <a href="event_details.php?id=1" class="bg-white text-gray-700 border border-gray-300 py-2.5 px-4 rounded no-underline hover:bg-gray-100 flex items-center gap-2">
-            <i class="fas fa-arrow-left"></i> Back to Event
+        <a href="/events/past" class="bg-white text-gray-700 border border-gray-300 py-2.5 px-4 rounded no-underline hover:bg-gray-100 flex items-center gap-2">
+            <i class="fas fa-arrow-left"></i> Back to Past Events
         </a>
     </div>
 
@@ -39,9 +39,9 @@ $isLoggedIn = true;
             <div class="bg-white rounded-lg shadow p-5 flex gap-5 mb-5">
                 <img src="/api/placeholder/150/100" alt="Event" class="w-[150px] h-[100px] object-cover rounded">
                 <div class="flex-1">
-                    <h2 class="text-xl font-semibold mb-2">Bosphorus Sunset Cruise</h2>
+                    <h2 class="text-xl font-semibold mb-2"><?php $event->title ?></h2>
                     <div class="flex flex-wrap gap-4 text-sm text-gray-600 mb-3">
-                        <span><i class="far fa-calendar mr-1"></i> Mar 18, 2025</span>
+                        <span><i class="far fa-calendar mr-1"></i><?php reDate($event->event_date) ?></span>
                         <span><i class="far fa-clock mr-1"></i> 17:30 - 20:30</span>
                         <span><i class="fas fa-map-marker-alt mr-1"></i> Eminönü, Istanbul</span>
                     </div>
