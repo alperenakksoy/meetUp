@@ -154,12 +154,6 @@ class EventController extends BaseController {
     }
     
     public function reviews($params) {
-<<<<<<< HEAD
-        $event = $this->eventModel->getEventWithDetails($params['id']);
-        loadView('events/reviews',[
-            'event' => $event
-        ]);
-=======
         
         $event = $this->eventModel->getEventWithDetails($params['id']);
         $reviews = $this->eventModel->getEventReviews($params['id']);
@@ -184,7 +178,6 @@ class EventController extends BaseController {
         'averageRating' => $averageRating,
         'ratingCounts' => $ratingCounts
     ]);
->>>>>>> 3b2d076 (updated)
     }
 
     
