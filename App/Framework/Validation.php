@@ -3,6 +3,23 @@ namespace Framework;
 
 class Validation {
     protected $errors = [];
+
+        /**
+     * Validate a string
+     * @param string $value
+     * @param int $min
+     * @param int $max
+     * @return boolean
+     */
+
+     public static function string($value,$min=1,$max=INF){
+        if(is_string($value)){
+           $value = trim($value);
+           $length = strlen($value);
+           return $length >= $min && $length <= $max; 
+        }
+        return false;
+     }
     
     /**
      * Validate required fields
@@ -21,23 +38,20 @@ class Validation {
         return empty($this->errors);
     }
     
-    /**
-     * Validate email format
-     * 
-     * @param string $field The field name
-     * @param string $value The value to validate
-     * @param string $message Optional error message
-     * @return bool Whether validation passed
-     */
-    public function email($field, $value, $message = null) {
-        if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
-            $this->addError($field, $message ?? 'Please enter a valid email address');
-            return false;
-        }
-        
-        return true;
-    }
-    
+ 
+     /**
+      * Validate email adress
+      * @param string @value
+      * @return mixed
+      */
+
+      public static function email($value){
+        $value = trim($value);
+        // validate is it email format or not filter_var validate many things
+        return filter_var($value,FILTER_VALIDATE_EMAIL);
+     }
+
+     
     /**
      * Validate minimum string length
      * 
@@ -73,25 +87,20 @@ class Validation {
         
         return true;
     }
-    
-    /**
-     * Validate that a value matches a pattern
-     * 
-     * @param string $field The field name
-     * @param string $value The value to validate
-     * @param string $pattern Regular expression pattern
-     * @param string $message Optional error message
-     * @return bool Whether validation passed
-     */
-    public function match($field, $value, $pattern, $message = null) {
-        if (!preg_match($pattern, $value)) {
-            $this->addError($field, $message ?? 'Field format is invalid');
-            return false;
-        }
-        
-        return true;
-    }
-    
+
+      /**
+       * Match of value aganist another
+       * @param string @value1
+       * @param string @value2
+       * @return boolean
+       */
+      public static function match($value1,$value2){
+        $value1 = trim($value1);
+        $value2 = trim($value2);
+        return $value1 === $value2;
+
+     }
+     
     /**
      * Validate that a field matches another field (e.g., password confirmation)
      * 

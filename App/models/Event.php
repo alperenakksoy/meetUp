@@ -1,5 +1,6 @@
 <?php
 namespace App\Models;
+use Framework\Validation;
 
 class Event extends BaseModel {
     protected $table = 'events';
@@ -125,4 +126,34 @@ class Event extends BaseModel {
         $params = ['event_id' => $eventId];
         return $this->db->query($query, $params)->fetchAll();
     }
+    // Add this to your Event.php model
+public function store($eventData) {
+    // Prepare fields and values for the query
+    $fields = implode(', ', array_keys($eventData));
+    
+    $values = [];
+    foreach(array_keys($eventData) as $field) {
+        $values[] = ':' . $field;
+    }
+    $valuesString = implode(', ', $values);
+    
+    // Fix your query - remove the erroneous comma after fields list
+    $query = "INSERT INTO {$this->table} ({$fields}) VALUES ({$valuesString})";
+    
+    // Execute the query and return the result (likely the new ID)
+    return $this->db->query($query, $eventData);
+}
+
+// Add a validation method to your model
+public function validate($data, $requiredFields) {
+    $errors = [];
+    
+    foreach($requiredFields as $field) {
+        if(empty($data[$field]) || !Validation::string($data[$field])) {
+            $errors[$field] = ucfirst($field) . ' field is required.';
+        }
+    }
+    
+    return $errors;
+}
 }
