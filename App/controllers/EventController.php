@@ -1,6 +1,7 @@
 <?php
 namespace App\Controllers;
 
+use Framework\Database;
 use App\Models\Event;
 use App\Models\EventTag;
 use App\Models\UserActivity;
@@ -8,10 +9,12 @@ use Framework\Validation;
 
 class EventController extends BaseController {
     protected $eventModel;
-    
     public function __construct() {
         $this->eventModel = new Event();
-
+        
+        // Initialize database
+        $config = require basePath('config/db.php');
+        $this->db = new Database($config['database']);
     }
     
     public function index() {
@@ -52,8 +55,8 @@ class EventController extends BaseController {
         // ['a' => 1, 'b' => 2, 'c' => 3]; after array_flip ----> [1  => a, 2 => b, 3 => c ]
         $newListingData = array_intersect_key($_POST, array_flip($allowedFields));
 
-        $newListingData = array_map('sanitize',array: $newListingData);
-        $newListingData['user_id'] = 1;
+        $newListingData = array_map('sanitize',$newListingData);
+        $newListingData['host_id'] = 1;
 
         $requiredFields = [
             'event_title',
@@ -96,9 +99,9 @@ class EventController extends BaseController {
                 $values[] = ':'.$field;
             }
             $values = implode(', ',$values);
-            $query = "INSERT INTO events ({$fields}), VALUES ({$values})";
+            $query = "INSERT INTO events ({$fields}) VALUES ({$values})";
             $this->db->query($query,$newListingData);
-            inspectAndDie($values);
+            inspectAndDie($query);
 
         }
     }
