@@ -27,6 +27,7 @@ $isLoggedIn = true;
                         <?= reTime($event->end_time);?></span>
                         <span><i class="fas fa-map-marker-alt mr-1"></i> <?= $event->location_address ?>, <?= $event->city ?> / <?= $event->country?></span>
                     </div>
+                    
                 </div>
             </div>
 
@@ -159,21 +160,31 @@ $isLoggedIn = true;
                 <a href="#" class="block text-center py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200">View All Attendees</a>
             </div>
 
-            <!-- Share & Save -->
-            <div class="bg-white p-5 rounded-lg shadow">
-                <h3 class="text-lg font-semibold mb-3 pb-2 border-b border-gray-100">Share & Save</h3>
-                <div class="flex gap-2.5 mb-4">
-                    <a href="#" class="flex-1 flex items-center justify-center gap-2 border border-[#f5a623] text-[#f5a623] py-2 px-4 rounded hover:bg-[#f5a623] hover:text-white transition-colors">
-                        <i class="fas fa-share-alt"></i> Share
-                    </a>
-                    <a href="#" class="flex-1 flex items-center justify-center gap-2 border border-[#f5a623] text-[#f5a623] py-2 px-4 rounded hover:bg-[#f5a623] hover:text-white transition-colors">
-                        <i class="far fa-bookmark"></i> Save
-                    </a>
-                </div>
-                <a href="#" class="block text-center border border-[#f5a623] text-[#f5a623] py-2 px-4 rounded hover:bg-[#f5a623] hover:text-white transition-colors">
-                    <i class="fas fa-exclamation-circle mr-1"></i> Report Event
-                </a>
-            </div>
+    <!-- Share & Save -->
+<div class="bg-white p-5 rounded-lg shadow">
+    <h3 class="text-lg font-semibold mb-3 pb-2 border-b border-gray-100">Share & Save</h3>
+    <div class="flex gap-2.5 mb-4">
+        <a href="#" class="flex-1 flex items-center justify-center gap-2 border border-[#f5a623] text-[#f5a623] py-2 px-4 rounded hover:bg-[#f5a623] hover:text-white transition-colors">
+            <i class="fas fa-share-alt"></i> Share
+        </a>
+        <a href="#" class="flex-1 flex items-center justify-center gap-2 border border-[#f5a623] text-[#f5a623] py-2 px-4 rounded hover:bg-[#f5a623] hover:text-white transition-colors">
+            <i class="far fa-bookmark"></i> Save
+        </a>
+    </div>
+    
+    <!-- Delete Form -->
+    <form method="POST" class="mb-4">
+        <input type="hidden" name="_method" value="DELETE">
+        <button type="submit" class="w-full px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded flex items-center justify-center gap-2">
+            <i class="fas fa-trash-alt"></i> Delete Event
+        </button>
+    </form>
+    <!-- End Delete Form -->
+    
+    <a href="#" class="block text-center border border-[#f5a623] text-[#f5a623] py-2 px-4 rounded hover:bg-[#f5a623] hover:text-white transition-colors">
+        <i class="fas fa-exclamation-circle mr-1"></i> Report Event
+    </a>
+</div>
 
             <!-- Similar Events -->
             <div class="bg-white p-5 rounded-lg shadow">
