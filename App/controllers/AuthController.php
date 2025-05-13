@@ -4,6 +4,7 @@ namespace App\Controllers;
 use App\Models\User;
 use App\Models\Auth;
 use Framework\Validation;
+use Framework\Session;
 
 class AuthController extends BaseController {
     protected $userModel;
@@ -21,8 +22,16 @@ class AuthController extends BaseController {
         loadView('auth/login');
     }
     
-    public function login() {
+    public function login($email,$password) {
         // Process login
+        $user = $this->userModel->findByEmail($email);
+
+        Session::set('user',[
+            'id' => $user->user_id,
+            'is_admin' => $user->is_admin,
+            'name' => $user->first_name . ' ' . $user->last_name,
+            'email' => $user->email
+        ]);
     }
     
     public function registerForm() {
@@ -76,6 +85,7 @@ class AuthController extends BaseController {
         }
         $_SESSION['flash_message'] = 'Registration successful! Please log in.';
         redirect('/login');
+
     }
     
     public function logout() {

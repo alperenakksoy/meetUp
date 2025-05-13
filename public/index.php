@@ -1,10 +1,12 @@
 <?php
-session_start();
-require '../helpers.php';
 // Require the Composer autoloader
 require_once __DIR__ . '/../vendor/autoload.php';
-
 use Framework\Router;
+use Framework\Session;
+// starting the session via static method.
+Session::start();
+
+require '../helpers.php';
 
 // Initialize router
 $router = new Router();
