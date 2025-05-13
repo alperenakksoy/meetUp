@@ -1,6 +1,4 @@
 <?php
-require_once __DIR__ . '/../../helpers.php';
-
 // Set page variables
 $pageTitle = 'Dashboard';
 $activePage = 'events';

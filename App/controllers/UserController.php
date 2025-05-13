@@ -6,9 +6,9 @@ use App\Models\User;
 class UserController extends BaseController {
     protected $userModel;
     
-    // public function __construct() {
-    //     $this->userModel = new User();
-    // }
+     public function __construct() {
+        $this->userModel = new User();
+    }
     
     public function profile($params) {
         loadView('users/profile');

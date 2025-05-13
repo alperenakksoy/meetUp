@@ -60,6 +60,7 @@ $isLoggedIn = true;
        
   <!-- Events Grid -->
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+    <?=loadPartial('message')?>
     <?php if(count($events) > 0): ?>
         <?php foreach($events as $event): ?>
             <!-- Event Card -->

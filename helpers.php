@@ -31,9 +31,10 @@
  * @param string $name
  * @return void
  */
- function loadPartial($name){
+ function loadPartial($name, $data=[]){
    $partialPath = basePath("App/views/partials/{$name}.php");
    if(file_exists($partialPath)){
+      extract($data); // allows us to access data 
       require $partialPath;
   } else {
      echo "view '{$name} not found!'";

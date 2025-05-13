@@ -11,11 +11,7 @@ use Exception;
 class EventController extends BaseController {
     protected $eventModel;
     public function __construct() {
-        $this->eventModel = new Event();
-        
-        // Initialize database
-        $config = require basePath('config/db.php');
-        $this->db = new Database($config['database']);
+        $this->eventModel = new Event(); 
     }
     
     public function index() {
@@ -135,15 +131,166 @@ class EventController extends BaseController {
     }
     
     public function edit($params) {
-        // Show event edit form
-    }
+
+            $id = $params['id'];
+            
+            // Get event by ID
+            $event = $this->eventModel->getById($id);
+            
+            if (!$event) {
+                // Event not found
+                $_SESSION['error_message'] = 'Event not found';
+                redirect('/events');
+                return;
+            }
+
+            loadView('events/edit', [
+                'event' => $event
+            ]);
+        
+        }
     
-    public function update($params) {
-        // Process event update
-    }
+        public function update($params) {
+            $id = $params['id'];
+            
+            // First check if event exists
+            $event = $this->eventModel->getById($id);
+            
+            if (!$event) {
+                // Event not found
+                $_SESSION['error_message'] = 'Event not found';
+                redirect('/events');
+                return;
+            }
+            
+            // Define allowed fields
+            $allowedFields = [
+                'event_title',
+                'event_date',
+                'event_time',
+                'event_end_date',
+                'event_end_time',
+                'event_category',
+                'event_max_attendees',
+                'event_location_name',
+                'event_location_address',
+                'event_city',
+                'event_country',
+                'event_location_details',
+                'event_description'
+            ];
+            
+            // Process form data similar to store method
+            $updateEventData = array_intersect_key($_POST, array_flip($allowedFields));
+            $updateEventData = array_map('sanitize', $updateEventData);
+            
+            // Create a mapping from form field names to database column names
+            $fieldMapping = [
+                'event_title' => 'title',
+                'event_date' => 'event_date',
+                'event_time' => 'start_time',
+                'event_end_date' => 'end_date',
+                'event_end_time' => 'end_time',
+                'event_category' => 'category',
+                'event_max_attendees' => 'max_attendees',
+                'event_location_name' => 'location_name',
+                'event_location_address' => 'location_address',
+                'event_location_details' => 'location_details',
+                'event_city' => 'city',
+                'event_country' => 'country',
+                'event_description' => 'description'
+            ];
+            
+            // Create a new array with properly mapped column names
+            $dbData = [];
+            foreach ($updateEventData as $formField => $value) {
+                if (isset($fieldMapping[$formField])) {
+                    $dbColumn = $fieldMapping[$formField];
+                    $dbData[$dbColumn] = $value;
+                }
+            }
+            
+            // Validate required fields
+            $requiredFields = [
+                'title',
+                'event_date',
+                'start_time',
+                'location_name',
+                'location_address',
+                'city',
+                'country',
+                'description'
+            ];
+            
+            $errors = [];
+            foreach ($requiredFields as $field) {
+                if (empty($dbData[$field]) || !Validation::string($dbData[$field])) {
+                    $formField = array_search($field, $fieldMapping) ?: $field;
+                    $errors[$formField] = ucfirst(str_replace('_', ' ', $formField)) . ' field is required.';
+                }
+            }
+            
+            if (!empty($errors)) {
+                loadView('events/edit', [
+                    'errors' => $errors,
+                    'event' => $event
+                ]);
+            } else {
+                try {
+                    // Handle image upload if needed
+                    
+                    // Update the event
+                    if ($this->eventModel->update($id, $dbData)) {
+                        // Success
+                        $_SESSION['success_message'] = 'Event updated successfully';
+                        redirect('/events/' . $id);
+                    } else {
+                        // Failed
+                        $errors['database'] = 'Failed to update event';
+                        loadView('events/edit', [
+                            'errors' => $errors,
+                            'event' => $event
+                        ]);
+                    }
+                } catch (Exception $e) {
+                    // Log the error and display a user-friendly message
+                    error_log($e->getMessage());
+                    $errors['database'] = 'There was an error updating your event. Please try again.';
+                    loadView('events/edit', [
+                        'errors' => $errors,
+                        'event' => $event
+                    ]);
+                }
+            }
+        }
     
     public function destroy($params) {
-        // Delete event
+        $id = $params['id'];
+        
+        // Get the event to check if it exists
+        $event = $this->eventModel->getById($id);
+        
+        if (!$event) {
+            // Event not found
+            $_SESSION['error_message'] = 'Event not found';
+            redirect('/events');
+            return;
+        }
+        
+        // Check if user has permission to delete (e.g., is the host or admin)
+        // For now, we'll skip this check, but in a real application, you should add it
+        
+        // Delete the event
+        if ($this->eventModel->delete($id)) {
+            // Success
+            $_SESSION['success_message'] = 'Event deleted successfully';
+        } else {
+            // Failed
+            $_SESSION['error_message'] = 'Failed to delete event';
+        }
+        
+        // Redirect to events list
+        redirect('/events');
     }
     
     public function pastEvents() {
@@ -182,6 +329,6 @@ class EventController extends BaseController {
 
     
     public function management() {
-        // Show event management page
-    }
+        loadView('events/reviews');
+}
 }

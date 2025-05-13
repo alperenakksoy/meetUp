@@ -9,7 +9,6 @@ $isLoggedIn = true;
 
 <body>
 <?php loadPartial('header') ?>
-
 <!-- Main Content -->
 <div class="container max-w-6xl mx-auto px-5 mt-20">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -30,6 +29,8 @@ $isLoggedIn = true;
                     
                 </div>
             </div>
+            <?=loadPartial('message')?>
+
 
             <!-- Event Content -->
             <div class="p-6">
@@ -180,6 +181,11 @@ $isLoggedIn = true;
         </button>
     </form>
     <!-- End Delete Form -->
+
+     <!-- Edit Form -->
+     <a href="/events/edit/<?=$event->event_id?>" class="block text-center bg-blue-500 border text-white py-2 px-4 mb-4 rounded hover:bg-blue-600 hover:text-white transition-colors">
+     Edit Event </a>
+    <!-- End Edit Form -->
     
     <a href="#" class="block text-center border border-[#f5a623] text-[#f5a623] py-2 px-4 rounded hover:bg-[#f5a623] hover:text-white transition-colors">
         <i class="fas fa-exclamation-circle mr-1"></i> Report Event

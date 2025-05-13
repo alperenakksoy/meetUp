@@ -19,10 +19,11 @@ class BaseModel {
     }
     
     public function getById($id) {
-        $query = "SELECT * FROM {$this->table} WHERE id = :id";
+        $query = "SELECT * FROM {$this->table} WHERE event_id = :id";
         $params = ['id' => $id];
         return $this->db->query($query, $params)->fetch();
     }
+    
     
     public function create($data) {
         // Build the query dynamically
@@ -43,17 +44,17 @@ class BaseModel {
         $fieldSet = array_map(fn($field) => "$field = :$field", $fields);
         $fieldSetString = implode(', ', $fieldSet);
         
-        $query = "UPDATE {$this->table} SET $fieldSetString WHERE id = :id";
+        $query = "UPDATE {$this->table} SET $fieldSetString WHERE event_id = :id";
         
         // Add id to parameters
         $data['id'] = $id;
         
         return $this->db->query($query, $data);
     }
-    
-    public function delete($id) {
-        $query = "DELETE FROM {$this->table} WHERE id = :id";
-        $params = ['id' => $id];
-        return $this->db->query($query, $params);
-    }
+    // Add this to your Event model
+public function delete($id) {
+    $query = "DELETE FROM {$this->table} WHERE event_id = :id";
+    $params = ['id' => $id];
+    return $this->db->query($query, $params);
+}
 }

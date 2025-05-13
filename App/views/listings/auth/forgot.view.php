@@ -32,7 +32,7 @@
             </div>
 
             <div class="text-center mt-5 text-sm text-gray-600">
-                <p>Remember your password? <a href="/../login_registerScreen/loginIndex.php" class="text-primary no-underline font-semibold transition-colors duration-300 hover:text-gray-800 hover:underline">Sign in</a></p>
+                <p>Remember your password? <a href="/login" class="text-primary no-underline font-semibold transition-colors duration-300 hover:text-gray-800 hover:underline">Sign in</a></p>
             </div>
         </form>
     </div>

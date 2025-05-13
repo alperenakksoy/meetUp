@@ -15,13 +15,6 @@ class Auth {
 
     // Register a new user
     public function register($userData) {
-        // Validate email format
-        if (!filter_var($userData['email'], FILTER_VALIDATE_EMAIL)) {
-            return [
-                'success' => false,
-                'message' => 'Invalid email format'
-            ];
-        }
 
         // Check if email already exists
         $existingUser = $this->userModel->findByEmail($userData['email']);

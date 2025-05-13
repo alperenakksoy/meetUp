@@ -12,11 +12,7 @@ $isLoggedIn = true;
 <?php loadPartial('header') ?>
  <!-- Main Content -->
  <div class="container max-w-3xl mx-auto px-5 mt-20">
-    <?php if(isset($errors)): ?>
-    <?php foreach($errors as $error):?>
-        <div class="message bg-red-100 my-3"><?= $error ?></div>
-    <?php endforeach;?>
-    <?php endif;?>
+  <?=loadPartial('errors',['errors' => $errors ?? []])?>
         <!--Page Header -->
         <div class="flex justify-between items-center mb-5">
             <h1 class="font-volkhov text-4xl text-[#2c3e50]">Create New Event</h1>
