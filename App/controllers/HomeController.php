@@ -6,4 +6,9 @@ class HomeController extends BaseController {
         // Load the homepage
         loadView('home');
     }
+    public function notifications($count) {
+        // Load the homepage
+        loadView('home');
+    }
+
 }
