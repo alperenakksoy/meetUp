@@ -1,20 +1,22 @@
 <?php
 namespace App\Controllers;
-
 use App\Models\User;
 use App\Models\Auth;
+use App\Models\Notification;
 use Framework\Validation;
 use Framework\Session;
 
 class AuthController extends BaseController {
     protected $userModel;
     protected $auth;
+    protected $notify;
 
     
     public function __construct() {
         parent::__construct();
         $this->userModel = new User();
         $this->auth = new Auth();
+        $this->notify = new Notification();
     }
     
     public function loginForm() {
@@ -30,7 +32,8 @@ class AuthController extends BaseController {
             'id' => $user->user_id,
             'is_admin' => $user->is_admin,
             'name' => $user->first_name . ' ' . $user->last_name,
-            'email' => $user->email
+            'email' => $user->email,
+            'profile_picture' => $user->profile_picture ?? 'default_profile.jpg',
         ]);
     }
     

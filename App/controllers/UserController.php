@@ -29,4 +29,5 @@ class UserController extends BaseController {
         // Check if user is logged in
       loadView('users/settings',[]);
     }
+
 }

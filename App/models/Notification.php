@@ -115,3 +115,25 @@ class Notification extends BaseModel {
         return $this->db->query($query, $params);
     }
 }
+?>
+
+<script>
+// Function to update notification count
+function updateNotificationCount() {
+    fetch('/api/notifications/count')
+        .then(response => response.json())
+        .then(data => {
+            const notificationBadge = document.querySelector('.notification-badge');
+            if (notificationBadge && data.count) {
+                notificationBadge.textContent = data.count;
+                notificationBadge.style.display = data.count > 0 ? 'flex' : 'none';
+            }
+        })
+        .catch(error => console.error('Error updating notification count:', error));
+}
+
+// Update notification count every 60 seconds
+if (document.querySelector('.notification-badge')) {
+    setInterval(updateNotificationCount, 60000);
+}
+</script>
