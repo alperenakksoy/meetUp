@@ -135,6 +135,7 @@ usort($references, function($a, $b) {
 ?>
 
 <?php loadPartial('head') ?>
+<?=loadPartial(name: 'navbar')?>
 
 <body class="bg-gray-50 pt-20">
     <!-- Main Content -->

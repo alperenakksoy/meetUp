@@ -24,17 +24,11 @@ class AuthController extends BaseController {
         loadView('auth/login');
     }
     
-    public function login($email,$password) {
-        // Process login
-        $user = $this->userModel->findByEmail($email);
+    public function login() {       
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+        $this->auth->login($email,$password);
 
-        Session::set('user',[
-            'id' => $user->user_id,
-            'is_admin' => $user->is_admin,
-            'name' => $user->first_name . ' ' . $user->last_name,
-            'email' => $user->email,
-            'profile_picture' => $user->profile_picture ?? 'default_profile.jpg',
-        ]);
     }
     
     public function registerForm() {
@@ -53,46 +47,35 @@ class AuthController extends BaseController {
             'gender' => $_POST['gender'] ?? null
         ];
 
-        $errors=[];
-        if(!Validation::email($userData['email'])){
-            $errors['email'] = 'Please enter a valid email';
-        }
-        if(!Validation::string($userData['first_name'],2,50) ||
-        !Validation::string($userData['last_name'],2,50)){
-            $errors['first_name'] = 'First name must be in 2 and 50 charachters.';
-            $errors['last_name'] = 'Last name must be in 2 and 50 charachters.';
-        }
-        if(!Validation::string($userData['password'],6)){
-            $errors['password'] = 'Password must be minimum 6 charachters.';
-        }
-        if(!Validation::match($userData['password'], $userData['confirm_password'])){
-            $errors['password_confirmation'] = 'Passwords do not match!';
-        }
-
-        if(!empty($errors)){
-            loadView('auth/register',[
-            'errors' => $errors,
-            'user' => $userData]);
-            exit;
-        }
-        // there is no confirm_password in database so we undestting after confirmation.
-        unset($userData['confirm_password']);
-
-        $result = $this->auth->register($userData);
-        
-        if(!$result['success']){
-            loadView('auth/register',[
-                'errors' => [$result['message']],
-                'user' => $userData
-            ]);
-        }
-        $_SESSION['flash_message'] = 'Registration successful! Please log in.';
-        redirect('/login');
+       $this->auth->register($userData);
 
     }
-    
+    /**
+     * 
+     * Kill the session
+     * @return void
+     */
     public function logout() {
-        loadView('auth/login');
+        // Clear all session data
+        Session::clearAll();
+    
+        // Destroy the PHP session cookie
+        $params = session_get_cookie_params();
+        setcookie(
+            'PHPSESSID',              // cookie name
+            '',                       // empty value
+            time() - 86400,           // expired in the past
+            $params['path'],          // path
+            $params['domain'],        // domain
+            $params['secure'],        // secure
+            $params['httponly']       // httponly
+        );
+    
+        // Optionally also call session_destroy
+        session_destroy();
+    
+        // Redirect to login
+        redirect('/login');
     }
     
     public function forgotForm() {

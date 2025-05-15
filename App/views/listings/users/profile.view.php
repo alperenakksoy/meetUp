@@ -4,12 +4,11 @@
 $pageTitle = 'Dashboard';
 $activePage = 'events';
 $isLoggedIn = true;
-?>
+loadPartial('head') ?>
 
-<?php loadPartial('head') ?>
 <body class="bg-gray-50 pt-20">
     <!-- Header Navigation -->
-    <?php loadPartial('header') ?>
+    <?php loadPartial('navbar') ?>
 
     <!-- Main Content -->
     <div class="container mx-auto px-4 py-6">

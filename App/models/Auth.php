@@ -1,5 +1,7 @@
 <?php
 namespace App\Models;
+use Framework\Validation;
+use Framework\Session;
 
 class Auth {
     protected $db;
@@ -16,70 +18,102 @@ class Auth {
     // Register a new user
     public function register($userData) {
 
-        // Check if email already exists
+        $errors=[];
+        if(!Validation::email($userData['email'])){
+            $errors['email'] = 'Please enter a valid email';
+        }
+        if(!Validation::string($userData['first_name'],2,50) ||
+        !Validation::string($userData['last_name'],2,50)){
+            $errors['first_name'] = 'First name must be in 2 and 50 charachters.';
+            $errors['last_name'] = 'Last name must be in 2 and 50 charachters.';
+        }
+        if(!Validation::string($userData['password'],6)){
+            $errors['password'] = 'Password must be minimum 6 charachters.';
+        }
+        if(!Validation::match($userData['password'], $userData['confirm_password'])){
+            $errors['password_confirmation'] = 'Passwords do not match!';
+        }
+
         $existingUser = $this->userModel->findByEmail($userData['email']);
         if ($existingUser) {
-            return [
-                'success' => false,
-                'message' => 'Email already registered'
-            ];
+            $errors['emailRegistered'] = 'Email already registered';
+        }
+         // there is no confirm_password in database so we undestting after confirmation.
+         unset($userData['confirm_password']);
+
+         if(!empty($errors)){
+            loadView('auth/register',[
+            'errors' => $errors,
+            'user' => $userData]);
+            exit;
         }
 
-        // Hash the password
-        $userData['password'] = password_hash($userData['password'], PASSWORD_DEFAULT);
-
-        // Insert the user
+           // Insert the user
         $userId = $this->userModel->create($userData);
-
-        if (!$userId) {
-            return [
-                'success' => false,
-                'message' => 'Failed to create user account'
-            ];
-        }
+           if (!$userId) {
+              $errors['create'] = 'Failed to create an account';
+           }
 
         // Log the registration
         $this->userActivityModel->logActivity($userId, 'registration', 'User registered');
-
-        return [
-            'success' => true,
-            'user_id' => $userId,
-            'message' => 'Registration successful'
-        ];
+        redirect('/login');
     }
 
     // Login a user
     public function login($email, $password) {
+
+        $errors=[];
+
+        if(!Validation::email($email)){
+            $errors[$email] = 'Please enter valid email';
+        }
+        if(!Validation::string($password,6)){
+            $errors[$password] = 'Password must be at least 6 charachters.';
+        }
+        // Check for errors
+        if(!empty($errors)){
+            loadView('auth/login',[
+                'errors'=>$errors
+            ]);
+        }
+        //check for emails that registered before or exist
         $user = $this->userModel->findByEmail($email);
-
-        if (!$user) {
-            return [
-                'success' => false,
-                'message' => 'Invalid credentials'
-            ];
+        if(!$user){
+            $errors[] = 'Incorrect credentials';
+            loadView('auth/login',[
+                'errors'=>$errors
+            ]);
+            exit;
         }
 
-        // Verify password
-        if (!password_verify($password, $user->password)) {
-            return [
-                'success' => false,
-                'message' => 'Invalid credentials'
-            ];
+        // Check password is match
+        if(!password_verify($password,$user->password)){
+            $errors[] = 'Incorrect credentials';
+            loadView('auth/login',[
+                'errors'=>$errors
+            ]);
+            exit;
         }
+       // Set session data
+Session::set('user', [
+    'first_name' => $user->first_name,
+    'last_name' => $user->last_name,
+    'email' => $user->email,
+    'profile_picture' => $user->profile_picture,
+    'bio' => $user->bio,
+    'city' => $user->city,
+    'country' => $user->country,
+    'is_admin' => $user->is_admin ?? false
+]);
+Session::set('user_id', $user->user_id);
+Session::set('is_logged_in', true);
+Session::set('login_time', time());
 
-        // Set session data
-        $_SESSION['user_id'] = $user->user_id;
-        $_SESSION['is_admin'] = $user->is_admin;
-        $_SESSION['user_name'] = $user->first_name . ' ' . $user->last_name;
 
         // Log the login
         $this->userActivityModel->logActivity($user->user_id, 'login', 'User logged in');
-
-        return [
-            'success' => true,
-            'user' => $user,
-            'message' => 'Login successful'
-        ];
+        redirect('/');
+       
     }
 
     // Logout the current user

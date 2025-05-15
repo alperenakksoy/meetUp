@@ -5,12 +5,14 @@
 
     <!-- Main Content -->
     <div class="bg-white rounded-lg w-full max-w-md mt-auto mb-20 py-5 shadow-md ">
-        <form action="" class="px-5">
+        <form action="/login" class="px-5" method="POST">
             <h1 class="mt-2.5 text-3xl text-center">Login</h1>
+            <?=loadPartial('errors',['errors' => $errors ?? []])?>
             <div class="w-[90%] h-12 mx-5 my-8">
                 <input 
-                    type="email" 
+                    type="text" 
                     placeholder="Email" 
+                    name="email"
                     required
                     class="w-full h-full bg-transparent border border-gray-600 outline-none rounded-3xl px-5 placeholder-black"
                 >
@@ -19,6 +21,7 @@
                 <input 
                     type="password" 
                     placeholder="Password" 
+                    name="password"
                     required
                     class="w-full h-full bg-transparent border border-gray-600 outline-none rounded-3xl px-5 placeholder-black"
                 >

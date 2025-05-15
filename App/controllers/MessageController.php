@@ -4,12 +4,11 @@ namespace App\Controllers;
 use App\Models\Message;
 use App\Models\Notification; // Add this
 use App\Models\User;
-use Framework\Session;
-
+use Exception;
 class MessageController extends BaseController {
     protected $messageModel;
     protected $notificationModel; 
-    protected $user;
+    protected $userModel;
     
     public function __construct() {
         parent::__construct(); // Call parent constructor if needed
@@ -32,8 +31,16 @@ class MessageController extends BaseController {
 
     //Notification Counter
     public function getCount($userId) {
-    $userId = Session::get($_SESSION['user_id']);
-    $notifyCount = $this->notificationModel->getUnreadCount($userId);
-    return $notifyCount;     
+        if (!$userId) {
+            return 0; // Return 0 if no user ID is provided
+        }
+        
+        try {
+            $notifyCount = $this->notificationModel->getUnreadCount($userId);
+            return $notifyCount;
+        } catch (Exception $e) {
+            error_log("Error in getCount: " . $e->getMessage());
+            return 0;
+        }
     }
 }

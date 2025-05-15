@@ -1,6 +1,6 @@
 <?php
 // Home routes
-$router->get('/', 'HomeController@index');
+$router->get('/{id}', 'HomeController@index');
 
 
 // User routes
@@ -33,7 +33,7 @@ $router->get('/login', 'AuthController@loginForm');
 $router->post('/login', 'AuthController@login');
 $router->get('/register', 'AuthController@registerForm');
 $router->post('/register', 'AuthController@register');
-$router->get('/logout', 'AuthController@logout');
+$router->post('/logout', 'AuthController@logout');
 $router->get('/forgot-password', 'AuthController@forgotForm');
 $router->post('/forgot-password', 'AuthController@forgotPassword');
 

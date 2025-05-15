@@ -9,7 +9,7 @@ $isLoggedIn = true;
 <?php loadPartial('head') ?>
 
 <body>
-<?php loadPartial('header') ?>
+<?php loadPartial('navbar') ?>
  <!-- Main Content -->
  <div class="container max-w-3xl mx-auto px-5 mt-20">
   <?=loadPartial('errors',['errors' => $errors ?? []])?>

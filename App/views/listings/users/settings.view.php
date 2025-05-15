@@ -23,9 +23,9 @@ $user = [
 ?>
 
 <?php loadPartial('head') ?>
+<?=loadPartial('navbar')?>
 
 <body class="bg-gray-50 pt-20">
-
     <!-- Main Content -->
     <div class="container mx-auto px-4">
         <div class="max-w-4xl mx-auto">
