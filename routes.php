@@ -1,6 +1,6 @@
 <?php
 // Home routes
-$router->get('/{id}', 'HomeController@index');
+$router->get('/', 'HomeController@index');
 
 
 // User routes

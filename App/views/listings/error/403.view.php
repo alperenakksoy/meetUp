@@ -1,7 +1,7 @@
 <?php require_once __DIR__ . '/../../../../helpers.php';?>
 
 <?= loadPartial('head')?>
-<?= loadPartial('header')?>
+<?= loadPartial('navbar')?>
 
 <div class="flex items-center justify-center min-h-screen bg-gray-100 px-4 ">
     <div class="max-w-md w-full bg-white rounded-lg shadow-md overflow-hidden mt-20">

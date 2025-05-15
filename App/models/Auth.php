@@ -47,6 +47,8 @@ class Auth {
             'user' => $userData]);
             exit;
         }
+        $userData['password'] = password_hash($userData['password'], PASSWORD_DEFAULT);
+
 
            // Insert the user
         $userId = $this->userModel->create($userData);
@@ -61,59 +63,62 @@ class Auth {
 
     // Login a user
     public function login($email, $password) {
-
-        $errors=[];
-
+        $errors = [];
+    
         if(!Validation::email($email)){
-            $errors[$email] = 'Please enter valid email';
+            $errors['email'] = 'Please enter a valid email';
         }
-        if(!Validation::string($password,6)){
-            $errors[$password] = 'Password must be at least 6 charachters.';
+        
+        if(!Validation::string($password, 6)){
+            $errors['password'] = 'Password must be at least 6 characters.';
         }
+        
         // Check for errors
         if(!empty($errors)){
-            loadView('auth/login',[
-                'errors'=>$errors
+            loadView('auth/login', [
+                'errors' => $errors
             ]);
+            exit;
         }
-        //check for emails that registered before or exist
+        
+        // Check for emails that registered before or exist
         $user = $this->userModel->findByEmail($email);
         if(!$user){
-            $errors[] = 'Incorrect credentials';
-            loadView('auth/login',[
-                'errors'=>$errors
+            $errors['login'] = 'Incorrect credentials';
+            loadView('auth/login', [
+                'errors' => $errors
             ]);
             exit;
         }
-
-        // Check password is match
-        if(!password_verify($password,$user->password)){
-            $errors[] = 'Incorrect credentials';
-            loadView('auth/login',[
-                'errors'=>$errors
+    
+        // Check password matches
+        if(!password_verify($password, $user->password)){
+            $errors['login'] = 'Incorrect credentials';
+            loadView('auth/login', [
+                'errors' => $errors
             ]);
             exit;
         }
-       // Set session data
-Session::set('user', [
-    'first_name' => $user->first_name,
-    'last_name' => $user->last_name,
-    'email' => $user->email,
-    'profile_picture' => $user->profile_picture,
-    'bio' => $user->bio,
-    'city' => $user->city,
-    'country' => $user->country,
-    'is_admin' => $user->is_admin ?? false
-]);
-Session::set('user_id', $user->user_id);
-Session::set('is_logged_in', true);
-Session::set('login_time', time());
-
-
+        
+        // If we get here, login is successful
+        // Set session data and redirect
+        Session::set('user', [
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+            'email' => $user->email,
+            'profile_picture' => $user->profile_picture,
+            'bio' => $user->bio,
+            'city' => $user->city,
+            'country' => $user->country,
+            'is_admin' => $user->is_admin ?? false
+        ]);
+        Session::set('user_id', $user->user_id);
+        Session::set('is_logged_in', true);
+        Session::set('login_time', time());
+    
         // Log the login
         $this->userActivityModel->logActivity($user->user_id, 'login', 'User logged in');
         redirect('/');
-       
     }
 
     // Logout the current user

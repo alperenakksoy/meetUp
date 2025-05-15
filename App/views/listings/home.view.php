@@ -20,7 +20,7 @@ $isLoggedIn = true;
                 <div class="flex justify-center -mt-16">
                     <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile Picture" class="w-24 h-24 rounded-full border-4 border-white shadow-md">
                 </div>
-                <h2 class="text-xl font-bold text-center mt-2">Ahmet Alperen Aksoy</h2>
+                <h2 class="text-xl font-bold text-center mt-2"><?= ucfirst($user->first_name).' '.ucfirst($user->last_name) ?></h2>
                 <div class="flex items-center justify-center text-gray-600 mt-1">
                     <i class="fas fa-map-marker-alt mr-1"></i>
                     Istanbul, Turkey
