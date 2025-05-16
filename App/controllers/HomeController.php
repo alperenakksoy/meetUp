@@ -6,7 +6,7 @@ use Framework\Session;
 class HomeController extends BaseController {
     public function index() {
         // Load the homepage
-    $email = Session::get('user')['email'];
+    $email = Session::get('user')['email'] ?? null;
 
     $userModel = new User();
 
