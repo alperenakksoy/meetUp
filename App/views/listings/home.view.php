@@ -21,7 +21,7 @@ $isLoggedIn = true;
                     <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile Picture" class="w-24 h-24 rounded-full border-4 border-white shadow-md">
                 </div>
                 <h2 class="text-xl font-bold text-center mt-2"><?= ucfirst($user->first_name).' '.ucfirst($user->last_name) ?></h2>
-                <div class="flex items-center justify-center text-gray-600 mt-1">
+                <div class="flex items-center justify-center text-gray-600 mt-1">i
                     <i class="fas fa-map-marker-alt mr-1"></i>
                     Istanbul, Turkey
                 </div>
