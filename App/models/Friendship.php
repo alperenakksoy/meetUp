@@ -14,7 +14,43 @@ class Friendship extends BaseModel {
         $params = ['user_id' => $userId];
         return $this->db->query($query, $params)->fetchAll();
     }
-    
+    /**
+ * Get the count of friends for a user
+ * @param int $userId
+ * @return int
+ */
+public function getFriendCount($userId) {
+    $query = "SELECT COUNT(*) as count 
+              FROM {$this->table} 
+              WHERE (user_id_1 = :user_id OR user_id_2 = :user_id)
+              AND status = 'accepted'";
+    $params = ['user_id' => $userId];
+    $result = $this->db->query($query, $params)->fetch();
+    return $result->count;
+}
+
+/**
+ * Get a limited list of friends for a user
+ * @param int $userId
+ * @param int $limit How many friends to return
+ * @return array
+ */
+public function getLimitedFriends($userId, $limit = 5) {
+    $query = "SELECT u.*
+              FROM users u
+              JOIN {$this->table} f ON 
+                  (u.user_id = f.user_id_1 OR u.user_id = f.user_id_2)
+              WHERE 
+                  ((f.user_id_1 = :user_id AND f.user_id_2 = u.user_id) OR 
+                  (f.user_id_2 = :user_id AND f.user_id_1 = u.user_id))
+              AND f.status = 'accepted'
+              LIMIT :limit";
+    $params = [
+        'user_id' => $userId,
+        'limit' => $limit
+    ];
+    return $this->db->query($query, $params)->fetchAll();
+}
     // Get pending friend requests sent to user
     public function getPendingRequestsReceived($userId) {
         $query = "SELECT f.*, u.first_name, u.last_name, u.profile_picture

@@ -144,7 +144,7 @@ usort($references, function($a, $b) {
             <!-- Page Header -->
             <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
                 <div class="flex items-center">
-                    <a href="/../App/userHome/profile.php" class="text-gray-500 hover:text-orange-500 mr-2">
+                    <a href="/" class="text-gray-500 hover:text-orange-500 mr-2">
                         <i class="fas fa-arrow-left"></i>
                     </a>
                     <h1 class="text-2xl font-bold text-gray-800 font-volkhov">References</h1>

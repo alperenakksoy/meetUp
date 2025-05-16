@@ -23,19 +23,21 @@ $isLoggedIn = true;
                 <h2 class="text-xl font-bold text-center mt-2"><?= ucfirst($user->first_name).' '.ucfirst($user->last_name) ?></h2>
                 <div class="flex items-center justify-center text-gray-600 mt-1">
                     <i class="fas fa-map-marker-alt mr-1"></i>
-                    Istanbul, Turkey
+                    <?= $user->city ?? null?>, <?= $user->country ?? null?>
                 </div>
                 <div class="flex justify-between mt-6">
-                    <div class="text-center">
+                <a href="/events/<?=$user->user_id ?? null ?>">                    <div class="text-center">
                         <div class="font-bold text-gray-800">24</div>
                         <div class="text-sm text-gray-500">Events</div>
                     </div>
+                    <a href="/users/friends>">
                     <div class="text-center">
-                        <div class="font-bold text-gray-800">156</div>
+                        <div class="font-bold text-gray-800"><?=$friendsCount?></div>
                         <div class="text-sm text-gray-500">Friends</div>
                     </div>
+                    <a href="/users/references/<?=$user->user_id?>">
                     <div class="text-center">
-                        <div class="font-bold text-gray-800">4.8</div>
+                        <div class="font-bold text-gray-800"><?=$avgRating?></div>
                         <div class="text-sm text-gray-500">Rating</div>
                     </div>
                 </div>
