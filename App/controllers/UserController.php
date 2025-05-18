@@ -37,12 +37,13 @@ class UserController extends BaseController {
     }
     
     public function references() {
-    $userId = Session::get('user_id') ?? null; 
+    $userId = Session::get(key: 'user_id') ?? null; 
+    $user = $this->userModel->getById($userId);
     $reference = $this->reviewModel->getReviewsForUser($userId);
-    $averageRating = $this->reviewModel->getReviewsForUser($userId);
+    $reviews = $this->reviewModel->getReviewsForUser($userId);
         loadView('users/references',[
             'reference' => $reference,
-            'averageRating' => $averageRating,
+            'reviews' => $reviews,
 
         ]);
     }

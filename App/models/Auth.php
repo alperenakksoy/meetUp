@@ -47,6 +47,7 @@ class Auth {
             'user' => $userData]);
             exit;
         }
+        
         $userData['password'] = password_hash($userData['password'], PASSWORD_DEFAULT);
 
 

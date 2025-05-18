@@ -36,7 +36,7 @@ loadPartial('head') ?>
                             <div class="text-xs text-gray-500">Friends</div>
                         </div></a>
                         
-                    <a href="/users/references/{id}"> <div class="text-center hover:scale-110 transition-transform duration-200 cursor-pointer">
+                    <a href="/users/references"> <div class="text-center hover:scale-110 transition-transform duration-200 cursor-pointer">
                             <div class="text-xl font-bold text-orange-500">42</div>
                             <div class="text-xs text-gray-500">References</div>
                         </div></a>

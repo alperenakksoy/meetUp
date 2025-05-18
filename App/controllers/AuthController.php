@@ -46,11 +46,11 @@ class AuthController extends BaseController {
             'date_of_birth' => $_POST['date_of_birth'] ?? null,
             'gender' => $_POST['gender'] ?? null,
             'city' => $_POST['city'] ?? null,
-           'country' => $_POST['country'] ?? null
+            'country' => $_POST['country'] ?? null
         ];
 
-       $this->auth->register($userData);
-
+    
+        $this->auth->register($userData);
     }
     /**
      * 
