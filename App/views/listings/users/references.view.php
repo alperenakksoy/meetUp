@@ -5,15 +5,6 @@ $pageTitle = 'References';
 $activePage = 'profile';
 $isLoggedIn = true;
 
-// In a real application, you would fetch the references from the database
-// For now, we'll use hardcoded data as a placeholder
-$user = [
-    'id' => 1,
-    'first_name' => 'Ahmet Alperen',
-    'last_name' => 'Aksoy',
-    'profile_image' => 'https://randomuser.me/api/portraits/men/32.jpg',
-    'location' => 'Istanbul, Turkey'
-];
 
 // Sample references data
 $references = [
@@ -168,9 +159,9 @@ usort($references, function($a, $b) {
                     <div class="bg-white rounded-lg shadow-sm overflow-hidden mb-6">
                         <div class="bg-gradient-to-r from-orange-500 to-orange-600 h-24"></div>
                         <div class="p-4 text-center relative">
-                            <img src="<?php echo $user['profile_image']; ?>" alt="<?php echo $user['first_name'] . ' ' . $user['last_name']; ?>" class="w-24 h-24 rounded-full border-4 border-white mx-auto absolute -top-12 left-1/2 transform -translate-x-1/2">
+                            <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="<?= $user->first_name . ' ' . $user->last_name; ?>" class="w-24 h-24 rounded-full border-4 border-white mx-auto absolute -top-12 left-1/2 transform -translate-x-1/2">
                             <div class="mt-14">
-                                <h2 class="text-xl font-bold text-gray-800"><?php echo $user['first_name'] . ' ' . $user['last_name']; ?></h2>
+                                <h2 class="text-xl font-bold text-gray-800"><?= $user->first_name . ' ' . $user->last_name; ?></h2>
                                 <div class="flex items-center justify-center text-gray-600 mt-1">
                                     <i class="fas fa-map-marker-alt text-orange-500 mr-1"></i>
                                     <span><?php echo $user['location']; ?></span>

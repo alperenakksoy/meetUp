@@ -23,6 +23,11 @@ class BaseModel {
         $params = ['id' => $id];
         return $this->db->query($query, $params)->fetch();
     }
+    public function usergetById($id) {
+        $query = "SELECT * FROM {$this->table} WHERE user_id = :id";
+        $params = ['id' => $id];
+        return $this->db->query($query, $params)->fetch();
+    }
     
     
     public function create($data) {

@@ -38,12 +38,13 @@ class UserController extends BaseController {
     
     public function references() {
     $userId = Session::get(key: 'user_id') ?? null; 
-    $user = $this->userModel->getById($userId);
+    $user = $this->userModel->usergetById($userId);
     $reference = $this->reviewModel->getReviewsForUser($userId);
     $reviews = $this->reviewModel->getReviewsForUser($userId);
         loadView('users/references',[
             'reference' => $reference,
             'reviews' => $reviews,
+            'user' => $user
 
         ]);
     }
