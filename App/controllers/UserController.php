@@ -36,9 +36,15 @@ class UserController extends BaseController {
         loadView('users/friends');
     }
     
-    public function references($params) {
+    public function references() {
+    $userId = Session::get('user_id') ?? null; 
+    $reference = $this->reviewModel->getReviewsForUser($userId);
+    $averageRating = $this->reviewModel->getReviewsForUser($userId);
+        loadView('users/references',[
+            'reference' => $reference,
+            'averageRating' => $averageRating,
 
-        loadView('users/references');
+        ]);
     }
     public function settings() {
         // Check if user is logged in

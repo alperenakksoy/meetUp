@@ -1,4 +1,6 @@
 <?php
+
+use Framework\Session;
 // Set page variables
 $pageTitle = 'Dashboard';
 $activePage = 'home';
@@ -35,10 +37,10 @@ $isLoggedIn = true;
                         <div class="font-bold text-gray-800"><?=$friendsCount?></div>
                         <div class="text-sm text-gray-500">Friends</div>
                     </div>
-                    <a href="/users/references/<?=$user->user_id?>">
+                    <a href="/users/references">
                     <div class="text-center">
                         <div class="font-bold text-gray-800"><?=$avgRating?></div>
-                        <div class="text-sm text-gray-500">Rating</div>
+                        <div class="text-sm text-gray-500">Reviews</div>
                     </div>
                 </div>
                 <a href="/events/create" class="block mt-6 bg-orange-600 hover:bg-orange-700 text-white text-center py-2 px-4 rounded-lg transition duration-200">

@@ -3,6 +3,8 @@ namespace App\Models;
 
 class Review extends BaseModel {
     protected $table = 'reviews';
+
+    
     
     // Get reviews for a user
     public function getReviewsForUser($userId, $limit = 10, $offset = 0) {

@@ -1,140 +1,13 @@
 <?php
 
+use Framework\Session;
+
 // Set page variables
 $pageTitle = 'References';
 $activePage = 'profile';
 $isLoggedIn = true;
-
-// In a real application, you would fetch the references from the database
-// For now, we'll use hardcoded data as a placeholder
-$user = [
-    'id' => 1,
-    'first_name' => 'Ahmet Alperen',
-    'last_name' => 'Aksoy',
-    'profile_image' => 'https://randomuser.me/api/portraits/men/32.jpg',
-    'location' => 'Istanbul, Turkey'
-];
-
-// Sample references data
-$references = [
-    [
-        'id' => 1,
-        'author' => [
-            'id' => 101,
-            'name' => 'Emma Johnson',
-            'profile_image' => 'https://randomuser.me/api/portraits/women/63.jpg',
-            'location' => 'London, UK'
-        ],
-        'event' => [
-            'id' => 201,
-            'title' => 'Bosphorus Sunset Cruise',
-            'date' => 'March 18, 2025'
-        ],
-        'content' => 'Ahmet was an amazing host for the Bosphorus Sunset Cruise! He was extremely knowledgeable about Istanbul\'s history and culture, sharing fascinating stories and insights throughout the tour. He made sure everyone felt welcome and included, even though we were all strangers at the beginning. By the end of the cruise, we were exchanging contact details and planning future meetups! The Turkish tea and baklava he provided were delicious too. I highly recommend joining any event hosted by Ahmet - you\'ll have a wonderful time and make great connections!',
-        'rating' => 5,
-        'date_posted' => 'March 19, 2025',
-        'tags' => ['Knowledgeable', 'Friendly', 'Welcoming']
-    ],
-    [
-        'id' => 2,
-        'author' => [
-            'id' => 102,
-            'name' => 'David Wilson',
-            'profile_image' => 'https://randomuser.me/api/portraits/men/54.jpg',
-            'location' => 'Berlin, Germany'
-        ],
-        'event' => [
-            'id' => 202,
-            'title' => 'Historical Istanbul Tour',
-            'date' => 'February 15, 2025'
-        ],
-        'content' => 'I joined Ahmet\'s walking tour of historical Istanbul, and it was one of the highlights of my trip. As a photography enthusiast, I appreciated how Ahmet knew all the best spots for amazing photos of Hagia Sophia and the Blue Mosque. He was patient when we wanted to stop for pictures and provided fascinating historical context for each site. He even helped with recommendations for local restaurants after the tour. A genuinely nice person who clearly loves showing people around his city!',
-        'rating' => 5,
-        'date_posted' => 'February 17, 2025',
-        'tags' => ['Knowledgeable', 'Helpful', 'Patient']
-    ],
-    [
-        'id' => 3,
-        'author' => [
-            'id' => 103,
-            'name' => 'Olivia Martinez',
-            'profile_image' => 'https://randomuser.me/api/portraits/women/29.jpg',
-            'location' => 'Barcelona, Spain'
-        ],
-        'event' => [
-            'id' => 203,
-            'title' => 'Coffee & Cultural Exchange',
-            'date' => 'January 28, 2025'
-        ],
-        'content' => 'The coffee meetup organized by Ahmet was a great experience. He selected a charming local café with delicious Turkish coffee. It was a bit chilly that day, and I wish I had known to bring a warmer jacket, but Ahmet was thoughtful enough to offer his jacket when he noticed I was cold. The conversation was interesting, with a good mix of locals and travelers. I learned so much about Turkish culture in just a few hours!',
-        'rating' => 4,
-        'date_posted' => 'January 30, 2025',
-        'tags' => ['Thoughtful', 'Interesting', 'Cultural']
-    ],
-    [
-        'id' => 4,
-        'author' => [
-            'id' => 104,
-            'name' => 'Michael Brown',
-            'profile_image' => 'https://randomuser.me/api/portraits/men/22.jpg',
-            'location' => 'Toronto, Canada'
-        ],
-        'event' => [
-            'id' => 204,
-            'title' => 'Turkish Cooking Workshop',
-            'date' => 'January 10, 2025'
-        ],
-        'content' => 'Ahmet\'s cooking workshop was fantastic! As someone who loves food but rarely cooks, I was a bit worried I\'d struggle, but Ahmet made the process very accessible. He was patient with beginners and made sure everyone succeeded in making their own dishes. The recipes were authentic, and he explained the cultural significance of each dish. We all shared the meal together afterward, which made for a wonderful social experience. Highly recommend!',
-        'rating' => 5,
-        'date_posted' => 'January 12, 2025',
-        'tags' => ['Patient', 'Skilled', 'Great teacher']
-    ],
-    [
-        'id' => 5,
-        'author' => [
-            'id' => 105,
-            'name' => 'Sophie Chen',
-            'profile_image' => 'https://randomuser.me/api/portraits/women/45.jpg',
-            'location' => 'Tokyo, Japan'
-        ],
-        'event' => [
-            'id' => 205,
-            'title' => 'Language Exchange Meetup',
-            'date' => 'December 15, 2024'
-        ],
-        'content' => 'I attended Ahmet\'s language exchange event while visiting Istanbul. It was well-organized with a good balance of structured activities and free conversation time. Ahmet made sure to introduce everyone and create an inclusive atmosphere. He also helped translate when needed. I practiced my beginner Turkish and helped others with Japanese. Made some great connections and improved my language skills!',
-        'rating' => 5,
-        'date_posted' => 'December 18, 2024',
-        'tags' => ['Organized', 'Inclusive', 'Helpful']
-    ]
-];
-
-// Statistics
-$totalReferences = count($references);
-$averageRating = array_sum(array_column($references, 'rating')) / $totalReferences;
-$fiveStarCount = count(array_filter($references, function($ref) { return $ref['rating'] === 5; }));
-$fourStarCount = count(array_filter($references, function($ref) { return $ref['rating'] === 4; }));
-$threeStarCount = count(array_filter($references, function($ref) { return $ref['rating'] === 3; }));
-$twoStarCount = count(array_filter($references, function($ref) { return $ref['rating'] === 2; }));
-$oneStarCount = count(array_filter($references, function($ref) { return $ref['rating'] === 1; }));
-
-// Get all unique tags
-$allTags = [];
-foreach ($references as $reference) {
-    foreach ($reference['tags'] as $tag) {
-        if (!in_array($tag, $allTags)) {
-            $allTags[] = $tag;
-        }
-    }
-}
-
-// Sort references by date (newest first)
-usort($references, function($a, $b) {
-    return strtotime($b['date_posted']) - strtotime($a['date_posted']);
-});
 ?>
-
-<?php loadPartial('head') ?>
+<?=loadPartial('head') ?>
 <?=loadPartial(name: 'navbar')?>
 
 <body class="bg-gray-50 pt-20">
@@ -155,7 +28,7 @@ usort($references, function($a, $b) {
                     </a>
                     <div class="bg-gray-200 text-gray-700 py-2 px-4 rounded-lg">
                         <i class="fas fa-star text-orange-500 mr-1"></i>
-                        <span class="font-semibold"><?php echo number_format($averageRating, 1); ?></span>
+                        <span class="font-semibold"><?=$averageRating?></span>
                         <span class="text-sm text-gray-500">(<?php echo $totalReferences; ?> references)</span>
                     </div>
                 </div>

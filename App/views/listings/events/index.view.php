@@ -99,7 +99,7 @@ $isLoggedIn = true;
                             <span class="bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded">Event</span>
                         </div>
                         <a href="/events/<?= $event->event_id ?>" class="bg-orange-500 hover:bg-orange-600 text-white px-3 py-1 rounded text-sm font-medium">
-                            <i class="fas fa-check-circle mr-1"></i> Join
+                            <i class="fas fa-check-circle mr-1"></i> View
                         </a>
                     </div>
                 </div>

@@ -9,7 +9,7 @@ $router->get('/users/settings', 'UserController@settings');
 $router->get('/users/profile/{id}', 'UserController@profile');
 $router->get('/users/edit/{id}', 'UserController@edit');
 $router->put('/users/{id}', 'UserController@update');
-$router->get('/users/references/{id}', 'UserController@references');
+$router->get('/users/references', 'UserController@references');
 
 // Event routes
 $router->get('/events', 'EventController@index');
