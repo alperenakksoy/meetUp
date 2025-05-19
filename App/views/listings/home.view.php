@@ -27,24 +27,11 @@ $isLoggedIn = true;
                     <i class="fas fa-map-marker-alt mr-1"></i>
                     <?= $user->city ?? null?>, <?= $user->country ?? null?>
                 </div>
-                <div class="flex justify-between mt-6">
-                <a href="/events/<?=$user->user_id ?? null ?>">                    <div class="text-center">
-                        <div class="font-bold text-gray-800">24</div>
-                        <div class="text-sm text-gray-500">Events</div>
-                    </div>
-                    <a href="/users/friends>">
-                    <div class="text-center">
-                        <div class="font-bold text-gray-800"><?=$friendsCount?></div>
-                        <div class="text-sm text-gray-500">Friends</div>
-                    </div>
-                    <a href="/users/references">
-                    <div class="text-center">
-                        <div class="font-bold text-gray-800"><?=$avgRating?></div>
-                        <div class="text-sm text-gray-500">Reviews</div>
-                    </div>
-                </div>
                 <a href="/events/create" class="block mt-6 bg-orange-600 hover:bg-orange-700 text-white text-center py-2 px-4 rounded-lg transition duration-200">
                     <i class="fas fa-plus mr-2"></i> Create New Event
+                </a>
+                <a href="/events/create" class="block mt-6 bg-blue-600 hover:bg-blue-700 text-white text-center py-2 px-4 rounded-lg transition duration-200">
+                    <i class="fas fa-plus mr-2"></i> Join An Event
                 </a>
             </div>
             <div class="border-t border-gray-200 px-6 py-4">
@@ -70,7 +57,7 @@ $isLoggedIn = true;
             <div class="bg-white rounded-lg shadow-md p-4">
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between">
                     <div class="text-gray-700 mb-2 md:mb-0">
-                        Welcome back, <strong class="font-semibold">Ahmet</strong>! What's your plan for today?
+                        Welcome back, <strong class="font-semibold"><?=$user->first_name?></strong>! What's your plan for today?
                     </div>
                     <div class="flex space-x-2">
                         <div class="bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 px-3 rounded-lg cursor-pointer transition duration-200">

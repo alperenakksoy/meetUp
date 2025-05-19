@@ -19,25 +19,24 @@ loadPartial('head') ?>
                     <div class="mx-auto mb-4">
                         <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile Picture" class="w-36 h-36 rounded-full border-4 border-gray-100 mx-auto">
                     </div>
-                    <h1 class="text-xl font-bold font-volkhov text-gray-800 mb-1">Ahmet Alperen Aksoy</h1>
+                    <h1 class="text-xl font-bold font-volkhov text-gray-800 mb-1"><?="{$user->first_name} {$user->last_name}"?></h1>
                     <div class="flex items-center justify-center text-gray-600 mb-4">
                         <i class="fas fa-map-marker-alt text-orange-500 mr-1"></i>
-                        <span>Istanbul, Turkey</span>
+                        <span><?= $user->city .', '.$user->country ?></span>
                     </div>
                     <div class="flex justify-between mb-4">
                    
                    <a href="/events/past">  <div class="text-center hover:scale-110 transition-transform duration-200 cursor-pointer">
-                            <div class="text-xl font-bold text-orange-500">24</div>
+                            <div class="text-xl font-bold text-orange-500"><?=count($pastEvents)?></div>
                             <div class="text-xs text-gray-500">Events</div>
                         </div></a>
                         
                     <a href="/users/friends"> <div class="text-center hover:scale-110 transition-transform duration-200 cursor-pointer">
-                            <div class="text-xl font-bold text-orange-500">156</div>
+                            <div class="text-xl font-bold text-orange-500"><?=$friendsCount?></div>
                             <div class="text-xs text-gray-500">Friends</div>
                         </div></a>
-                        
                     <a href="/users/references"> <div class="text-center hover:scale-110 transition-transform duration-200 cursor-pointer">
-                            <div class="text-xl font-bold text-orange-500">42</div>
+                            <div class="text-xl font-bold text-orange-500"><?=count($reviews)?></div>
                             <div class="text-xs text-gray-500">References</div>
                         </div></a>
                     </div>
@@ -45,14 +44,13 @@ loadPartial('head') ?>
                         <i class="fas fa-edit mr-1"></i> Edit Profile
                     </a>
                 </div>
-
                 <!-- User Details -->
                 <div class="mt-6">
                     <div class="mb-4">
                         <h3 class="text-gray-800 font-medium border-b border-gray-100 pb-2 mb-3 font-volkhov">Personal Information</h3>
                         <div class="flex items-center text-sm text-gray-600 mb-2">
                             <i class="fas fa-user text-orange-500 w-5 mr-2"></i>
-                            <span>27 years old</span>
+                            <span><?=calcAge($user->date_of_birth)?> years old</span>
                         </div>
                         <div class="flex items-center text-sm text-gray-600 mb-2">
                             <i class="fas fa-briefcase text-orange-500 w-5 mr-2"></i>
@@ -60,13 +58,21 @@ loadPartial('head') ?>
                         </div>
                         <div class="flex items-center text-sm text-gray-600">
                             <i class="fas fa-clock text-orange-500 w-5 mr-2"></i>
-                            <span>Member since January 2023</span>
+                            <span>Member since <?=reDate($user->created_at)?></span>
                         </div>
+                        <?php if($user->gender =='Female' || $user->gender =='Male'):?>
+                        <div class="flex items-center text-sm text-gray-600 mb-2 mt-2 ml-0.5">
+                            <i class="fas fa-<?=strtolower($user->gender)?> text-orange-500 w-5 mr-2"></i>
+                            <span>Gender: <?=ucfirst($user->gender)?></span>
+                        </div>
+                        <?php endif;?>
+            
+                    
                     </div>
 
                     <div class="mb-4">
                         <h3 class="text-gray-800 font-medium border-b border-gray-100 pb-2 mb-3 font-volkhov">About Me</h3>
-                        <p class="text-sm text-gray-600">Software engineering graduate passionate about travel, technology, and bringing people together. Created SocialLoop as my B.Sc. thesis project to help travelers connect with locals through shared experiences.</p>
+                        <p class="text-sm text-gray-600"><?=$user->bio?></p>
                     </div>
 
                     <div>
@@ -93,7 +99,8 @@ loadPartial('head') ?>
                         <a href="events.php" class="text-orange-500 hover:text-orange-600 text-sm hover:underline">View All</a>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
-                        <!-- Event 1 -->
+                    <?php foreach($upevents as $upevent):?>
+                        <!-- Events that user attending -->
                         <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
                             <img src="/api/placeholder/400/150" alt="Event Image" class="w-full h-36 object-cover">
                             <div class="p-3">
@@ -116,53 +123,7 @@ loadPartial('head') ?>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Event 2 -->
-                        <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
-                            <img src="/api/placeholder/400/150" alt="Event Image" class="w-full h-36 object-cover">
-                            <div class="p-3">
-                                <h3 class="font-semibold text-gray-800 mb-2">Hiking Belgrad Forest</h3>
-                                <div class="flex items-center text-sm text-gray-600 mb-1">
-                                    <i class="far fa-calendar text-orange-500 w-4 mr-2"></i>
-                                    <span>April 8, 2025 • 09:00</span>
-                                </div>
-                                <div class="flex items-center text-sm text-gray-600 mb-3">
-                                    <i class="fas fa-map-marker-alt text-orange-500 w-4 mr-2"></i>
-                                    <span>Belgrad Forest, Istanbul</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <div class="flex -space-x-2">
-                                        <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Participant" class="w-7 h-7 rounded-full border-2 border-white">
-                                        <img src="https://randomuser.me/api/portraits/women/29.jpg" alt="Participant" class="w-7 h-7 rounded-full border-2 border-white">
-                                    </div>
-                                    <span class="text-xs text-gray-500 ml-2">+6 going</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Event 3 -->
-                        <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
-                            <img src="/api/placeholder/400/150" alt="Event Image" class="w-full h-36 object-cover">
-                            <div class="p-3">
-                                <h3 class="font-semibold text-gray-800 mb-2">Historical Istanbul Tour</h3>
-                                <div class="flex items-center text-sm text-gray-600 mb-1">
-                                    <i class="far fa-calendar text-orange-500 w-4 mr-2"></i>
-                                    <span>April 10, 2025 • 10:00</span>
-                                </div>
-                                <div class="flex items-center text-sm text-gray-600 mb-3">
-                                    <i class="fas fa-map-marker-alt text-orange-500 w-4 mr-2"></i>
-                                    <span>Sultanahmet, Istanbul</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <div class="flex -space-x-2">
-                                        <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="Participant" class="w-7 h-7 rounded-full border-2 border-white">
-                                        <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="Participant" class="w-7 h-7 rounded-full border-2 border-white">
-                                        <img src="https://randomuser.me/api/portraits/women/55.jpg" alt="Participant" class="w-7 h-7 rounded-full border-2 border-white">
-                                    </div>
-                                    <span class="text-xs text-gray-500 ml-2">+8 going</span>
-                                </div>
-                            </div>
-                        </div>
+                    <?php endforeach;?>
                     </div>
                 </div>
 

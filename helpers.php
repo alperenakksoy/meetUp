@@ -110,5 +110,17 @@ function inspectAndDie($value): void {
    return date('H:i', strtotime($time));
   }
 
-  
+  /**
+   * Calculate the age from database
+   * @param mixed
+   * @return int
+   */
+   function calcAge($date){
+   $birthdate = $date; // Replace with the value from your DB
+
+   $birthDate = new DateTime($birthdate);
+   $today = new DateTime();
+   $age = $birthDate->diff($today)->y;
+    return $age;
+  }
 

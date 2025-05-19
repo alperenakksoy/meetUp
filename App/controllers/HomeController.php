@@ -26,6 +26,7 @@ class HomeController extends BaseController {
     public function index() {
         // Load the homepage
     $email = Session::get('user')['email'] ?? null;
+    $events = $this->eventModel->getPastEvents();
 
     // finding the user's data with email
     $user = $this->userModel->findByEmail($email);
@@ -37,7 +38,8 @@ class HomeController extends BaseController {
     loadView('home',[
         'user' => $user,
         'friendsCount' => $friendsCount,
-        'avgRating' => $avgRating
+        'avgRating' => $avgRating,
+        'events' => $events
 
     ]);
     }
