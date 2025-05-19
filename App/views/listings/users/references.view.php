@@ -23,10 +23,10 @@ $isLoggedIn = true;
                         Back to Profile
                     </a>
                     <div class="bg-gray-200 text-gray-700 py-2 px-4 rounded-lg">
-                        <i class="fas fa-star text-orange-500 mr-1"></i>
-                        <span class="font-semibold">4.8</span>
-                        <span class="text-sm text-gray-500">(5 references)</span>
-                    </div>
+    <i class="fas fa-star text-orange-500 mr-1"></i>
+    <span class="font-semibold"><?= number_format($averageRating, 1) ?></span>
+    <span class="text-sm text-gray-500">(<?= $totalReviews ?> references)</span>
+</div>
                 </div>
             </div>
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -47,61 +47,70 @@ $isLoggedIn = true;
                     </div>
                 </div>
                 <!-- Ratings Breakdown -->
-                <div class="bg-white rounded-lg shadow-sm overflow-hidden mb-6">
-                    <div class="p-4 border-b border-gray-100">
-                        <h3 class="font-semibold text-gray-800">Ratings Breakdown</h3>
-                    </div>
-                    <div class="p-4">
-                        <div class="space-y-3">
-                            <div class="flex items-center gap-2">
-                                <div class="w-16 flex items-center text-sm">
-                                    <i class="fas fa-star text-orange-500 mr-1"></i> 5
-                                </div>
-                                <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                                    <div class="bg-orange-500 h-full" style="width: 80%"></div>
-                                </div>
-                                <div class="w-8 text-sm text-gray-600 text-right">4</div>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <div class="w-16 flex items-center text-sm">
-                                    <i class="fas fa-star text-orange-500 mr-1"></i> 4
-                                </div>
-                                <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                                    <div class="bg-orange-500 h-full" style="width: 20%"></div>
-                                </div>
-                                <div class="w-8 text-sm text-gray-600 text-right">1</div>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <div class="w-16 flex items-center text-sm">
-                                    <i class="fas fa-star text-orange-500 mr-1"></i> 3
-                                </div>
-                                <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                                    <div class="bg-orange-500 h-full" style="width: 0%"></div>
-                                </div>
-                                <div class="w-8 text-sm text-gray-600 text-right">0</div>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <div class="w-16 flex items-center text-sm">
-                                    <i class="fas fa-star text-orange-500 mr-1"></i> 2
-                                </div>
-                                <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                                    <div class="bg-orange-500 h-full" style="width: 0%"></div>
-                                </div>
-                                <div class="w-8 text-sm text-gray-600 text-right">0</div>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <div class="w-16 flex items-center text-sm">
-                                    <i class="fas fa-star text-orange-500 mr-1"></i> 1
-                                </div>
-                                <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                                    <div class="bg-orange-500 h-full" style="width: 0%"></div>
-                                </div>
-                                <div class="w-8 text-sm text-gray-600 text-right">0</div>
-                            </div>
-                        </div>
-                    </div>
+     <!-- Ratings Breakdown -->
+<div class="bg-white rounded-lg shadow-sm overflow-hidden mb-6">
+    <div class="p-4 border-b border-gray-100">
+        <h3 class="font-semibold text-gray-800">Ratings Breakdown</h3>
+    </div>
+    <div class="p-4">
+        <div class="space-y-3">
+            <!-- 5 stars -->
+            <div class="flex items-center gap-2">
+                <div class="w-16 flex items-center text-sm">
+                    <i class="fas fa-star text-orange-500 mr-1"></i> 5
                 </div>
-
+                <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div class="bg-orange-500 h-full" style="width: <?= $totalReviews > 0 ? ($fiveStarCount / $totalReviews) * 100 : 0 ?>%"></div>
+                </div>
+                <div class="w-8 text-sm text-gray-600 text-right"><?= $fiveStarCount ?></div>
+            </div>
+            
+            <!-- 4 stars -->
+            <div class="flex items-center gap-2">
+                <div class="w-16 flex items-center text-sm">
+                    <i class="fas fa-star text-orange-500 mr-1"></i> 4
+                </div>
+                <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div class="bg-orange-500 h-full" style="width: <?= $totalReviews > 0 ? ($fourStarCount / $totalReviews) * 100 : 0 ?>%"></div>
+                </div>
+                <div class="w-8 text-sm text-gray-600 text-right"><?= $fourStarCount ?></div>
+            </div>
+            
+            <!-- 3 stars -->
+            <div class="flex items-center gap-2">
+                <div class="w-16 flex items-center text-sm">
+                    <i class="fas fa-star text-orange-500 mr-1"></i> 3
+                </div>
+                <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div class="bg-orange-500 h-full" style="width: <?= $totalReviews > 0 ? ($threeStarCount / $totalReviews) * 100 : 0 ?>%"></div>
+                </div>
+                <div class="w-8 text-sm text-gray-600 text-right"><?= $threeStarCount ?></div>
+            </div>
+            
+            <!-- 2 stars -->
+            <div class="flex items-center gap-2">
+                <div class="w-16 flex items-center text-sm">
+                    <i class="fas fa-star text-orange-500 mr-1"></i> 2
+                </div>
+                <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div class="bg-orange-500 h-full" style="width: <?= $totalReviews > 0 ? ($twoStarCount / $totalReviews) * 100 : 0 ?>%"></div>
+                </div>
+                <div class="w-8 text-sm text-gray-600 text-right"><?= $twoStarCount ?></div>
+            </div>
+            
+            <!-- 1 star -->
+            <div class="flex items-center gap-2">
+                <div class="w-16 flex items-center text-sm">
+                    <i class="fas fa-star text-orange-500 mr-1"></i> 1
+                </div>
+                <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div class="bg-orange-500 h-full" style="width: <?= $totalReviews > 0 ? ($oneStarCount / $totalReviews) * 100 : 0 ?>%"></div>
+                </div>
+                <div class="w-8 text-sm text-gray-600 text-right"><?= $oneStarCount ?></div>
+            </div>
+        </div>
+    </div>
+</div>
                 <!-- Common Tags -->
                 <div class="bg-white rounded-lg shadow-sm overflow-hidden mb-6">
                     <div class="p-4 border-b border-gray-100">
@@ -187,7 +196,6 @@ $isLoggedIn = true;
                         <!-- References -->
                         <div class="p-5">
                             <div class="flex gap-4 mb-4">
-                                <?= inspectAndDie($review->reviewer_profile_picture);?>
                             <img src="/uploads/profiles/<?=$review->reviewer_profile_picture ?? 'default_profile.png' ?>" alt="<?=$review->reviewer_first_name.' '. $review->reviewer_last_name?>" class="w-12 h-12 rounded-full object-cover">
                                 <div class="flex-1">
                                     <div class="flex justify-between items-start">

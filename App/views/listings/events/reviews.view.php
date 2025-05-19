@@ -39,19 +39,12 @@ $isLoggedIn = true;
             <div class="bg-white rounded-lg shadow p-5 flex gap-5 mb-5">
                 <img src="/api/placeholder/150/100" alt="Event" class="w-[150px] h-[100px] object-cover rounded">
                 <div class="flex-1">
-<<<<<<< HEAD
-                    <h2 class="text-xl font-semibold mb-2"><?php $event->title ?></h2>
-                    <div class="flex flex-wrap gap-4 text-sm text-gray-600 mb-3">
-                        <span><i class="far fa-calendar mr-1"></i><?php reDate($event->event_date) ?></span>
-                        <span><i class="far fa-clock mr-1"></i> 17:30 - 20:30</span>
-                        <span><i class="fas fa-map-marker-alt mr-1"></i> Eminönü, Istanbul</span>
-=======
+
                     <h2 class="text-xl font-semibold mb-2"><?= $event->title ?></h2>
                     <div class="flex flex-wrap gap-4 text-sm text-gray-600 mb-3">
                         <span><i class="far fa-calendar mr-1"></i><?= reDate($event->event_date) ?></span>
                         <span><i class="far fa-clock mr-1"></i> <?= reTime($event->start_time) ?> - <?= reTime($event->end_time) ?></span>
                         <span><i class="fas fa-map-marker-alt mr-1"></i><?= $event->location_name ?>, <?= $event->city?>/<?= $event->country ?></span>
->>>>>>> 3b2d076 (updated)
                     </div>
                     
                     <div class="flex items-center">
