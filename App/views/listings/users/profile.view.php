@@ -94,86 +94,110 @@ loadPartial('head') ?>
             <div class="lg:col-span-3 space-y-6">
                 <!-- Events Section -->
                 <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-                    <div class="flex justify-between items-center p-4 border-b border-gray-100">
-                        <h2 class="text-lg font-semibold text-gray-800 font-volkhov"><i class="fas fa-calendar-alt text-orange-500 mr-2"></i> My Events</h2>
-                        <a href="events.php" class="text-orange-500 hover:text-orange-600 text-sm hover:underline">View All</a>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
-                    <?php foreach($upevents as $upevent):?>
-                        <!-- Events that user attending -->
-                        <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
-                            <img src="/api/placeholder/400/150" alt="Event Image" class="w-full h-36 object-cover">
-                            <div class="p-3">
-                                <h3 class="font-semibold text-gray-800 mb-2">Coffee & Cultural Exchange</h3>
-                                <div class="flex items-center text-sm text-gray-600 mb-1">
-                                    <i class="far fa-calendar text-orange-500 w-4 mr-2"></i>
-                                    <span>April 5, 2025 • 15:00</span>
-                                </div>
-                                <div class="flex items-center text-sm text-gray-600 mb-3">
-                                    <i class="fas fa-map-marker-alt text-orange-500 w-4 mr-2"></i>
-                                    <span>Kadıköy, Istanbul</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <div class="flex -space-x-2">
-                                        <img src="https://randomuser.me/api/portraits/women/63.jpg" alt="Participant" class="w-7 h-7 rounded-full border-2 border-white">
-                                        <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Participant" class="w-7 h-7 rounded-full border-2 border-white">
-                                        <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Participant" class="w-7 h-7 rounded-full border-2 border-white">
-                                    </div>
-                                    <span class="text-xs text-gray-500 ml-2">+4 going</span>
-                                </div>
-                            </div>
+    <div class="flex justify-between items-center p-4 border-b border-gray-100">
+        <h2 class="text-lg font-semibold text-gray-800 font-volkhov">
+            <i class="fas fa-calendar-alt text-orange-500 mr-2"></i> My Upcoming Events
+        </h2>
+        <a href="events.php" class="text-orange-500 hover:text-orange-600 text-sm hover:underline">View All</a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
+        <?php if (empty($upevents)): ?>
+            <div class="col-span-full flex items-center text-sm text-gray-600">
+                <i class="far fa-calendar text-orange-500 w-4 mr-2"></i>
+                <span>No Upcoming Events</span>
+            </div>
+        <?php else: ?>
+            <?php foreach($upevents as $upevent): ?>
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
+                    <img src="/api/placeholder/400/150" alt="Event Image" class="w-full h-36 object-cover">
+                    <div class="p-3">
+                        <h3 class="font-semibold text-gray-800 mb-2"><?=$upevent->title?></h3>
+                        <div class="flex items-center text-sm text-gray-600 mb-1">
+                            <i class="far fa-calendar text-orange-500 w-4 mr-2"></i>
+                            <span><?=reDate($upevent->event_date)?>, • <?=reTime($upevent->start_time)?></span>
                         </div>
-                    <?php endforeach;?>
+                        <div class="flex items-center text-sm text-gray-600 mb-3">
+                            <i class="fas fa-map-marker-alt text-orange-500 w-4 mr-2"></i>
+                            <span><?=$upevent->location_name?>, <?=$upevent->city?></span>
+                        </div>
+                        <div class="flex items-center">
+                            
+                            <span class="text-xs text-gray-500 ml-2">+4 going</span>
+                        </div>
                     </div>
                 </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </div>
+</div>
+
+<div class="bg-white rounded-lg shadow-sm overflow-hidden">
+    <div class="flex justify-between items-center p-4 border-b border-gray-100">
+        <h2 class="text-lg font-semibold text-gray-800 font-volkhov">
+            <i class="fas fa-calendar-alt text-orange-500 mr-2"></i> My Past Events
+        </h2>
+        <a href="events.php" class="text-orange-500 hover:text-orange-600 text-sm hover:underline">View All</a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
+        <?php if (empty($pastEvents)): ?>
+            <div class="col-span-full flex items-center text-sm text-gray-600">
+                <i class="far fa-calendar text-orange-500 w-4 mr-2"></i>
+                <span>No Upcoming Events</span>
+            </div>
+        <?php else: ?>
+            <?php foreach($pastEvents as $pastEvent): ?>
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
+                    <img src="/api/placeholder/400/150" alt="Event Image" class="w-full h-36 object-cover">
+                    <div class="p-3">
+                        <h3 class="font-semibold text-gray-800 mb-2"><?=$pastEvent->title?></h3>
+                        <div class="flex items-center text-sm text-gray-600 mb-1">
+                            <i class="far fa-calendar text-orange-500 w-4 mr-2"></i>
+                            <span><?=reDate($pastEvent->event_date)?>, • <?=reTime($pastEvent->start_time)?></span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-600 mb-3">
+                            <i class="fas fa-map-marker-alt text-orange-500 w-4 mr-2"></i>
+                            <span><?=$pastEvent->location_name?>, <?=$pastEvent->city?></span>
+                        </div>
+                        <div class="flex items-center">
+                          
+                            <span class="text-xs text-gray-500 ml-2"></span>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </div>
+</div>
 
                 <!-- Friends Section -->
                 <div class="bg-white rounded-lg shadow-sm overflow-hidden">
                     <div class="flex justify-between items-center p-4 border-b border-gray-100">
-                        <h2 class="text-lg font-semibold text-gray-800 font-volkhov"><i class="fas fa-users text-orange-500 mr-2"></i> Friends</h2>
+                        <h2 class="text-lg font-semibold text-gray-800 font-volkhov"><i class="fas fa-users text-orange-500 mr-2"></i> Friends (<?=$friendsCount?>)</h2>
                         <a href="friends.php" class="text-orange-500 hover:text-orange-600 text-sm hover:underline">View All</a>
                     </div>
                     <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-4 p-4">
-                        <!-- Friend 1 -->
-                        <div class="text-center cursor-pointer hover:-translate-y-1 transition-transform">
-                            <img src="https://randomuser.me/api/portraits/women/63.jpg" alt="Friend" class="w-14 h-14 rounded-full border-2 border-gray-100 mx-auto mb-1">
-                            <div class="text-xs text-gray-800 truncate">Emma</div>
-                        </div>
-                        <!-- Friend 2 -->
-                        <div class="text-center cursor-pointer hover:-translate-y-1 transition-transform">
-                            <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Friend" class="w-14 h-14 rounded-full border-2 border-gray-100 mx-auto mb-1">
-                            <div class="text-xs text-gray-800 truncate">David</div>
-                        </div>
-                        <!-- Friend 3 -->
-                        <div class="text-center cursor-pointer hover:-translate-y-1 transition-transform">
-                            <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Friend" class="w-14 h-14 rounded-full border-2 border-gray-100 mx-auto mb-1">
-                            <div class="text-xs text-gray-800 truncate">Sophie</div>
-                        </div>
-                        <!-- Friend 4 -->
-                        <div class="text-center cursor-pointer hover:-translate-y-1 transition-transform">
-                            <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Friend" class="w-14 h-14 rounded-full border-2 border-gray-100 mx-auto mb-1">
-                            <div class="text-xs text-gray-800 truncate">Michael</div>
-                        </div>
-                        <!-- Friend 5 -->
-                        <div class="text-center cursor-pointer hover:-translate-y-1 transition-transform">
-                            <img src="https://randomuser.me/api/portraits/women/29.jpg" alt="Friend" class="w-14 h-14 rounded-full border-2 border-gray-100 mx-auto mb-1">
-                            <div class="text-xs text-gray-800 truncate">Olivia</div>
-                        </div>
-                        <!-- Friend 6 -->
-                        <div class="text-center cursor-pointer hover:-translate-y-1 transition-transform">
-                            <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="Friend" class="w-14 h-14 rounded-full border-2 border-gray-100 mx-auto mb-1">
-                            <div class="text-xs text-gray-800 truncate">James</div>
-                        </div>
-                        <!-- Friend 7 -->
-                        <div class="text-center cursor-pointer hover:-translate-y-1 transition-transform">
-                            <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="Friend" class="w-14 h-14 rounded-full border-2 border-gray-100 mx-auto mb-1">
-                            <div class="text-xs text-gray-800 truncate">Isabella</div>
-                        </div>
-                        <!-- Friend 8 -->
-                        <div class="text-center cursor-pointer hover:-translate-y-1 transition-transform">
-                            <img src="https://randomuser.me/api/portraits/men/42.jpg" alt="Friend" class="w-14 h-14 rounded-full border-2 border-gray-100 mx-auto mb-1">
-                            <div class="text-xs text-gray-800 truncate">Alexander</div>
-                        </div>
+    <?php 
+    // $friendsCount 6'dan büyükse, gösterilecek arkadaş sayısını 6 ile sınırla
+    $displayCount = ($friendsCount > 6) ? 6 : $friendsCount;
+    
+    // Belirlenen sayıya kadar arkadaşları göster
+    for($i = 0; $i < $displayCount; $i++): 
+    ?>
+        <div class="text-center cursor-pointer hover:-translate-y-1 transition-transform">
+            <img src="https://randomuser.me/api/portraits/women/<?= (63 + $i) % 99 ?>.jpg" alt="Friend" class="w-14 h-14 rounded-full border-2 border-gray-100 mx-auto mb-1">
+            <div class="text-xs text-gray-800 truncate">Friend <?= $i+1 ?></div>
+        </div>
+    <?php endfor; ?>
+    
+    <?php if($friendsCount == 0): ?>
+        <div class="col-span-full text-center py-4 text-gray-500">
+            <p>You don't have any friends yet.</p>
+            <a href="/users/find-friends" class="text-orange-500 hover:underline mt-2 inline-block">Find Friends</a>
+        </div>
+    <?php endif; ?>
+</div>
                     </div>
                 </div>
             </div>

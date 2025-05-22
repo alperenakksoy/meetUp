@@ -21,6 +21,22 @@ class Event extends BaseModel {
         
         return $this->db->query($query)->fetchAll();
     }
+
+    // App/models/Event.php içinde
+
+public function getPastEventsUserAttended($userId) {
+    $query = "SELECT e.*, u.first_name, u.last_name, u.profile_picture 
+              FROM {$this->table} e
+              JOIN users u ON e.host_id = u.user_id
+              JOIN event_attendees ea ON e.event_id = ea.event_id
+              WHERE ea.user_id = :user_id
+              AND ea.status IN ('attending', 'approved')
+              AND (e.event_date < CURDATE() OR e.status = 'past')
+              ORDER BY e.event_date DESC";
+    
+    $params = ['user_id' => $userId];
+    return $this->db->query($query, $params)->fetchAll();
+}
     
     // Get past events
     public function getPastEvents($limit = 10, $offset = 0) {
@@ -60,6 +76,82 @@ class Event extends BaseModel {
         return $this->db->query($query, $params)->fetch();
     }
     
+    // App/models/Event.php içinde
+
+public function getEventCompleteDetails($eventId) {
+    $query = "SELECT 
+        -- Event Details
+        e.event_id,
+        e.title AS event_title,
+        e.description,
+        e.location_name,
+        e.location_address,
+        e.location_details,
+        e.city,
+        e.country,
+        e.event_date,
+        e.start_time,
+        e.end_time,
+        e.end_date,
+        e.cover_image,
+        e.category,
+        e.max_attendees,
+        e.require_approval,
+        e.status AS event_status,
+        e.created_at AS event_created_at,
+        
+        -- Host Details
+        h.user_id AS host_id,
+        CONCAT(h.first_name, ' ', h.last_name) AS host_name,
+        h.first_name AS host_first_name,
+        h.last_name AS host_last_name,
+        h.profile_picture AS host_profile_picture,
+        h.city AS host_city,
+        h.country AS host_country,
+        h.bio AS host_bio,
+        
+        -- Event Statistics
+        (SELECT COUNT(*) 
+         FROM event_attendees ea 
+         WHERE ea.event_id = e.event_id 
+         AND ea.status IN ('attending', 'approved')) AS total_attendees,
+         
+        (SELECT COUNT(*) 
+         FROM event_attendees ea 
+         WHERE ea.event_id = e.event_id 
+         AND ea.status = 'pending') AS pending_requests,
+         
+        (SELECT AVG(rating) 
+         FROM reviews r 
+         WHERE r.event_id = e.event_id) AS average_rating,
+         
+        (SELECT COUNT(*) 
+         FROM reviews r 
+         WHERE r.event_id = e.event_id) AS total_reviews,
+         
+        (SELECT COUNT(*) 
+         FROM event_comments ec 
+         WHERE ec.event_id = e.event_id) AS total_comments,
+         
+        -- Event Tags
+        GROUP_CONCAT(DISTINCT et.tag_name SEPARATOR ', ') AS event_tags
+
+    FROM 
+        {$this->table} e
+    JOIN 
+        users h ON e.host_id = h.user_id
+    LEFT JOIN 
+        event_tags et ON e.event_id = et.event_id
+
+    WHERE 
+        e.event_id = :event_id
+
+    GROUP BY 
+        e.event_id";
+    
+    $params = ['event_id' => $eventId];
+    return $this->db->query($query, $params)->fetch();
+}
     // Get events by category
     public function getEventsByCategory($category) {
         $query = "SELECT e.*, u.first_name, u.last_name 
@@ -90,14 +182,15 @@ class Event extends BaseModel {
     }
     
     // Get events a user is attending
-    public function getEventsUserAttending($userId) {
+    public function getEventsUserAttending($userId,$limit=5) {
         $query = "SELECT e.*, u.first_name, u.last_name 
                 FROM {$this->table} e
                 JOIN users u ON e.host_id = u.user_id
                 JOIN event_attendees ea ON e.event_id = ea.event_id
                 WHERE ea.user_id = :user_id
                 AND ea.status IN ('attending', 'approved')
-                ORDER BY e.event_date ASC";
+                ORDER BY e.event_date ASC
+                LIMIT {$limit}";
         $params = ['user_id' => $userId];
         return $this->db->query($query, $params)->fetchAll();
     }
@@ -126,8 +219,90 @@ class Event extends BaseModel {
         $params = ['event_id' => $eventId];
         return $this->db->query($query, $params)->fetchAll();
     }
-    // Add this to your Event.php model
 
+
+    // App/models/Event.php içinde
+
+public function getPastEventsUserAttendedWithDetails($userId) {
+    $query = "SELECT 
+        -- Event Details
+        e.event_id,
+        e.title AS event_title,
+        e.description,
+        e.location_name,
+        e.location_address,
+        e.location_details,
+        e.city,
+        e.country,
+        e.event_date,
+        e.start_time,
+        e.end_time,
+        e.end_date,
+        e.cover_image,
+        e.category,
+        e.status AS event_status,
+        e.created_at AS event_created_at,
+        
+        -- Host Details
+        h.user_id AS host_id,
+        CONCAT(h.first_name, ' ', h.last_name) AS host_name,
+        h.first_name AS host_first_name,
+        h.last_name AS host_last_name,
+        h.profile_picture AS host_profile_picture,
+        h.city AS host_city,
+        h.country AS host_country,
+        
+        -- User's Attendance Details
+        ea.status AS attendance_status,
+        ea.joined_at AS registration_date,
+        
+        -- Event Statistics
+        (SELECT COUNT(*) 
+         FROM event_attendees ea2 
+         WHERE ea2.event_id = e.event_id 
+         AND ea2.status IN ('attending', 'approved')) AS total_attendees,
+         
+        (SELECT AVG(rating) 
+         FROM reviews r 
+         WHERE r.event_id = e.event_id) AS average_rating,
+         
+        (SELECT COUNT(*) 
+         FROM reviews r 
+         WHERE r.event_id = e.event_id) AS total_reviews,
+         
+        -- User's Review (if exists)
+        ur.rating AS user_rating,
+        ur.content AS user_review,
+        ur.created_at AS review_date,
+        
+        -- Event Tags
+        GROUP_CONCAT(et.tag_name SEPARATOR ', ') AS event_tags
+
+    FROM 
+        event_attendees ea
+    JOIN 
+        {$this->table} e ON ea.event_id = e.event_id
+    JOIN 
+        users h ON e.host_id = h.user_id
+    LEFT JOIN 
+        reviews ur ON e.event_id = ur.event_id AND ur.reviewer_id = ea.user_id
+    LEFT JOIN 
+        event_tags et ON e.event_id = et.event_id
+
+    WHERE 
+        ea.user_id = :user_id
+        AND ea.status IN ('attending', 'approved')
+        AND (e.event_date < CURDATE() OR e.status = 'past')
+
+    GROUP BY 
+        e.event_id, ea.attendee_id, ur.review_id
+
+    ORDER BY 
+        e.event_date DESC";
+    
+    $params = ['user_id' => $userId];
+    return $this->db->query($query, $params)->fetchAll();
+}
 // Add a validation method to your model
 public function validate($data, $requiredFields) {
     $errors = [];
@@ -140,4 +315,5 @@ public function validate($data, $requiredFields) {
     
     return $errors;
 }
+
 }

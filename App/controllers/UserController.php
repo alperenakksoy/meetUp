@@ -25,12 +25,11 @@ class UserController extends BaseController {
     }
     
     public function profile() {
-              // Load the homepage
-    $email = Session::get('user')['email'] ?? null;
-    $pastEvents = $this->eventModel->getPastEvents();
-
+    $email = Session::get('user')['email'] ?? null;   
     // finding the user's data with email
     $user = $this->userModel->findByEmail($email);
+    // get past events where user attended
+    $pastEvents = $this->eventModel->getPastEventsUserAttended($user->user_id);
     // retrieve amount of friends to display on home.view
     $friendsCount = $this->friendshipModel->getFriendCount($user->user_id);
     // retrieve average of rating to display on home.view
@@ -43,17 +42,14 @@ class UserController extends BaseController {
     $attendeeUpcomingEvents = $this->eventModel->getEventsUserAttending($user->user_id);
     // get the datas for the events that user attending
     $upEventsList = [];
-    foreach($attendeeUpcomingEvents as $event){
+    foreach ($attendeeUpcomingEvents as $event) {
         $hostID = $event->host_id;
-        if(!isset($upEventsList[$hostID])){
+        if (!isset($upEventsList[$hostID])) {
             $host = $this->userModel->usergetById($hostID);
-            $upEventsList[$hostID] = $host; 
+            $upEventsList[$hostID] = $host;
         }
-        inspectAndDie($upEventsList);
     }
-    inspectAndDie($upEventsList);
-    // event attendees
-    // $eventAttendees = $this->eventAttendeeModel->
+ 
     loadView('users/profile',[
         'user' => $user,
         'friendsCount' => $friendsCount,
@@ -62,7 +58,6 @@ class UserController extends BaseController {
         'reviews' => $reviews,
         'hostedEvents' => $hostedEvents,
         'upevents' => $attendeeUpcomingEvents,
-
     ]);
     }
   
