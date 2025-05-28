@@ -24,11 +24,11 @@ class EventController extends BaseController {
         ]);
     }
     
+    
     public function create() {
         loadView('events/create');
 
     }
-    
     public function store() {
         $allowedFields = [
             'event_title',
@@ -76,7 +76,13 @@ class EventController extends BaseController {
         }
         
         // Add the host_id - this is critical!
-        $dbData['host_id'] = 1; // Or get from session if available
+        $dbData['host_id'] = $_SESSION['user_id'] ?? 1; // Use actual session user ID
+    
+        // Handle image upload
+        $uploadedImage = $this->handleImageUpload();
+        if ($uploadedImage) {
+            $dbData['cover_image'] = $uploadedImage;
+        }
     
         // Validate required fields
         $requiredFields = [
@@ -120,6 +126,46 @@ class EventController extends BaseController {
                 ]);
             }
         }
+    }
+    
+    private function handleImageUpload() {
+        if (!isset($_FILES['event_image']) || $_FILES['event_image']['error'] !== UPLOAD_ERR_OK) {
+            return null;
+        }
+        
+        $file = $_FILES['event_image'];
+        
+        // Validate file type
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
+        if (!in_array($file['type'], $allowedTypes)) {
+            $_SESSION['error_message'] = 'Only JPEG, PNG, and WebP images are allowed.';
+            return null;
+        }
+        
+        // Validate file size (5MB max)
+        if ($file['size'] > 5 * 1024 * 1024) {
+            $_SESSION['error_message'] = 'Image size must be less than 5MB.';
+            return null;
+        }
+        
+        // Create upload directory if it doesn't exist
+        $uploadDir = 'uploads/events/';
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
+        
+        // Generate unique filename
+        $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $filename = uniqid('event_') . '.' . $extension;
+        $uploadPath = $uploadDir . $filename;
+        
+        // Move uploaded file
+        if (move_uploaded_file($file['tmp_name'], $uploadPath)) {
+            return $filename; // Return just the filename, not the full path
+        }
+        
+        $_SESSION['error_message'] = 'Failed to upload image.';
+        return null;
     }
     
     public function show($params) {

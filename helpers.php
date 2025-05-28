@@ -123,4 +123,3 @@ function inspectAndDie($value): void {
    $age = $birthDate->diff($today)->y;
     return $age;
   }
-

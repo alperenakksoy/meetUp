@@ -26,22 +26,16 @@ class HomeController extends BaseController {
     public function index() {
         // Load the homepage
     $email = Session::get('user')['email'] ?? null;
-    $events = $this->eventModel->getPastEvents();
-
     // finding the user's data with email
     $user = $this->userModel->findByEmail($email);
-    // retrieve amount of friends to display on home.view
-    $friendsCount = $this->friendshipModel->getFriendCount($user->user_id);
-    // retrieve average of rating to display on home.view
-    $avgRating = $this->reviewModel->getAverageRating($user->user_id);
-
+    // get events that user attending in upcoming events section
+    $upcomingEvents = $this->eventModel->getEventsUserAttending($user->user_id);
+   
     loadView('home',[
         'user' => $user,
-        'friendsCount' => $friendsCount,
-        'avgRating' => $avgRating,
-        'events' => $events
-
+        'upEvents' => $upcomingEvents
     ]);
+    inspectAndDie($upcomingEvents);
     }
   
 

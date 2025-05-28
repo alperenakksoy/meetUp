@@ -77,52 +77,77 @@ $isLoggedIn = true;
                     <a href="events.php" class="text-orange-600 hover:text-orange-800 text-sm">View All</a>
                 </div>
                 
-                <div class="event-card">
-                    <div class="relative">
-                        <img src="/api/placeholder/600/200" alt="Event Image" class="w-full h-48 object-cover">
-                        <div class="absolute top-3 left-3 bg-black bg-opacity-70 text-white px-3 py-1 rounded-full text-sm">
-                            Apr 5, 2025 • 15:00
-                        </div>
-                        <div class="absolute top-3 right-3 bg-green-600 text-white px-3 py-1 rounded-full text-sm">
-                            Coffee & Cultural
-                        </div>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="text-xl font-semibold mb-2">Coffee & Cultural Exchange</h3>
-                        <div class="space-y-2 mb-3">
-                            <div class="flex items-center text-gray-600">
-                                <i class="fas fa-map-marker-alt mr-2"></i>
-                                <span>Mandabatmaz Coffee, Kadıköy, Istanbul</span>
-                            </div>
-                            <div class="flex items-center text-gray-600">
-                                <i class="fas fa-user mr-2"></i>
-                                <span>Hosted by You</span>
-                            </div>
-                        </div>
-                        <p class="text-gray-700 mb-4">
-                            Join us for an afternoon of coffee and conversation! Share your travel stories, learn about Turkish culture, and make new friends in a cozy atmosphere.
-                        </p>
-                        <div class="flex justify-between items-center">
-                            <div class="flex items-center">
-                                <div class="flex -space-x-2">
-                                    <img src="https://randomuser.me/api/portraits/women/63.jpg" alt="Attendee" class="w-8 h-8 rounded-full border-2 border-white">
-                                    <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Attendee" class="w-8 h-8 rounded-full border-2 border-white">
-                                    <img src="https://randomuser.me/api/portraits/women/29.jpg" alt="Attendee" class="w-8 h-8 rounded-full border-2 border-white">
-                                    <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Attendee" class="w-8 h-8 rounded-full border-2 border-white">
+                <?php
+                $maxEventsToShow = 5;
+                $count = 0;
+                ?>
+
+                <div class="divide-y divide-gray-200">
+                    <?php foreach($upEvents as $upEvent): ?>
+                        <?php
+                        if ($count >= $maxEventsToShow) {
+                            break;
+                        }
+                        $count++;
+                        ?>
+                        
+                        <div class="p-4">
+                            <div class="relative mb-4">
+                                <img src="/api/placeholder/600/200" alt="Event Image" class="w-full h-48 object-cover rounded-lg">
+                                <div class="absolute top-3 left-3 bg-black bg-opacity-70 text-white px-3 py-1 rounded-full text-sm">
+                                    <?= reDate($upEvent->event_date) ?? null ?> • <?= reTime($upEvent->start_time) ?? null ?>
                                 </div>
-                                <span class="ml-2 text-sm text-gray-500">+3 going</span>
+                                <?php if (!empty($upEvent->category)): ?>
+                                    <div class="absolute top-3 right-3 bg-green-600 text-white px-3 py-1 rounded-full text-sm">
+                                        <?= ucfirst($upEvent->category) ?>
+                                    </div>
+                                <?php else: ?>
+                                    <div class="absolute top-3 right-3 bg-green-600 text-white px-3 py-1 rounded-full text-sm">
+                                        No Category
+                                    </div>
+                                <?php endif; ?>
                             </div>
-                            <div class="flex space-x-2">
-                                <a href="event_management.php?id=1" class="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-3 rounded-lg transition duration-200">
-                                    <i class="fas fa-cog mr-1"></i> Manage
-                                </a>
-                                <a href="event_details.php?id=1" class="bg-orange-600 hover:bg-orange-700 text-white py-2 px-3 rounded-lg transition duration-200">
-                                    <i class="fas fa-eye mr-1"></i> View
-                                </a>
+
+                            <h3 class="text-xl font-semibold mb-2"><?= ucfirst($upEvent->title) ?></h3>
+                            <div class="space-y-2 mb-3">
+                                <div class="flex items-center text-gray-600">
+                                    <i class="fas fa-map-marker-alt mr-2"></i>
+                                    <span><?= ucfirst($upEvent->location_name) . ' ' . ($upEvent->location_details ?? '') . ", {$upEvent->city} / {$upEvent->country}" ?></span>
+                                </div>
+                                <div class="flex items-center text-gray-600">
+                                    <i class="fas fa-user mr-2"></i>
+                                    <span>Hosted by You</span>
+                                </div>
+                            </div>
+                            <p class="text-gray-700 mb-4"><?= $upEvent->description ?? null ?></p>
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <div class="flex -space-x-2">
+                                        <img src="https://randomuser.me/api/portraits/women/63.jpg" alt="Attendee" class="w-8 h-8 rounded-full border-2 border-white">
+                                        <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Attendee" class="w-8 h-8 rounded-full border-2 border-white">
+                                        <img src="https://randomuser.me/api/portraits/women/29.jpg" alt="Attendee" class="w-8 h-8 rounded-full border-2 border-white">
+                                        <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Attendee" class="w-8 h-8 rounded-full border-2 border-white">
+                                    </div>
+                                    <span class="ml-2 text-sm text-gray-500">+3 going</span>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <a href="event_management.php?id=<?= $upEvent->id ?>" class="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-3 rounded-lg transition duration-200">
+                                        <i class="fas fa-cog mr-1"></i> Manage
+                                    </a>
+                                    <a href="event_details.php?id=<?= $upEvent->id ?>" class="bg-orange-600 hover:bg-orange-700 text-white py-2 px-3 rounded-lg transition duration-200">
+                                        <i class="fas fa-eye mr-1"></i> View
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
+
+                <?php if(count($upEvents) > $maxEventsToShow): ?>
+                    <div class="p-4 border-t border-gray-200">
+                        <a href="events.php" class="text-orange-600 hover:text-orange-800 text-sm font-medium">View All Events →</a>
+                    </div>
+                <?php endif; ?>
             </div>
 
             <!-- Recommended Events -->
@@ -132,9 +157,9 @@ $isLoggedIn = true;
                     <a href="events.php?filter=recommended" class="text-orange-600 hover:text-orange-800 text-sm">View All</a>
                 </div>
                 
-                <div class="event-card">
-                    <div class="relative">
-                        <img src="/api/placeholder/600/200" alt="Event Image" class="w-full h-48 object-cover">
+                <div class="p-4">
+                    <div class="relative mb-4">
+                        <img src="/api/placeholder/600/200" alt="Event Image" class="w-full h-48 object-cover rounded-lg">
                         <div class="absolute top-3 left-3 bg-black bg-opacity-70 text-white px-3 py-1 rounded-full text-sm">
                             Apr 8, 2025 • 19:00
                         </div>
@@ -142,39 +167,37 @@ $isLoggedIn = true;
                             Language Exchange
                         </div>
                     </div>
-                    <div class="p-4">
-                        <h3 class="text-xl font-semibold mb-2">International Language Meetup</h3>
-                        <div class="space-y-2 mb-3">
-                            <div class="flex items-center text-gray-600">
-                                <i class="fas fa-map-marker-alt mr-2"></i>
-                                <span>Multilingual Café, Şişli, Istanbul</span>
-                            </div>
-                            <div class="flex items-center text-gray-600">
-                                <i class="fas fa-user mr-2"></i>
-                                <span>Hosted by Sophia Klein</span>
-                            </div>
+                    <h3 class="text-xl font-semibold mb-2">International Language Meetup</h3>
+                    <div class="space-y-2 mb-3">
+                        <div class="flex items-center text-gray-600">
+                            <i class="fas fa-map-marker-alt mr-2"></i>
+                            <span>Multilingual Café, Şişli, Istanbul</span>
                         </div>
-                        <p class="text-gray-700 mb-4">
-                            Practice languages while meeting new people! English, Turkish, Spanish, French, and more. All levels welcome. Structured activities and free conversation time.
-                        </p>
-                        <div class="flex justify-between items-center">
-                            <div class="flex items-center">
-                                <div class="flex -space-x-2">
-                                    <img src="https://randomuser.me/api/portraits/men/42.jpg" alt="Attendee" class="w-8 h-8 rounded-full border-2 border-white">
-                                    <img src="https://randomuser.me/api/portraits/women/76.jpg" alt="Attendee" class="w-8 h-8 rounded-full border-2 border-white">
-                                    <img src="https://randomuser.me/api/portraits/men/91.jpg" alt="Attendee" class="w-8 h-8 rounded-full border-2 border-white">
-                                    <img src="https://randomuser.me/api/portraits/women/55.jpg" alt="Attendee" class="w-8 h-8 rounded-full border-2 border-white">
-                                </div>
-                                <span class="ml-2 text-sm text-gray-500">+12 going</span>
+                        <div class="flex items-center text-gray-600">
+                            <i class="fas fa-user mr-2"></i>
+                            <span>Hosted by Sophia Klein</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 mb-4">
+                        Practice languages while meeting new people! English, Turkish, Spanish, French, and more. All levels welcome. Structured activities and free conversation time.
+                    </p>
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="flex -space-x-2">
+                                <img src="https://randomuser.me/api/portraits/men/42.jpg" alt="Attendee" class="w-8 h-8 rounded-full border-2 border-white">
+                                <img src="https://randomuser.me/api/portraits/women/76.jpg" alt="Attendee" class="w-8 h-8 rounded-full border-2 border-white">
+                                <img src="https://randomuser.me/api/portraits/men/91.jpg" alt="Attendee" class="w-8 h-8 rounded-full border-2 border-white">
+                                <img src="https://randomuser.me/api/portraits/women/55.jpg" alt="Attendee" class="w-8 h-8 rounded-full border-2 border-white">
                             </div>
-                            <div class="flex space-x-2">
-                                <a href="#" class="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-3 rounded-lg transition duration-200">
-                                    <i class="far fa-bookmark mr-1"></i> Save
-                                </a>
-                                <a href="event_details.php?id=2" class="bg-orange-600 hover:bg-orange-700 text-white py-2 px-3 rounded-lg transition duration-200">
-                                    <i class="fas fa-check-circle mr-1"></i> Join
-                                </a>
-                            </div>
+                            <span class="ml-2 text-sm text-gray-500">+12 going</span>
+                        </div>
+                        <div class="flex space-x-2">
+                            <a href="#" class="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-3 rounded-lg transition duration-200">
+                                <i class="far fa-bookmark mr-1"></i> Save
+                            </a>
+                            <a href="event_details.php?id=2" class="bg-orange-600 hover:bg-orange-700 text-white py-2 px-3 rounded-lg transition duration-200">
+                                <i class="fas fa-check-circle mr-1"></i> Join
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -266,7 +289,7 @@ $isLoggedIn = true;
                 <h3 class="font-semibold text-lg mb-3">You're Attending</h3>
                 <div class="space-y-3">
                     <div class="flex items-start">
-                        <div class="bg-gray-100 text-center rounded-lg p-2 mr-3 min-w-12">
+                        <div class="bg-gray-100 text-center rounded-lg p-2 mr-3 min-w-[48px]">
                             <div class="text-xs font-bold uppercase text-gray-500">APR</div>
                             <div class="text-lg font-bold">5</div>
                         </div>
@@ -276,7 +299,7 @@ $isLoggedIn = true;
                         </div>
                     </div>
                     <div class="flex items-start">
-                        <div class="bg-gray-100 text-center rounded-lg p-2 mr-3 min-w-12">
+                        <div class="bg-gray-100 text-center rounded-lg p-2 mr-3 min-w-[48px]">
                             <div class="text-xs font-bold uppercase text-gray-500">APR</div>
                             <div class="text-lg font-bold">10</div>
                         </div>
@@ -286,7 +309,7 @@ $isLoggedIn = true;
                         </div>
                     </div>
                     <div class="flex items-start">
-                        <div class="bg-gray-100 text-center rounded-lg p-2 mr-3 min-w-12">
+                        <div class="bg-gray-100 text-center rounded-lg p-2 mr-3 min-w-[48px]">
                             <div class="text-xs font-bold uppercase text-gray-500">APR</div>
                             <div class="text-lg font-bold">15</div>
                         </div>
@@ -302,23 +325,23 @@ $isLoggedIn = true;
             <div class="bg-white rounded-lg shadow-md p-4">
                 <h3 class="font-semibold text-lg mb-3">Trending in Istanbul</h3>
                 <div class="space-y-2">
-                    <div class="flex justify-between items-center hover:bg-gray-50 p-2 rounded">
+                    <div class="flex justify-between items-center hover:bg-gray-50 p-2 rounded cursor-pointer">
                         <div class="font-medium">Coffee Tasting</div>
                         <div class="text-sm text-gray-500">24 events</div>
                     </div>
-                    <div class="flex justify-between items-center hover:bg-gray-50 p-2 rounded">
+                    <div class="flex justify-between items-center hover:bg-gray-50 p-2 rounded cursor-pointer">
                         <div class="font-medium">Boat Tours</div>
                         <div class="text-sm text-gray-500">18 events</div>
                     </div>
-                    <div class="flex justify-between items-center hover:bg-gray-50 p-2 rounded">
+                    <div class="flex justify-between items-center hover:bg-gray-50 p-2 rounded cursor-pointer">
                         <div class="font-medium">Photography</div>
                         <div class="text-sm text-gray-500">15 events</div>
                     </div>
-                    <div class="flex justify-between items-center hover:bg-gray-50 p-2 rounded">
+                    <div class="flex justify-between items-center hover:bg-gray-50 p-2 rounded cursor-pointer">
                         <div class="font-medium">Language Exchange</div>
                         <div class="text-sm text-gray-500">12 events</div>
                     </div>
-                    <div class="flex justify-between items-center hover:bg-gray-50 p-2 rounded">
+                    <div class="flex justify-between items-center hover:bg-gray-50 p-2 rounded cursor-pointer">
                         <div class="font-medium">Hiking</div>
                         <div class="text-sm text-gray-500">9 events</div>
                     </div>
@@ -327,14 +350,16 @@ $isLoggedIn = true;
         </div>
     </div>
 </div>
-    <script>
-        // User Dropdown Menu
-        document.addEventListener('DOMContentLoaded', function() {
-            const userMenu = document.getElementById('userMenu');
-            const userDropdown = document.getElementById('userDropdown');
-            
+
+<script>
+    // User Dropdown Menu
+    document.addEventListener('DOMContentLoaded', function() {
+        const userMenu = document.getElementById('userMenu');
+        const userDropdown = document.getElementById('userDropdown');
+        
+        if (userMenu && userDropdown) {
             userMenu.addEventListener('click', function(e) {
-                e.stopPropagation(); // Prevent click from immediately bubbling to document
+                e.stopPropagation();
                 userDropdown.classList.toggle('show');
             });
             
@@ -344,44 +369,44 @@ $isLoggedIn = true;
                     userDropdown.classList.remove('show');
                 }
             });
-        });
+        }
+    });
 
-        // Like functionality for activity posts
-        document.querySelectorAll('.activity-action .fa-heart').forEach(heart => {
-            heart.addEventListener('click', function() {
-                const likeCount = this.parentElement.querySelector('span');
-                if (this.classList.contains('far')) { // Not liked yet
-                    this.classList.remove('far');
-                    this.classList.add('fas');
-                    this.style.color = '#e74c3c';
+    // Like functionality for activity posts
+    document.querySelectorAll('.fa-heart').forEach(heart => {
+        heart.addEventListener('click', function() {
+            const parentSpan = this.parentElement;
+            const likeCount = parentSpan.querySelector('span');
+            
+            if (this.classList.contains('far')) { // Not liked yet
+                this.classList.remove('far');
+                this.classList.add('fas');
+                parentSpan.classList.remove('hover:text-red-500');
+                parentSpan.classList.add('text-red-500');
+                if (likeCount) {
                     likeCount.textContent = parseInt(likeCount.textContent) + 1;
-                } else { // Already liked
-                    this.classList.remove('fas');
-                    this.classList.add('far');
-                    this.style.color = '';
+                }
+            } else { // Already liked
+                this.classList.remove('fas');
+                this.classList.add('far');
+                parentSpan.classList.add('hover:text-red-500');
+                parentSpan.classList.remove('text-red-500');
+                if (likeCount) {
                     likeCount.textContent = parseInt(likeCount.textContent) - 1;
                 }
-            });
+            }
         });
-
-        // Friend request buttons
-        document.querySelectorAll('.add-friend-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                if (this.textContent === '+ Add Friend') {
-                    this.textContent = 'Request Sent';
-                    this.style.backgroundColor = '#27ae60';
-                } else {
-                    this.textContent = '+ Add Friend';
-                    this.style.backgroundColor = '#f5a623';
-                }
-            });
-        });
-        //ScrollDown Function
-        document.addEventListener('DOMContentLoaded', () => {
-        initHeaderScrollBehavior();  // Call only if this feature is needed
     });
-    </script>      
-    <?=loadPartial(name: 'footer'); ?>
+
+    // Initialize header scroll behavior if function exists
+    document.addEventListener('DOMContentLoaded', () => {
+        if (typeof initHeaderScrollBehavior === 'function') {
+            initHeaderScrollBehavior();
+        }
+    });
+</script>
+
+<?=loadPartial(name: 'footer'); ?>
 
 </body>
 </html>
