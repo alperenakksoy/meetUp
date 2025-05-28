@@ -123,7 +123,7 @@ loadPartial('head') ?>
                         </div>
                         <div class="flex items-center">
                             
-                            <span class="text-xs text-gray-500 ml-2">+4 going</span>
+                            <span class="text-xs text-gray-500 ml-2">+<?=$upevent->attendee_count?> going</span>
                         </div>
                     </div>
                 </div>
@@ -162,7 +162,7 @@ loadPartial('head') ?>
                         </div>
                         <div class="flex items-center">
                           
-                            <span class="text-xs text-gray-500 ml-2"></span>
+                            <span class="text-xs text-gray-500 ml-2">Reviews: <?=number_format($pastEvent->average_rating, 1)?>/5 </span>
                         </div>
                     </div>
                 </div>
@@ -187,7 +187,6 @@ loadPartial('head') ?>
     ?>
         <div class="text-center cursor-pointer hover:-translate-y-1 transition-transform">
             <img src="https://randomuser.me/api/portraits/women/<?= (63 + $i) % 99 ?>.jpg" alt="Friend" class="w-14 h-14 rounded-full border-2 border-gray-100 mx-auto mb-1">
-            <div class="text-xs text-gray-800 truncate">Friend <?= $i+1 ?></div>
         </div>
     <?php endfor; ?>
     

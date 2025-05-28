@@ -75,6 +75,19 @@ class Review extends BaseModel {
         return $this->db->query($query, $params)->fetchAll();
     }
     
+    // Etkinliğin ortalama rating'ini getir
+    
+   public function getEventAverageRating($eventId) {
+       $query = "SELECT 
+           COALESCE(AVG(rating), 0) AS average_rating,
+           COUNT(rating) AS total_reviews
+       FROM reviews 
+       WHERE event_id = :event_id";
+       
+       $params = ['event_id' => $eventId];
+       return $this->db->query($query, $params)->fetch();
+   }
+
     // Get most frequent tags in reviews
     public function getCommonTags($userId, $limit = 10) {
         // This would require a table for review tags or parsing content for tags

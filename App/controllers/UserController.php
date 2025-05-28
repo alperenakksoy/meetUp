@@ -34,7 +34,12 @@ class UserController extends BaseController {
     $friendsCount = $this->friendshipModel->getFriendCount($user->user_id);
     // retrieve average of rating to display on home.view
     $avgRating = $this->reviewModel->getAverageRating($user->user_id);
-    // get reviews object array
+    // get average rating for event
+    foreach($pastEvents as $event) {
+        $ratingData = $this->reviewModel->getEventAverageRating($event->event_id);
+        $event->average_rating = $ratingData->average_rating; // Obje içinden değeri alın
+        $event->total_reviews = $ratingData->total_reviews;   // Toplam review sayısını da ekleyin
+    }    // get reviews object array
     $reviews = $this->reviewModel->getReviewsForUser($user->user_id);
     // get events by host to show MY EVENTS section.
     $hostedEvents = $this->eventModel->getEventsByHost($user->user_id);
@@ -49,7 +54,14 @@ class UserController extends BaseController {
             $upEventsList[$hostID] = $host;
         }
     }
- 
+// Get events that user attending
+$attendeeUpcomingEvents = $this->eventModel->getEventsUserAttending($user->user_id);
+
+// Add attendee count to each event
+foreach($attendeeUpcomingEvents as $event) {
+    $event->attendee_count = $this->eventAttendeeModel->getAttendeesCount($event->event_id);
+}
+
     loadView('users/profile',[
         'user' => $user,
         'friendsCount' => $friendsCount,
