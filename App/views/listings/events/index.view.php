@@ -59,19 +59,38 @@ $isLoggedIn = true;
         </div>
        
   <!-- Events Grid -->
+  <?php
+// Updated section of App/views/listings/events/index.view.php
+// Replace the Events Grid section with this:
+?>
+
+<!-- Events Grid -->
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
     <?=loadPartial('message')?>
     <?php if(count($events) > 0): ?>
         <?php foreach($events as $event): ?>
             <!-- Event Card -->
             <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition duration-200 hover:border-orange-500 hover:border">
-                <img src="/uploads/events/<?= $event->cover_image ?? 'default.jpg' ?>" alt="<?= $event->title ?>" class="w-full h-48 object-cover">
+                <div class="relative">
+                    <img src="<?= getEventImage($event) ?>" 
+                         alt="<?= htmlspecialchars($event->title) ?>" 
+                         class="w-full h-48 object-cover">
+                    <!-- Category Badge -->
+                    <div class="absolute top-3 right-3 <?= getCategoryColor($event->category) ?> text-white px-3 py-1 rounded-full text-sm flex items-center gap-1">
+                        <i class="<?= getCategoryIcon($event->category) ?> text-xs"></i>
+                        <span><?= ucfirst($event->category ?? 'Event') ?></span>
+                    </div>
+                </div>
                 <div class="p-4">
                     <div class="flex items-center mb-3">
-                        <img src="/uploads/profiles/<?= $event->profile_picture ?? 'default_profile.jpg' ?>" alt="Host" class="w-8 h-8 rounded-full mr-2">
-                        <span class="text-sm font-medium"><?= $event->first_name . ' ' . $event->last_name ?></span>
+                        <img src="/uploads/profiles/<?= $event->profile_picture ?? 'default_profile.jpg' ?>" 
+                             alt="Host" 
+                             class="w-8 h-8 rounded-full mr-2">
+                        <span class="text-sm font-medium"><?= htmlspecialchars($event->first_name . ' ' . $event->last_name) ?></span>
                     </div>
-                    <h3 class="text-lg font-bold mb-2 hover:text-orange-500 cursor-pointer"><?= $event->title ?></h3>
+                    <h3 class="text-lg font-bold mb-2 hover:text-orange-500 cursor-pointer">
+                        <?= $event->title ?>
+                    </h3>
                     <div class="space-y-2 mb-3">
                         <div class="flex items-center text-sm text-gray-600">
                             <i class="far fa-calendar mr-2"></i>
@@ -83,7 +102,7 @@ $isLoggedIn = true;
                         </div>
                         <div class="flex items-center text-sm text-gray-600">
                             <i class="fas fa-map-marker-alt mr-2"></i>
-                            <span><?= $event->location_name ?>, <?= $event->city ?>, <?= $event->country ?></span>
+                            <span><?= htmlspecialchars($event->location_name) ?>, <?= htmlspecialchars($event->city) ?>, <?= htmlspecialchars($event->country) ?></span>
                         </div>
                         <div class="flex items-center text-sm text-gray-600">
                             <i class="fas fa-users mr-2"></i>
@@ -91,15 +110,16 @@ $isLoggedIn = true;
                         </div>
                     </div>
                     <p class="text-gray-700 text-sm mb-4">
-                        <?= strlen($event->description) > 150 ? substr($event->description, 0, 150) . '...' : $event->description ?>
+                        <?= htmlspecialchars(strlen($event->description) > 150 ? substr($event->description, 0, 150) . '...' : $event->description) ?>
                     </p>
                     <div class="flex justify-between items-center">
-                        <div class="flex space-x-2">
-                            <!-- This is a simplified approach for tags - you might want to fetch tags separately -->
-                            <span class="bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded">Event</span>
+                        <div class="flex items-center gap-2">
+                            <i class="<?= getCategoryIcon($event->category) ?> text-orange-500"></i>
+                            <span class="text-sm text-gray-600"><?= ucfirst($event->category ?? 'Event') ?></span>
                         </div>
-                        <a href="/events/<?= $event->event_id ?>" class="bg-orange-500 hover:bg-orange-600 text-white px-3 py-1 rounded text-sm font-medium">
-                            <i class="fas fa-check-circle mr-1"></i> View
+                        <a href="/events/<?= $event->event_id ?>" 
+                           class="bg-orange-500 hover:bg-orange-600 text-white px-3 py-1 rounded text-sm font-medium">
+                            <i class="fas fa-eye mr-1"></i> View
                         </a>
                     </div>
                 </div>

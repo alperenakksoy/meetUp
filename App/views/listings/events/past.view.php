@@ -86,7 +86,6 @@ $isLoggedIn = true;
                 </div>
             </div>
 
-<<<<<<< HEAD
             <div class="mb-6">
                 <h3 class="text-lg font-semibold mb-4 pb-2 border-b border-gray-100">Rating</h3>
                 <div class="space-y-2">
@@ -113,8 +112,6 @@ $isLoggedIn = true;
                 </div>
             </div>
 
-=======
->>>>>>> 3b2d076 (updated)
             <div class="flex gap-2">
                 <button class="bg-[#f5a623] text-white py-2 px-4 rounded flex-1 hover:bg-[#e5941d] transition-colors">Apply Filters</button>
                 <button class="bg-white text-gray-700 border border-gray-300 py-2 px-4 rounded flex-1 hover:bg-gray-100 transition-colors">Reset</button>
@@ -156,37 +153,52 @@ $isLoggedIn = true;
                 <!-- Event 1 -->
                 <div class="bg-white rounded-lg shadow flex flex-col md:flex-row overflow-hidden transform transition-transform hover:scale-[1.01]">
                     <img src="/api/placeholder/200/150" alt="Event" class="w-full md:w-48 h-40 object-cover">
-                    <div class="p-4 flex-1">
-                        <div class="mb-2">
-                            <span class="inline-block bg-[#3498db] text-white text-xs px-2 py-1 rounded mr-2">Hosted</span>
-                            <h3 class="inline-block text-lg font-semibold"><?=$event->title?></h3>
-                        </div>
-                        <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-600 mb-3">
-                            <span><i class="far fa-calendar mr-1"></i><?= reDate($event->event_date);?></span>
-                            <span><i class="far fa-clock mr-1"></i>
-                            <?= reTime($event->start_time); ?> -
-                            <?= reTime($event->end_time ?? ''); ?>
-                        </span>
-                            <span><i class="fas fa-map-marker-alt mr-1"></i><?= $event->location_name ?>,
-                             <?= $event->city ?>, <?= $event->country ?></span>
-                        </div>
-                        <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm mb-3">
-                            <div class="flex items-center">
-                                <i class="fas fa-users text-[#f5a623] mr-1"></i> <?=$event->attendee_count ?? 0?>/<?=$event->capacity ?? 25?> Attended
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-comment text-[#f5a623] mr-1"></i> <?=$event->review_count?> Reviews
-                            </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-star text-[#f5a623] mr-1"></i><?=number_format($event->average_rating ?? 0,1)?>/5 Rating
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-4 flex md:flex-col gap-2 justify-end bg-gray-50">
-                        <a href="/events/reviews/<?=$event->event_id?>" class="bg-white border border-gray-300 text-gray-700 py-2 px-3 rounded text-sm flex items-center gap-1 hover:bg-gray-100 transition-colors">
-                            <i class="fas fa-eye"></i> View
-                        </a>
-                    </div>
+                    <div class="bg-white rounded-lg shadow flex flex-col md:flex-row overflow-hidden transform transition-transform hover:scale-[1.01]">
+    <div class="relative w-full md:w-48 h-40">
+        <img src="<?= getEventImage($event) ?>" 
+             alt="<?= htmlspecialchars($event->title) ?>" 
+             class="w-full h-full object-cover">
+        <!-- Category Badge on Image -->
+        <div class="absolute top-2 right-2 <?= getCategoryColor($event->category) ?> text-white px-2 py-1 rounded text-xs flex items-center gap-1">
+            <i class="<?= getCategoryIcon($event->category) ?> text-xs"></i>
+            <span><?= ucfirst($event->category ?? 'Event') ?></span>
+        </div>
+    </div>
+    <div class="p-4 flex-1">
+        <div class="mb-2">
+            <span class="inline-block bg-[#3498db] text-white text-xs px-2 py-1 rounded mr-2">
+                <?= $event->host_id == ($_SESSION['user_id'] ?? 0) ? 'Hosted' : 'Attended' ?>
+            </span>
+            <h3 class="inline-block text-lg font-semibold"><?= $event->title ?></h3>
+        </div>
+        <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-600 mb-3">
+            <span><i class="far fa-calendar mr-1"></i><?= reDate($event->event_date);?></span>
+            <span><i class="far fa-clock mr-1"></i>
+                <?= reTime($event->start_time); ?> -
+                <?= reTime($event->end_time ?? ''); ?>
+            </span>
+            <span><i class="fas fa-map-marker-alt mr-1"></i><?= htmlspecialchars($event->location_name) ?>,
+                <?= htmlspecialchars($event->city) ?>, <?= htmlspecialchars($event->country) ?></span>
+        </div>
+        <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm mb-3">
+            <div class="flex items-center">
+                <i class="fas fa-users text-[#f5a623] mr-1"></i> <?=$event->attendee_count ?? 0?>/<?=$event->capacity ?? 25?> Attended
+            </div>
+            <div class="flex items-center">
+                <i class="fas fa-comment text-[#f5a623] mr-1"></i> <?=$event->review_count?> Reviews
+            </div>
+            <div class="flex items-center">
+                <i class="fas fa-star text-[#f5a623] mr-1"></i><?=number_format($event->average_rating ?? 0,1)?>/5 Rating
+            </div>
+        </div>
+    </div>
+    <div class="p-4 flex md:flex-col gap-2 justify-end bg-gray-50">
+        <a href="/events/reviews/<?=$event->event_id?>" 
+           class="bg-white border border-gray-300 text-gray-700 py-2 px-3 rounded text-sm flex items-center gap-1 hover:bg-gray-100 transition-colors">
+            <i class="fas fa-eye"></i> View
+        </a>
+    </div>
+</div>
                 </div>
                 <?php endforeach;?>
                 <?php else: ?>

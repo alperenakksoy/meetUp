@@ -16,19 +16,23 @@ $isLoggedIn = true;
         <div class="md:col-span-2 bg-white rounded-lg shadow overflow-hidden">
             <!-- Event Header with Cover Image -->
             <div class="relative">
-                <img src="CreateEventForm/event_image.webp" alt="Event Cover Image" class="w-full h-[300px] object-cover">
-                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-5 text-white">
-                    <span class="inline-block bg-[#f5a623] text-white px-3 py-1 rounded-full text-sm mb-2.5">Coffee & Cultural</span>
-                    <h1 class="text-3xl font-bold mb-2.5"><?= $event->title ?></h1>
-                    <div class="flex flex-wrap gap-4 text-sm">
-                        <span><i class="far fa-calendar mr-1"></i><?= reDate($event->event_date); ?></span>
-                        <span><i class="far fa-clock mr-1"></i><?= reTime($event->start_time);?> : 
-                        <?= reTime($event->end_time);?></span>
-                        <span><i class="fas fa-map-marker-alt mr-1"></i> <?= $event->location_address ?>, <?= $event->city ?> / <?= $event->country?></span>
-                    </div>
-                    
-                </div>
-            </div>
+    <img src="<?= getEventImage($event) ?>" 
+         alt="<?= htmlspecialchars($event->title) ?>" 
+         class="w-full h-[300px] object-cover">
+    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-5 text-white">
+        <span class="inline-block <?= getCategoryColor($event->category) ?> text-white px-3 py-1 rounded-full text-sm mb-2.5 flex items-center gap-1 w-fit">
+            <i class="<?= getCategoryIcon($event->category) ?>"></i>
+            <?= ucfirst($event->category ?? 'Event') ?>
+        </span>
+        <h1 class="text-3xl font-bold mb-2.5"><?= $event->title ?></h1>
+        <div class="flex flex-wrap gap-4 text-sm">
+            <span><i class="far fa-calendar mr-1"></i><?= reDate($event->event_date); ?></span>
+            <span><i class="far fa-clock mr-1"></i><?= reTime($event->start_time);?> - 
+            <?= reTime($event->end_time);?></span>
+            <span><i class="fas fa-map-marker-alt mr-1"></i> <?= htmlspecialchars($event->location_address) ?>, <?= htmlspecialchars($event->city) ?> / <?= htmlspecialchars($event->country)?></span>
+        </div>
+    </div>
+</div>
             <?=loadPartial('message')?>
 
 
