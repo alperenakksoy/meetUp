@@ -156,8 +156,8 @@ loadPartial('head') ?>
                 <span>No Unreviewed Events</span>
             </div>
         <?php else: ?>
+            <?php ?>
             <?php foreach($unreviewedEvents as $unreviewedEvent): ?>
-                <?=inspectAndDie($unreviewedEvents)?>
                 <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
                     <img src="<?=$unreviewedEvent->cover_image?>" alt="Event Image" class="w-full h-36 object-cover">
                     <div class="p-3">
@@ -170,13 +170,15 @@ loadPartial('head') ?>
                             <i class="fas fa-map-marker-alt text-orange-500 w-4 mr-2"></i>
                             <span><?=$unreviewedEvent->location_name?>, <?=$unreviewedEvent->city?></span>
                         </div>
+                        <?php if($unreviewedEvent->attendeesCount>0):?>
                         <div class="flex items-center">
-                            <?php if(count($unreviewedEvent->attendees) == 1 && $unreviewedEvent->attendees->attendee_id !== $unreviewedEvent->user_id):?>
+                            <?php if($unreviewedEvent->attendeesCount == 1):?>
                             <span class="text-xs text-gray-500 ml-2">+1 other person participated</span>
-                            <?php elseif(count($unreviewedEvent->attendees) > 1):?>
-                                <span class="text-xs text-gray-500 ml-2">+<?=count($unreviewedEvent->attendees)?> people participated</span>
+                            <?php else:?>
+                                <span class="text-xs text-gray-500 ml-2">+<?=$unreviewedEvent->attendeesCount?> people participated</span>
                             <?php endif;?>
                         </div>
+                        <?php endif;?>
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -222,7 +224,6 @@ loadPartial('head') ?>
         <?php endif; ?>
     </div>
 </div>
-<?=inspectAndDie($unreviewedEvents);?>
 
 
                 <!-- Friends Section -->
