@@ -17,7 +17,7 @@ loadPartial('head') ?>
             <div class="lg:col-span-1 bg-white rounded-lg shadow-sm p-6 lg:sticky lg:top-24 self-start">
                 <div class="text-center pb-6 border-b border-gray-100">
                     <div class="mx-auto mb-4">
-                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile Picture" class="w-36 h-36 rounded-full border-4 border-gray-100 mx-auto">
+                        <img src="<?=$user->profile_picture?>" alt="Profile Picture" class="w-36 h-36 rounded-full border-4 border-gray-100 mx-auto">
                     </div>
                     <h1 class="text-xl font-bold font-volkhov text-gray-800 mb-1"><?="{$user->first_name} {$user->last_name}"?></h1>
                     <div class="flex items-center justify-center text-gray-600 mb-4">
@@ -27,16 +27,16 @@ loadPartial('head') ?>
                     <div class="flex justify-between mb-4">
                    
                    <a href="/events/past">  <div class="text-center hover:scale-110 transition-transform duration-200 cursor-pointer">
-                            <div class="text-xl font-bold text-orange-500"><?=count($pastEvents)?></div>
+                            <div class="text-xl font-bold text-orange-500"><?=count($pastEvents) ?? 0?></div>
                             <div class="text-xs text-gray-500">Events</div>
                         </div></a>
                         
                     <a href="/users/friends"> <div class="text-center hover:scale-110 transition-transform duration-200 cursor-pointer">
-                            <div class="text-xl font-bold text-orange-500"><?=$friendsCount?></div>
+                            <div class="text-xl font-bold text-orange-500"><?=$friendsCount ?? 0?></div>
                             <div class="text-xs text-gray-500">Friends</div>
                         </div></a>
                     <a href="/users/references"> <div class="text-center hover:scale-110 transition-transform duration-200 cursor-pointer">
-                            <div class="text-xl font-bold text-orange-500"><?=count($reviews)?></div>
+                            <div class="text-xl font-bold text-orange-500"><?=count($reviews)?? 0?></div>
                             <div class="text-xs text-gray-500">References</div>
                         </div></a>
                     </div>
@@ -48,14 +48,18 @@ loadPartial('head') ?>
                 <div class="mt-6">
                     <div class="mb-4">
                         <h3 class="text-gray-800 font-medium border-b border-gray-100 pb-2 mb-3 font-volkhov">Personal Information</h3>
+                        <?php if($user->show_age == 1):?>
                         <div class="flex items-center text-sm text-gray-600 mb-2">
                             <i class="fas fa-user text-orange-500 w-5 mr-2"></i>
                             <span><?=calcAge($user->date_of_birth)?> years old</span>
                         </div>
+                        <?php endif;?>
+                        <?php if(isset($user->occupation)):?>
                         <div class="flex items-center text-sm text-gray-600 mb-2">
                             <i class="fas fa-briefcase text-orange-500 w-5 mr-2"></i>
-                            <span>Software Engineer</span>
+                            <span><?=$user->occupation?></span>
                         </div>
+                        <?php endif;?>
                         <div class="flex items-center text-sm text-gray-600">
                             <i class="fas fa-clock text-orange-500 w-5 mr-2"></i>
                             <span>Member since <?=reDate($user->created_at)?></span>
@@ -66,14 +70,44 @@ loadPartial('head') ?>
                             <span>Gender: <?=ucfirst($user->gender)?></span>
                         </div>
                         <?php endif;?>
-            
-                    
                     </div>
 
                     <div class="mb-4">
                         <h3 class="text-gray-800 font-medium border-b border-gray-100 pb-2 mb-3 font-volkhov">About Me</h3>
+                        <?php if(isset($user->bio)):?>
                         <p class="text-sm text-gray-600"><?=$user->bio?></p>
+                        <?php endif;?>
                     </div>
+
+                    <?php if($user->linkedin || $user->twitter || $user->instagram || $user->website): ?>
+    <div class="mb-4">
+        <h3 class="text-gray-800 font-medium border-b border-gray-100 pb-2 mb-3 font-volkhov">Connect with Me</h3>
+        <div class="flex flex-wrap gap-3">
+            <?php if($user->linkedin): ?>
+                <a href="<?= htmlspecialchars($user->linkedin) ?>" target="_blank" class="flex items-center text-sm text-blue-700 hover:underline">
+                    <i class="fab fa-linkedin mr-1"></i> LinkedIn
+                </a>
+            <?php endif; ?>
+            
+            <?php if($user->twitter): ?>
+                <a href="<?= htmlspecialchars($user->twitter) ?>" target="_blank" class="flex items-center text-sm text-blue-500 hover:underline">
+                    <i class="fab fa-twitter mr-1"></i> Twitter
+                </a>
+            <?php endif; ?>
+            <?php if($user->instagram): ?>
+                <a href="<?= htmlspecialchars($user->instagram) ?>" target="_blank" class="flex items-center text-sm text-pink-600 hover:underline">
+                    <i class="fab fa-instagram mr-1"></i> Instagram
+                </a>
+            <?php endif; ?>
+            <?php if($user->website): ?>
+                <a href="<?= htmlspecialchars($user->website) ?>" target="_blank" class="flex items-center text-sm text-orange-500 hover:underline">
+                    <i class="fas fa-globe mr-1"></i> Website
+                </a>
+            <?php endif; ?>
+        </div>
+    </div>
+<?php endif; ?>
+
                      <!-- Interests -->
                     <div>
                         <h3 class="text-gray-800 font-medium border-b border-gray-100 pb-2 mb-3 font-volkhov">Interests</h3>
@@ -110,34 +144,38 @@ loadPartial('head') ?>
                 <div class="bg-white rounded-lg shadow-sm overflow-hidden">
     <div class="flex justify-between items-center p-4 border-b border-gray-100">
         <h2 class="text-lg font-semibold text-gray-800 font-volkhov">
-            <i class="fas fa-calendar-alt text-orange-500 mr-2"></i> My Upcoming Events
+            <i class="fas fa-calendar-alt text-orange-500 mr-2"></i> Unreviwed Events
         </h2>
         <a href="events.php" class="text-orange-500 hover:text-orange-600 text-sm hover:underline">View All</a>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
-        <?php if (empty($upevents)): ?>
+        <?php if (empty($unreviewedEvents)): ?>
             <div class="col-span-full flex items-center text-sm text-gray-600">
                 <i class="far fa-calendar text-orange-500 w-4 mr-2"></i>
-                <span>No Upcoming Events</span>
+                <span>No Unreviewed Events</span>
             </div>
         <?php else: ?>
-            <?php foreach($upevents as $upevent): ?>
+            <?php foreach($unreviewedEvents as $unreviewedEvent): ?>
+                <?=inspectAndDie($unreviewedEvents)?>
                 <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
-                    <img src="/api/placeholder/400/150" alt="Event Image" class="w-full h-36 object-cover">
+                    <img src="<?=$unreviewedEvent->cover_image?>" alt="Event Image" class="w-full h-36 object-cover">
                     <div class="p-3">
-                        <h3 class="font-semibold text-gray-800 mb-2"><?=$upevent->title?></h3>
+                        <h3 class="font-semibold text-gray-800 mb-2"><?=$unreviewedEvent->event_title?></h3>
                         <div class="flex items-center text-sm text-gray-600 mb-1">
                             <i class="far fa-calendar text-orange-500 w-4 mr-2"></i>
-                            <span><?=reDate($upevent->event_date)?>, • <?=reTime($upevent->start_time)?></span>
+                            <span><?=reDate($unreviewedEvent->event_date)?>, • <?=reTime($unreviewedEvent->start_time)?></span>
                         </div>
                         <div class="flex items-center text-sm text-gray-600 mb-3">
                             <i class="fas fa-map-marker-alt text-orange-500 w-4 mr-2"></i>
-                            <span><?=$upevent->location_name?>, <?=$upevent->city?></span>
+                            <span><?=$unreviewedEvent->location_name?>, <?=$unreviewedEvent->city?></span>
                         </div>
                         <div class="flex items-center">
-                            
-                            <span class="text-xs text-gray-500 ml-2">+<?=$upevent->attendee_count?> going</span>
+                            <?php if(count($unreviewedEvent->attendees) == 1 && $unreviewedEvent->attendees->attendee_id !== $unreviewedEvent->user_id):?>
+                            <span class="text-xs text-gray-500 ml-2">+1 other person participated</span>
+                            <?php elseif(count($unreviewedEvent->attendees) > 1):?>
+                                <span class="text-xs text-gray-500 ml-2">+<?=count($unreviewedEvent->attendees)?> people participated</span>
+                            <?php endif;?>
                         </div>
                     </div>
                 </div>
@@ -158,7 +196,7 @@ loadPartial('head') ?>
         <?php if (empty($pastEvents)): ?>
             <div class="col-span-full flex items-center text-sm text-gray-600">
                 <i class="far fa-calendar text-orange-500 w-4 mr-2"></i>
-                <span>No Upcoming Events</span>
+                <span>No Past Events</span>
             </div>
         <?php else: ?>
             <?php foreach($pastEvents as $pastEvent): ?>
@@ -184,6 +222,8 @@ loadPartial('head') ?>
         <?php endif; ?>
     </div>
 </div>
+<?=inspectAndDie($unreviewedEvents);?>
+
 
                 <!-- Friends Section -->
                 <div class="bg-white rounded-lg shadow-sm overflow-hidden">

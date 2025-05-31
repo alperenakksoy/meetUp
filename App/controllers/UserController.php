@@ -61,8 +61,13 @@ $attendeeUpcomingEvents = $this->eventModel->getEventsUserAttending($user->user_
 foreach($attendeeUpcomingEvents as $event) {
     $event->attendee_count = $this->eventAttendeeModel->getAttendeesCount($event->event_id);
 }
-
-    loadView('users/profile',[
+//get past events user attended but hasn't reviewed
+$unreviewedEvents = $this->eventModel->getPastEventsUserAttendedWithoutReview($user->user_id);
+// get atteendees for past events that hasnt reviewed yet
+foreach($unreviewedEvents as $unreviewedEvent){
+    $unreviewedEvent->attendees = $this->eventAttendeeModel->getAttendeesByEvent($unreviewedEvent->event_id);
+}
+loadView('users/profile',[
         'user' => $user,
         'friendsCount' => $friendsCount,
         'avgRating' => $avgRating,
@@ -70,6 +75,7 @@ foreach($attendeeUpcomingEvents as $event) {
         'reviews' => $reviews,
         'hostedEvents' => $hostedEvents,
         'upevents' => $attendeeUpcomingEvents,
+        'unreviewedEvents'=>$unreviewedEvents
     ]);
     }
   

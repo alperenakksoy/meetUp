@@ -315,5 +315,78 @@ public function validate($data, $requiredFields) {
     
     return $errors;
 }
+/**
+ * Get past events that user attended but hasn't reviewed yet
+ * @param int $userId
+ * @return array
+ */
+public function getPastEventsUserAttendedWithoutReview($userId) {
+    $query = "SELECT 
+        -- Event Details
+        e.event_id,
+        e.title AS event_title,
+        e.description,
+        e.location_name,
+        e.location_address,
+        e.location_details,
+        e.city,
+        e.country,
+        e.event_date,
+        e.start_time,
+        e.end_time,
+        e.end_date,
+        e.cover_image,
+        e.category,
+        e.status AS event_status,
+        e.created_at AS event_created_at,
+        
+        -- Host Details
+        h.user_id AS host_id,
+        CONCAT(h.first_name, ' ', h.last_name) AS host_name,
+        h.first_name AS host_first_name,
+        h.last_name AS host_last_name,
+        h.profile_picture AS host_profile_picture,
+        h.city AS host_city,
+        h.country AS host_country,
+        
+        -- User's Attendance Details
+        ea.status AS attendance_status,
+        ea.joined_at AS registration_date,
+        
+        -- Event Statistics
+        (SELECT COUNT(*) 
+         FROM event_attendees ea2 
+         WHERE ea2.event_id = e.event_id 
+         AND ea2.status IN ('attending', 'approved')) AS total_attendees,
+         
+        (SELECT AVG(rating) 
+         FROM reviews r 
+         WHERE r.event_id = e.event_id) AS average_rating,
+         
+        (SELECT COUNT(*) 
+         FROM reviews r 
+         WHERE r.event_id = e.event_id) AS total_reviews
+
+    FROM 
+        event_attendees ea
+    JOIN 
+        {$this->table} e ON ea.event_id = e.event_id
+    JOIN 
+        users h ON e.host_id = h.user_id
+    LEFT JOIN 
+        reviews ur ON e.event_id = ur.event_id AND ur.reviewer_id = ea.user_id
+
+    WHERE 
+        ea.user_id = :user_id
+        AND ea.status IN ('attending', 'approved')
+        AND (e.event_date < CURDATE() OR e.status = 'past')
+        AND ur.review_id IS NULL  -- This ensures no review exists
+
+    ORDER BY 
+        e.event_date DESC";
+    
+    $params = ['user_id' => $userId];
+    return $this->db->query($query, $params)->fetchAll();
+}
 
 }

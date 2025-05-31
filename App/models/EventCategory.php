@@ -53,4 +53,6 @@ class EventCategory extends BaseModel {
         
         return $this->db->query($query)->fetchAll();
     }
+
+    
 }

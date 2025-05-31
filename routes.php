@@ -4,12 +4,12 @@ $router->get('/', 'HomeController@index');
 
 
 // User routes
+$router->get('/users/references', 'UserController@references');
 $router->get('/users/friends', 'UserController@friends');
 $router->get('/users/settings', 'UserController@settings');
 $router->get('/users/profile/{id}', 'UserController@profile');
 $router->get('/users/{id}', 'UserController@edit');
 $router->put('/users/{id}', 'UserController@update');
-$router->get('/users/references', 'UserController@references');
 
 // Event routes
 $router->get('/events', 'EventController@index');
