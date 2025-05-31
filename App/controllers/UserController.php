@@ -75,7 +75,15 @@ foreach($attendeeUpcomingEvents as $event) {
   
     
     public function update($params) {
-        // Process profile update
+    }
+
+    public function edit() {
+        $email = Session::get('user')['email'] ?? null;   
+        // finding the user's data with email
+        $user = $this->userModel->findByEmail($email);
+        loadView('users/edit',[
+           'user'=>$user 
+        ]);
     }
     
     public function friends() {

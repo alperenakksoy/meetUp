@@ -53,7 +53,7 @@ if(Session::has('user_id')) {
             <!-- Profile Dropdown -->
             <div class="relative" id="profileDropdown">
                 <div id="profileButton" class="profile-image hover:scale-110 transition-transform duration-200 cursor-pointer">
-                    <img src="<?= Session::has('profile_picture') ? Session::get('profile_pic') : '/uploads/profiles/default_profile.png' ?>" 
+                    <img src="<?= Session::has('profile_picture') ? Session::get('profile_picture') : '/uploads/profiles/default_profile.png' ?>" 
                          alt="Profile Picture" 
                          class="w-9 h-9 rounded-full border-2 border-orange-500">
                 </div>

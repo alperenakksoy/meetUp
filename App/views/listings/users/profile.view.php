@@ -40,7 +40,7 @@ loadPartial('head') ?>
                             <div class="text-xs text-gray-500">References</div>
                         </div></a>
                     </div>
-                    <a href="/../App/profileNavs/edit_profile.php" class="block w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-md text-center transition-colors">
+                    <a href="/users/edit" class="block w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-md text-center transition-colors">
                         <i class="fas fa-edit mr-1"></i> Edit Profile
                     </a>
                 </div>
@@ -74,17 +74,31 @@ loadPartial('head') ?>
                         <h3 class="text-gray-800 font-medium border-b border-gray-100 pb-2 mb-3 font-volkhov">About Me</h3>
                         <p class="text-sm text-gray-600"><?=$user->bio?></p>
                     </div>
-
+                     <!-- Interests -->
                     <div>
                         <h3 class="text-gray-800 font-medium border-b border-gray-100 pb-2 mb-3 font-volkhov">Interests</h3>
                         <div class="flex flex-wrap gap-2">
-                            <span class="bg-gray-100 hover:bg-orange-500 hover:text-white text-gray-800 px-3 py-1 rounded-full text-xs transition-colors cursor-pointer">Travel</span>
-                            <span class="bg-gray-100 hover:bg-orange-500 hover:text-white text-gray-800 px-3 py-1 rounded-full text-xs transition-colors cursor-pointer">Photography</span>
-                            <span class="bg-gray-100 hover:bg-orange-500 hover:text-white text-gray-800 px-3 py-1 rounded-full text-xs transition-colors cursor-pointer">Hiking</span>
-                            <span class="bg-gray-100 hover:bg-orange-500 hover:text-white text-gray-800 px-3 py-1 rounded-full text-xs transition-colors cursor-pointer">Coffee</span>
-                            <span class="bg-gray-100 hover:bg-orange-500 hover:text-white text-gray-800 px-3 py-1 rounded-full text-xs transition-colors cursor-pointer">Technology</span>
-                            <span class="bg-gray-100 hover:bg-orange-500 hover:text-white text-gray-800 px-3 py-1 rounded-full text-xs transition-colors cursor-pointer">Languages</span>
-                            <span class="bg-gray-100 hover:bg-orange-500 hover:text-white text-gray-800 px-3 py-1 rounded-full text-xs transition-colors cursor-pointer">Culture</span>
+                            <?php if(isset($user->interests)):?>
+                            <?php $interestsArray = explode(',', $user->interests);?>
+                            <?php foreach($interestsArray as $interest):?>
+                            <span class="bg-gray-100 hover:bg-orange-500 hover:text-white text-gray-800 px-3 py-1 rounded-full text-xs transition-colors cursor-pointer"><?=trim($interest,"[]\" \t\n\r\0\x0B")?></span>
+                            <?php endforeach;?>
+                            <?php else:?>
+                             <span class="bg-gray-100 hover:bg-orange-500 hover:text-white text-gray-800 px-3 py-1 rounded-full text-xs transition-colors cursor-pointer">No Interests added</span>
+                            <?php endif;?>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-gray-800 font-medium border-b border-gray-100 pb-2 mt-5 mb-3 font-volkhov">Languages</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <?php if(isset($user->languages)):?>
+                            <?php $languagesArray = explode(',', $user->languages);?>
+                            <?php foreach($languagesArray as $language):?>
+                            <span class="bg-gray-100 hover:bg-orange-500 hover:text-white text-gray-800 px-3 py-1 rounded-full text-xs transition-colors cursor-pointer"><?=trim($language,"[]\" \t\n\r\0\x0B")?></span>
+                            <?php endforeach;?>
+                            <?php else:?>
+                             <span class="bg-gray-100 hover:bg-orange-500 hover:text-white text-gray-800 px-3 py-1 rounded-full text-xs transition-colors cursor-pointer">No Languages added</span>
+                            <?php endif;?>
                         </div>
                     </div>
                 </div>

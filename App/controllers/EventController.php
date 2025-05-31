@@ -123,7 +123,7 @@ class EventController extends BaseController {
     }
     
     public function show($params) {
-      $event = $this->eventModel->getEventWithDetails($params['id']);
+      $event = $this->eventModel->getEventWithDetails($params['id']);    
 
         loadView('events/show',[
             'event' => $event
