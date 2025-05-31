@@ -7,8 +7,10 @@ $router->get('/', 'HomeController@index');
 $router->get('/users/references', 'UserController@references');
 $router->get('/users/friends', 'UserController@friends');
 $router->get('/users/settings', 'UserController@settings');
-$router->get('/users/profile/{id}', 'UserController@profile');
-$router->get('/users/{id}', 'UserController@edit');
+// Current user's profile (no ID needed)
+$router->get('/users/profile', 'UserController@profile');
+// Specific user's profile (with ID)
+$router->get('/users/profile/{id}', 'UserController@profile');$router->get('/users/{id}', 'UserController@edit');
 $router->put('/users/{id}', 'UserController@update');
 
 // Event routes

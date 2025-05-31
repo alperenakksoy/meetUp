@@ -224,38 +224,36 @@ loadPartial('head') ?>
         <?php endif; ?>
     </div>
 </div>
-
- <!-- Friends Section -->
- <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-     <div class="flex justify-between items-center p-4 border-b border-gray-100">
-          <h2 class="text-lg font-semibold text-gray-800 font-volkhov"><i class="fas fa-users text-orange-500 mr-2"></i> Friends (<?=$friendsCount?>)</h2>
-             <a href="friends.php" class="text-orange-500 hover:text-orange-600 text-sm hover:underline">View All</a>
-         </div>
-    <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-4 p-4">
-    <?php 
-   if (!empty($friends)) {
-       foreach(array_slice($friends, 0, 6) as $friend): 
-   ?>
-       <a href="/users/profile/<?= $friend->user_id ?>"><div class="text-center cursor-pointer hover:-translate-y-1 transition-transform">
-           <img src="<?= !empty($friend->profile_picture) ? $friend->profile_picture : 'https://ui-avatars.com/api/?name=' . urlencode($friend->first_name . '+' . $friend->last_name) . '&size=56&background=f97316&color=fff&rounded=true' ?>" 
-                alt="<?= htmlspecialchars($friend->first_name . ' ' . $friend->last_name) ?>" 
-                class="w-14 h-14 rounded-full border-2 border-gray-100 mx-auto mb-1 object-cover">
-       </div></a>
-   <?php endforeach; 
-   }
-   ?>
-    <?php if($friendsCount == 0): ?>
-        <div class="col-span-full text-center py-4 text-gray-500">
-            <p>You don't have any friends yet.</p>
-            <a href="/users/find-friends" class="text-orange-500 hover:underline mt-2 inline-block">Find Friends</a>
-        </div>
-    <?php endif; ?>
-</div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<!-- Friends Section -->
+<div class="bg-white rounded-lg shadow-sm overflow-hidden">
+    <div class="flex justify-between items-center p-4 border-b border-gray-100">
+        <h2 class="text-lg font-semibold text-gray-800 font-volkhov">
+            <i class="fas fa-users text-orange-500 mr-2"></i> Friends (<?=$friendsCount?>)
+        </h2>
+        <a href="/users/friends" class="text-orange-500 hover:text-orange-600 text-sm hover:underline">View All</a>
     </div>
+    
+    <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-4 p-4">
+        <?php if($friendsCount == 0): ?>
+            <div class="col-span-full text-center py-4 text-gray-500">
+                <p>You don't have any friends yet.</p>
+                <a href="/users/find-friends" class="text-orange-500 hover:underline mt-2 inline-block">Find Friends</a>
+            </div>
+        <?php elseif (!empty($friends)): ?>
+            <?php foreach(array_slice($friends, 0, 6) as $friend): ?>
+                <div class="text-center cursor-pointer hover:-translate-y-1 transition-transform">
+                    <img src="<?= !empty($friend->profile_picture) ? $friend->profile_picture : 'https://ui-avatars.com/api/?name=' . urlencode($friend->first_name . '+' . $friend->last_name) . '&size=56&background=f97316&color=fff&rounded=true' ?>" 
+                         alt="<?= htmlspecialchars($friend->first_name . ' ' . $friend->last_name) ?>" 
+                         class="w-14 h-14 rounded-full border-2 border-gray-100 mx-auto mb-1 object-cover">
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <div class="col-span-full text-center py-4 text-gray-500">
+                <p>Error loading friends.</p>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>
 
 
     

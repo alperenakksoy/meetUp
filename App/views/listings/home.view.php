@@ -53,7 +53,7 @@ function getProfilePictureUrl($attendee) {
                 </a>
             </div>
             <div class="border-t border-gray-200 px-6 py-4">
-                <a href="/users/profile/{id}" class="flex items-center py-2 text-gray-700 hover:text-orange-600">
+                <a href="/users/profile/<?=$user->user_id?>" class="flex items-center py-2 text-gray-700 hover:text-orange-600">
                     <i class="fas fa-user mr-3"></i> View My Profile
                 </a>
                 <a href="/events/past" class="flex items-center py-2 text-gray-700 hover:text-orange-600">
