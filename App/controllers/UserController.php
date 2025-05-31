@@ -24,7 +24,7 @@ class UserController extends BaseController {
         $this->eventAttendeeModel = new EventAttendee(); 
     }
     
-    public function profile() {
+    public function profile($params = []) {
     $email = Session::get('user')['email'] ?? null;   
     // finding the user's data with email
     $user = $this->userModel->findByEmail($email);
@@ -75,6 +75,9 @@ foreach($unreviewedEvents as $unreviewedEvent){
     }
 }   
 
+// get user's friends
+$friends = $this->friendshipModel->getFriends($user->user_id);
+
 loadView('users/profile',[
         'user' => $user,
         'friendsCount' => $friendsCount,
@@ -84,6 +87,7 @@ loadView('users/profile',[
         'hostedEvents' => $hostedEvents,
         'upevents' => $attendeeUpcomingEvents,
         'unreviewedEvents'=>$unreviewedEvents,
+        'friends' => $friends
     ]);
     }
   

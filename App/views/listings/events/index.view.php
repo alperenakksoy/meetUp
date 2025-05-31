@@ -106,7 +106,13 @@ $isLoggedIn = true;
                         </div>
                         <div class="flex items-center text-sm text-gray-600">
                             <i class="fas fa-users mr-2"></i>
-                            <span><?= $event->attendee_count ?? '0' ?> people attending</span>
+                            <?php if($event->attendee_count == 1):?>
+                                <span>+1 person is attending</span>
+                            <?php elseif($event->attendee_count > 1):?>
+                                <span>+<?=$event->attendee_count?> people attending</span>
+                            <?php else:?>
+                                <span>No one has joined yet</span>
+                            <?php endif;?>
                         </div>
                     </div>
                     <p class="text-gray-700 text-sm mb-4">

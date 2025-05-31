@@ -159,7 +159,7 @@ loadPartial('head') ?>
             <?php ?>
             <?php foreach($unreviewedEvents as $unreviewedEvent): ?>
                 <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
-                    <img src="<?=$unreviewedEvent->cover_image?>" alt="Event Image" class="w-full h-36 object-cover">
+                    <img src="<?=getEventImage($unreviewedEvent)?>" alt="Event Image" class="w-full h-36 object-cover">
                     <div class="p-3">
                         <h3 class="font-semibold text-gray-800 mb-2"><?=$unreviewedEvent->event_title?></h3>
                         <div class="flex items-center text-sm text-gray-600 mb-1">
@@ -203,7 +203,7 @@ loadPartial('head') ?>
         <?php else: ?>
             <?php foreach($pastEvents as $pastEvent): ?>
                 <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
-                    <img src="/api/placeholder/400/150" alt="Event Image" class="w-full h-36 object-cover">
+                    <img src="<?= getEventImage($pastEvent)?>" alt="Event Image" class="w-full h-36 object-cover">
                     <div class="p-3">
                         <h3 class="font-semibold text-gray-800 mb-2"><?=$pastEvent->title?></h3>
                         <div class="flex items-center text-sm text-gray-600 mb-1">
@@ -225,26 +225,25 @@ loadPartial('head') ?>
     </div>
 </div>
 
-
-                <!-- Friends Section -->
-                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-                    <div class="flex justify-between items-center p-4 border-b border-gray-100">
-                        <h2 class="text-lg font-semibold text-gray-800 font-volkhov"><i class="fas fa-users text-orange-500 mr-2"></i> Friends (<?=$friendsCount?>)</h2>
-                        <a href="friends.php" class="text-orange-500 hover:text-orange-600 text-sm hover:underline">View All</a>
-                    </div>
-                    <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-4 p-4">
+ <!-- Friends Section -->
+ <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+     <div class="flex justify-between items-center p-4 border-b border-gray-100">
+          <h2 class="text-lg font-semibold text-gray-800 font-volkhov"><i class="fas fa-users text-orange-500 mr-2"></i> Friends (<?=$friendsCount?>)</h2>
+             <a href="friends.php" class="text-orange-500 hover:text-orange-600 text-sm hover:underline">View All</a>
+         </div>
+    <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-4 p-4">
     <?php 
-    // $friendsCount 6'dan büyükse, gösterilecek arkadaş sayısını 6 ile sınırla
-    $displayCount = ($friendsCount > 6) ? 6 : $friendsCount;
-    
-    // Belirlenen sayıya kadar arkadaşları göster
-    for($i = 0; $i < $displayCount; $i++): 
-    ?>
-        <div class="text-center cursor-pointer hover:-translate-y-1 transition-transform">
-            <img src="https://randomuser.me/api/portraits/women/<?= (63 + $i) % 99 ?>.jpg" alt="Friend" class="w-14 h-14 rounded-full border-2 border-gray-100 mx-auto mb-1">
-        </div>
-    <?php endfor; ?>
-    
+   if (!empty($friends)) {
+       foreach(array_slice($friends, 0, 6) as $friend): 
+   ?>
+       <a href="/users/profile/<?= $friend->user_id ?>"><div class="text-center cursor-pointer hover:-translate-y-1 transition-transform">
+           <img src="<?= !empty($friend->profile_picture) ? $friend->profile_picture : 'https://ui-avatars.com/api/?name=' . urlencode($friend->first_name . '+' . $friend->last_name) . '&size=56&background=f97316&color=fff&rounded=true' ?>" 
+                alt="<?= htmlspecialchars($friend->first_name . ' ' . $friend->last_name) ?>" 
+                class="w-14 h-14 rounded-full border-2 border-gray-100 mx-auto mb-1 object-cover">
+       </div></a>
+   <?php endforeach; 
+   }
+   ?>
     <?php if($friendsCount == 0): ?>
         <div class="col-span-full text-center py-4 text-gray-500">
             <p>You don't have any friends yet.</p>
@@ -257,6 +256,9 @@ loadPartial('head') ?>
             </div>
         </div>
     </div>
+
+
+    
     <?=loadPartial(name: 'footer'); ?>
 <script>
         // Add click events to cards for navigation
