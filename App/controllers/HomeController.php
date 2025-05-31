@@ -42,7 +42,7 @@ class HomeController extends BaseController {
     $profilePics[$user->user_id] = $attende->profile_picture;
      }
     }
-
+    inspectAndDie($upcomingEvents);
     
     loadView('home',[
         'user' => $user,

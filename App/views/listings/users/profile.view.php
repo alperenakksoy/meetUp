@@ -241,11 +241,11 @@ loadPartial('head') ?>
             </div>
         <?php elseif (!empty($friends)): ?>
             <?php foreach(array_slice($friends, 0, 6) as $friend): ?>
-                <div class="text-center cursor-pointer hover:-translate-y-1 transition-transform">
+                <a href="/users/profile/<?= $friend->user_id ?>"><div class="text-center cursor-pointer hover:-translate-y-1 transition-transform">
                     <img src="<?= !empty($friend->profile_picture) ? $friend->profile_picture : 'https://ui-avatars.com/api/?name=' . urlencode($friend->first_name . '+' . $friend->last_name) . '&size=56&background=f97316&color=fff&rounded=true' ?>" 
                          alt="<?= htmlspecialchars($friend->first_name . ' ' . $friend->last_name) ?>" 
                          class="w-14 h-14 rounded-full border-2 border-gray-100 mx-auto mb-1 object-cover">
-                </div>
+                </div></a>
             <?php endforeach; ?>
         <?php else: ?>
             <div class="col-span-full text-center py-4 text-gray-500">
