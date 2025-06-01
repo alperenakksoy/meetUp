@@ -161,16 +161,20 @@ function getProfilePictureUrl($attendee) {
                                 <?php endforeach; ?>
                             </div>
                         <?php endif; ?>
-                        
                         <?php 
                         $indicator = '';
+                        foreach($upEvent->attendees as $attendee):
                         if($upEvent->counts == 0):
                             $indicator = "No one has joined yet.";
+                        elseif($upEvent->counts == 1 && $attendee->user_id == $user->user_id):
+                            $indicator = "Only you going";
                         elseif($upEvent->counts == 1):
                             $indicator = "1 person going";
                         elseif($upEvent->counts > 1):
                             $indicator = "{$upEvent->counts} people going";
                         endif;
+                    endforeach;
+
                         ?>
                         
                         <span class="text-sm text-gray-500"><?= $indicator ?></span>
@@ -197,58 +201,88 @@ function getProfilePictureUrl($attendee) {
     <?php endif; ?>
 </div>
 
-
-          <!-- Recommended Events -->
+<!-- Recommended Events -->
 <div class="bg-white rounded-lg shadow-md overflow-hidden">
     <div class="flex justify-between items-center p-4 border-b border-gray-200">
         <h2 class="text-lg font-semibold">Recommended For You</h2>
-        <a href="events.php?filter=recommended" class="text-orange-600 hover:text-orange-800 text-sm">View All</a>
+        <a href="/events?filter=recommended" class="text-orange-600 hover:text-orange-800 text-sm">View All</a>
     </div>
     
-    <div class="p-4 hover:bg-gray-50 hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1 group">
-        <div class="relative mb-4">
-            <img src="/api/placeholder/600/200" alt="Event Image" class="w-full h-48 object-cover rounded-lg group-hover:ring-2 group-hover:ring-orange-200 transition-all duration-200">
-            <div class="absolute top-3 left-3 bg-black bg-opacity-70 text-white px-3 py-1 rounded-full text-sm">
-                Apr 8, 2025 • 19:00
-            </div>
-            <div class="absolute top-3 right-3 bg-green-600 text-white px-3 py-1 rounded-full text-sm">
-                Language Exchange
-            </div>
-        </div>
-        <h3 class="text-xl font-semibold mb-2 group-hover:text-orange-600 transition-colors duration-200">International Language Meetup</h3>
-        <div class="space-y-2 mb-3">
-            <div class="flex items-center text-gray-600">
-                <i class="fas fa-map-marker-alt mr-2"></i>
-                <span>Multilingual Café, Şişli, Istanbul</span>
-            </div>
-            <div class="flex items-center text-gray-600">
-                <i class="fas fa-user mr-2"></i>
-                <span>Hosted by Sophia Klein</span>
-            </div>
-        </div>
-        <p class="text-gray-700 mb-4">
-            Practice languages while meeting new people! English, Turkish, Spanish, French, and more. All levels welcome. Structured activities and free conversation time.
-        </p>
-        <div class="flex justify-between items-center">
-            <div class="flex items-center">
-                <div class="flex -space-x-2">
-                    <img src="https://randomuser.me/api/portraits/men/42.jpg" alt="Attendee" class="w-8 h-8 rounded-full border-2 border-white group-hover:ring-2 group-hover:ring-orange-200">
-                    <img src="https://randomuser.me/api/portraits/women/76.jpg" alt="Attendee" class="w-8 h-8 rounded-full border-2 border-white group-hover:ring-2 group-hover:ring-orange-200">
-                    <img src="https://randomuser.me/api/portraits/men/91.jpg" alt="Attendee" class="w-8 h-8 rounded-full border-2 border-white group-hover:ring-2 group-hover:ring-orange-200">
-                    <img src="https://randomuser.me/api/portraits/women/55.jpg" alt="Attendee" class="w-8 h-8 rounded-full border-2 border-white group-hover:ring-2 group-hover:ring-orange-200">
+    <?php if (!empty($recommendedEvents)): ?>
+        <div class="space-y-4">
+            <?php foreach($recommendedEvents as $recEvent): ?>
+                <div class="p-4 hover:bg-gray-50 hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1 group">
+                    <div class="relative mb-4">
+                        <img src="<?= getEventImage($recEvent) ?>" alt="<?= htmlspecialchars($recEvent->title) ?>" class="w-full h-48 object-cover rounded-lg group-hover:ring-2 group-hover:ring-orange-200 transition-all duration-200">
+                        <div class="absolute top-3 left-3 bg-black bg-opacity-70 text-white px-3 py-1 rounded-full text-sm">
+                            <?= reDate($recEvent->event_date) ?> • <?= reTime($recEvent->start_time) ?>
+                        </div>
+                        <div class="absolute top-3 right-3 <?= getCategoryColor($recEvent->category) ?> text-white px-3 py-1 rounded-full text-sm">
+                            <i class="<?= getCategoryIcon($recEvent->category) ?> text-xs"></i>
+                            <?= ucfirst($recEvent->category) ?>
+                        </div>
+                        <!-- Recommendation reason badge -->
+                        <div class="absolute bottom-3 left-3 bg-green-500 text-white px-3 py-1 rounded-full text-xs">
+                            <i class="fas fa-heart mr-1"></i> Matches your interests
+                        </div>
+                    </div>
+                    
+                    <h3 class="text-xl font-semibold mb-2 group-hover:text-orange-600 transition-colors duration-200">
+                        <?= htmlspecialchars($recEvent->title) ?>
+                    </h3>
+                    
+                    <div class="space-y-2 mb-3">
+                        <div class="flex items-center text-gray-600">
+                            <i class="fas fa-map-marker-alt mr-2"></i>
+                            <span><?= htmlspecialchars($recEvent->location_name) ?>, <?= htmlspecialchars($recEvent->city) ?>, <?= htmlspecialchars($recEvent->country) ?></span>
+                        </div>
+                        <div class="flex items-center text-gray-600">
+                            <i class="fas fa-user mr-2"></i>
+                            <span>Hosted by <?= htmlspecialchars($recEvent->first_name . ' ' . $recEvent->last_name) ?></span>
+                        </div>
+                    </div>
+                    
+                    <p class="text-gray-700 mb-4">
+                        <?= htmlspecialchars(strlen($recEvent->description) > 120 ? substr($recEvent->description, 0, 120) . '...' : $recEvent->description) ?>
+                    </p>
+                    
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <span class="text-sm text-gray-500">
+                                <?php if($recEvent->attendee_count == 0): ?>
+                                    Be the first to join!
+                                <?php elseif($recEvent->attendee_count == 1): ?>
+                                    1 person going
+                                <?php else: ?>
+                                    <?= $recEvent->attendee_count ?> people going
+                                <?php endif; ?>
+                            </span>
+                        </div>
+                        <div class="flex space-x-2">
+                            <a href="#" class="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-3 rounded-lg transition duration-200">
+                                <i class="far fa-bookmark mr-1"></i> Save
+                            </a>
+                            <a href="/events/<?= $recEvent->event_id ?>" class="bg-orange-600 hover:bg-orange-700 text-white py-2 px-3 rounded-lg transition duration-200">
+                                <i class="fas fa-check-circle mr-1"></i> Join
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <span class="ml-2 text-sm text-gray-500">+12 going</span>
-            </div>
-            <div class="flex space-x-2">
-                <a href="#" class="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-3 rounded-lg transition duration-200">
-                    <i class="far fa-bookmark mr-1"></i> Save
-                </a>
-                <a href="event_details.php?id=2" class="bg-orange-600 hover:bg-orange-700 text-white py-2 px-3 rounded-lg transition duration-200">
-                    <i class="fas fa-check-circle mr-1"></i> Join
+            <?php endforeach; ?>
+        </div>
+    <?php else: ?>
+        <!-- Default content when no recommendations -->
+        <div class="p-4 hover:bg-gray-50 hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1 group">
+            <div class="text-center py-8">
+                <i class="fas fa-lightbulb text-orange-500 text-4xl mb-4"></i>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">No Recommendations Yet</h3>
+                <p class="text-gray-600 mb-4">Add interests to your profile to get personalized event recommendations!</p>
+                <a href="/users/edit" class="bg-orange-600 hover:bg-orange-700 text-white py-2 px-4 rounded-lg transition duration-200">
+                    <i class="fas fa-user-edit mr-1"></i> Update Profile
                 </a>
             </div>
         </div>
-    </div>
+    <?php endif; ?>
 </div>
 
             <!-- Friend Activity -->
