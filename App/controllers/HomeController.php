@@ -49,9 +49,6 @@ class HomeController extends BaseController {
                     // Handle comma-separated format
                     $userInterests = explode(',', $user->interests);
                 }
-                
-                // DEBUG: Add this temporary line to see how many we found
-                // echo "Found " . count($recommendedEvents) . " recommended events<br>";
             }
             
             // Clean up interests array
@@ -159,10 +156,6 @@ class HomeController extends BaseController {
             // Remove duplicates
             $matchingCategories = array_unique($matchingCategories);
             
-            // DEBUG: Uncomment these lines to debug
-            // echo "User interests: " . print_r($userInterests, true) . "<br>";
-            // echo "Matching categories: " . print_r($matchingCategories, true) . "<br>";
-            
             // Get recommended events if we have matching categories
             if (!empty($matchingCategories)) {
                 // Get all upcoming events first
@@ -176,19 +169,12 @@ class HomeController extends BaseController {
                     }
                 }
                 
-                // DEBUG: Uncomment to see how many events we're checking
-                // echo "Total upcoming events: " . count($allUpcomingEvents) . "<br>";
-                // echo "User attending: " . count($userEventIds) . "<br>";
-                
                 // Filter events based on matching categories
                 foreach($allUpcomingEvents as $event) {
                     // Skip if user is already attending this event
                     if (!empty($userEventIds) && in_array($event->event_id, $userEventIds)) {
                         continue;
                     }
-                    
-                    // DEBUG: Uncomment to see event categories
-                    // echo "Event: {$event->title} - Category: {$event->category}<br>";
                     
                     // Check if event category matches user interests  
                     if (!empty($event->category) && in_array($event->category, $matchingCategories)) {
@@ -201,6 +187,12 @@ class HomeController extends BaseController {
                     }
                 }
             }
+        }
+        
+        // Get attendees and counts for recommended events (UPDATED SECTION)
+        foreach($recommendedEvents as $recEvent){
+            $recEvent->attendees = $this->eventAttendeeModel->getAttendeesByEvent($recEvent->event_id);
+            $recEvent->counts = count($recEvent->attendees); // Add this line for consistency
         }
         
         loadView('home',[

@@ -1,6 +1,5 @@
-<?php
+<a?php
 
-// Set page variables
 $pageTitle = 'Dashboard';
 $activePage = 'events';
 $isLoggedIn = true;
@@ -63,14 +62,17 @@ $isLoggedIn = true;
                 <h2 class="text-xl font-semibold text-gray-800">Friend Requests</h2>
                 <a href="#" class="text-orange-600 hover:underline">See All</a>
             </div>
+            <?php foreach($pendingRequests as $request):?>
             <div class="space-y-4">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center">
-                        <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Friend" class="w-12 h-12 rounded-full mr-4">
+                        <img src="<?=$request->profile_picture ?? 'public/uploads/profiles/default_profile.png'?>" alt="Friend" class="w-12 h-12 rounded-full mr-4">
                         <div>
-                            <div class="font-semibold text-gray-800">Thomas Anderson</div>
-                            <div class="text-sm text-gray-600"><i class="fas fa-user-friends mr-1"></i> 3 mutual friends</div>
-                            <div class="text-sm text-gray-500">2 days ago</div>
+                            <div class="font-semibold text-gray-800"><?="{$request->first_name} {$request->last_name}"?></div>
+                            <?php if($request->mutualFriends >0):?>
+                            <div class="text-sm text-gray-600"><i class="fas fa-user-friends mr-1"></i> <?=$request->mutualFriends?> mutual friends</div>
+                            <?php endif;?>
+                            <div class="text-sm text-gray-500"><?= timeSince($request->created_at)?></div>
                         </div>
                     </div>
                     <div class="flex gap-2">
@@ -82,255 +84,49 @@ $isLoggedIn = true;
                         </button>
                     </div>
                 </div>
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <img src="https://randomuser.me/api/portraits/women/70.jpg" alt="Friend" class="w-12 h-12 rounded-full mr-4">
-                        <div>
-                            <div class="font-semibold text-gray-800">Maria Garcia</div>
-                            <div class="text-sm text-gray-600"><i class="fas fa-user-friends mr-1"></i> 5 mutual friends</div>
-                            <div class="text-sm text-gray-500">4 days ago</div>
-                        </div>
-                    </div>
-                    <div class="flex gap-2">
-                        <button class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 flex items-center">
-                            <i class="fas fa-check mr-2"></i> Accept
-                        </button>
-                        <button class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 flex items-center">
-                            <i class="fas fa-times mr-2"></i> Decline
-                        </button>
-                    </div>
+                <?php endforeach;?>
                 </div>
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <img src="https://randomuser.me/api/portraits/men/42.jpg" alt="Friend" class="w-12 h-12 rounded-full mr-4">
-                        <div>
-                            <div class="font-semibold text-gray-800">John Walker</div>
-                            <div class="text-sm text-gray-600"><i class="fas fa-user-friends mr-1"></i> 2 mutual friends</div>
-                            <div class="text-sm text-gray-500">1 week ago</div>
-                        </div>
-                    </div>
-                    <div class="flex gap-2">
-                        <button class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 flex items-center">
-                            <i class="fas fa-check mr-2"></i> Accept
-                        </button>
-                        <button class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 flex items-center">
-                            <i class="fas fa-times mr-2"></i> Decline
-                        </button>
-                    </div>
-                </div>
+               
             </div>
         </div>
 
         <!-- All Friends Section -->
         <div class="bg-white rounded-lg shadow-md p-6 mb-6">
             <div class="mb-4">
-                <h2 class="text-xl font-semibold text-gray-800">All Friends (156)</h2>
+                <h2 class="text-xl font-semibold text-gray-800">All Friends (<?=$friendsCount?>)</h2>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Friend 1 -->
+                <!-- Friends Index -->
+            <?php foreach($friends as $friend):?>     
                 <div class="bg-gray-50 rounded-lg shadow-sm overflow-hidden">
                     <div class="h-24 bg-gray-200"></div>
                     <div class="relative">
-                        <img src="https://randomuser.me/api/portraits/women/63.jpg" alt="Friend" class="w-20 h-20 rounded-full border-4 border-white absolute -top-10 left-1/2 transform -translate-x-1/2">
+                        <img src="<?=$friend->profile_picture?>" alt="Friend" class="w-20 h-20 rounded-full border-4 border-white absolute -top-10 left-1/2 transform -translate-x-1/2">
                     </div>
                     <div class="p-4 pt-12 text-center">
-                        <h3 class="font-semibold text-gray-800">Emma Johnson</h3>
+                        <h3 class="font-semibold text-gray-800"><?=$friend->first_name?> <?=$friend->last_name?></h3>
                         <div class="text-sm text-gray-600 flex items-center justify-center">
-                            <i class="fas fa-map-marker-alt mr-1"></i> London, UK
+                            <i class="fas fa-map-marker-alt mr-1"></i><?="{$friend->city}, {$friend->country}"?>
                         </div>
-                        <div class="text-sm text-gray-500 mt-1">Travel enthusiast, Photography lover</div>
+                        <div class="text-sm text-gray-500 mt-1"><?=$friend->occupation?></div>
                         <div class="flex justify-center mt-2">
+                          <?php foreach($friend->mutualFriendsDetails as $mutualfriend):?>  
                             <div class="flex -space-x-2">
-                                <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
-                                <img src="https://randomuser.me/api/portraits/women/29.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
+                                <img src="<?=$mutualfriend->profile_picture?>" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
                             </div>
-                            <span class="text-sm text-gray-600 ml-2">2 mutual friends</span>
+                            <?php endforeach;?>
+                            <?php if($friend->mutualFriends >0):?>
+                            <span class="text-sm text-gray-600 ml-2"><?= $friend->mutualFriends?> mutual friends</span>
+                            <?php endif;?>
                         </div>
                         <div class="mt-4 flex justify-center gap-2">
                             <button class="border border-gray-300 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-100">Message</button>
-                            <button class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600">Profile</button>
+                           <a href="/users/profile/<?=$friend->user_id?>"> <button class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600">Profile</button></a>
                         </div>
                     </div>
                 </div>
-                <!-- Friend 2 -->
-                <div class="bg-gray-50 rounded-lg shadow-sm overflow-hidden">
-                    <div class="h-24 bg-gray-200"></div>
-                    <div class="relative">
-                        <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Friend" class="w-20 h-20 rounded-full border-4 border-white absolute -top-10 left-1/2 transform -translate-x-1/2">
-                    </div>
-                    <div class="p-4 pt-12 text-center">
-                        <h3 class="font-semibold text-gray-800">David Wilson</h3>
-                        <div class="text-sm text-gray-600 flex items-center justify-center">
-                            <i class="fas fa-map-marker-alt mr-1"></i> Berlin, Germany
-                        </div>
-                        <div class="text-sm text-gray-500 mt-1">Hiking, Photography, Cultural exploration</div>
-                        <div class="flex justify-center mt-2">
-                            <div class="flex -space-x-2">
-                                <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
-                                <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
-                                <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
-                            </div>
-                            <span class="text-sm text-gray-600 ml-2">3 mutual friends</span>
-                        </div>
-                        <div class="mt-4 flex justify-center gap-2">
-                            <button class="border border-gray-300 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-100">Message</button>
-                            <button class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600">Profile</button>
-                        </div>
-                    </div>
-                </div>
-                <!-- Friend 3 -->
-                <div class="bg-gray-50 rounded-lg shadow-sm overflow-hidden">
-                    <div class="h-24 bg-gray-200"></div>
-                    <div class="relative">
-                        <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Friend" class="w-20 h-20 rounded-full border-4 border-white absolute -top-10 left-1/2 transform -translate-x-1/2">
-                    </div>
-                    <div class="p-4 pt-12 text-center">
-                        <h3 class="font-semibold text-gray-800">Sophie Chen</h3>
-                        <div class="text-sm text-gray-600 flex items-center justify-center">
-                            <i class="fas fa-map-marker-alt mr-1"></i> Tokyo, Japan
-                        </div>
-                        <div class="text-sm text-gray-500 mt-1">Food lover, Cultural experiences</div>
-                        <div class="flex justify-center mt-2">
-                            <div class="flex -space-x-2">
-                                <img src="https://randomuser.me/api/portraits/women/29.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
-                            </div>
-                            <span class="text-sm text-gray-600 ml-2">1 mutual friend</span>
-                        </div>
-                        <div class="mt-4 flex justify-center gap-2">
-                            <button class="border border-gray-300 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-100">Message</button>
-                            <button class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600">Profile</button>
-                        </div>
-                    </div>
-                </div>
-                <!-- Friend 4 -->
-                <div class="bg-gray-50 rounded-lg shadow-sm overflow-hidden">
-                    <div class="h-24 bg-gray-200"></div>
-                    <div class="relative">
-                        <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Friend" class="w-20 h-20 rounded-full border-4 border-white absolute -top-10 left-1/2 transform -translate-x-1/2">
-                    </div>
-                    <div class="p-4 pt-12 text-center">
-                        <h3 class="font-semibold text-gray-800">Michael Brown</h3>
-                        <div class="text-sm text-gray-600 flex items-center justify-center">
-                            <i class="fas fa-map-marker-alt mr-1"></i> Istanbul, Turkey
-                        </div>
-                        <div class="text-sm text-gray-500 mt-1">Hiking, Outdoor activities</div>
-                        <div class="flex justify-center mt-2">
-                            <div class="flex -space-x-2">
-                                <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
-                                <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
-                                <img src="https://randomuser.me/api/portraits/women/63.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
-                            </div>
-                            <span class="text-sm text-gray-600 ml-2">3 mutual friends</span>
-                        </div>
-                        <div class="mt-4 flex justify-center gap-2">
-                            <button class="border border-gray-300 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-100">Message</button>
-                            <button class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600">Profile</button>
-                        </div>
-                    </div>
-                </div>
-                <!-- Friend 5 -->
-                <div class="bg-gray-50 rounded-lg shadow-sm overflow-hidden">
-                    <div class="h-24 bg-gray-200"></div>
-                    <div class="relative">
-                        <img src="https://randomuser.me/api/portraits/women/29.jpg" alt="Friend" class="w-20 h-20 rounded-full border-4 border-white absolute -top-10 left-1/2 transform -translate-x-1/2">
-                    </div>
-                    <div class="p-4 pt-12 text-center">
-                        <h3 class="font-semibold text-gray-800">Olivia Martinez</h3>
-                        <div class="text-sm text-gray-600 flex items-center justify-center">
-                            <i class="fas fa-map-marker-alt mr-1"></i> Barcelona, Spain
-                        </div>
-                        <div class="text-sm text-gray-500 mt-1">Art, Museums, Culture</div>
-                        <div class="flex justify-center mt-2">
-                            <div class="flex -space-x-2">
-                                <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
-                                <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
-                            </div>
-                            <span class="text-sm text-gray-600 ml-2">2 mutual friends</span>
-                        </div>
-                        <div class="mt-4 flex justify-center gap-2">
-                            <button class="border border-gray-300 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-100">Message</button>
-                            <button class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600">Profile</button>
-                        </div>
-                    </div>
-                </div>
-                <!-- Friend 6 -->
-                <div class="bg-gray-50 rounded-lg shadow-sm overflow-hidden">
-                    <div class="h-24 bg-gray-200"></div>
-                    <div class="relative">
-                        <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="Friend" class="w-20 h-20 rounded-full border-4 border-white absolute -top-10 left-1/2 transform -translate-x-1/2">
-                    </div>
-                    <div class="p-4 pt-12 text-center">
-                        <h3 class="font-semibold text-gray-800">James Taylor</h3>
-                        <div class="text-sm text-gray-600 flex items-center justify-center">
-                            <i class="fas fa-map-marker-alt mr-1"></i> Amsterdam, Netherlands
-                        </div>
-                        <div class="text-sm text-gray-500 mt-1">Cycling, Coffee, Digital nomad</div>
-                        <div class="flex justify-center mt-2">
-                            <div class="flex -space-x-2">
-                                <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
-                                <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
-                                <img src="https://randomuser.me/api/portraits/women/29.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
-                                <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
-                            </div>
-                            <span class="text-sm text-gray-600 ml-2">4 mutual friends</span>
-                        </div>
-                        <div class="mt-4 flex justify-center gap-2">
-                            <button class="border border-gray-300 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-100">Message</button>
-                            <button class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600">Profile</button>
-                        </div>
-                    </div>
-                </div>
-                <!-- Friend 7 -->
-                <div class="bg-gray-50 rounded-lg shadow-sm overflow-hidden">
-                    <div class="h-24 bg-gray-200"></div>
-                    <div class="relative">
-                        <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="Friend" class="w-20 h-20 rounded-full border-4 border-white absolute -top-10 left-1/2 transform -translate-x-1/2">
-                    </div>
-                    <div class="p-4 pt-12 text-center">
-                        <h3 class="font-semibold text-gray-800">Isabella Johnson</h3>
-                        <div class="text-sm text-gray-600 flex items-center justify-center">
-                            <i class="fas fa-map-marker-alt mr-1"></i> Rome, Italy
-                        </div>
-                        <div class="text-sm text-gray-500 mt-1">History, Architecture, Food</div>
-                        <div class="flex justify-center mt-2">
-                            <div class="flex -space-x-2">
-                                <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
-                            </div>
-                            <span class="text-sm text-gray-600 ml-2">1 mutual friend</span>
-                        </div>
-                        <div class="mt-4 flex justify-center gap-2">
-                            <button class="border border-gray-300 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-100">Message</button>
-                            <button class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600">Profile</button>
-                        </div>
-                    </div>
-                </div>
-                <!-- Friend 8 -->
-                <div class="bg-gray-50 rounded-lg shadow-sm overflow-hidden">
-                    <div class="h-24 bg-gray-200"></div>
-                    <div class="relative">
-                        <img src="https://randomuser.me/api/portraits/men/42.jpg" alt="Friend" class="w-20 h-20 rounded-full border-4 border-white absolute -top-10 left-1/2 transform -translate-x-1/2">
-                    </div>
-                    <div class="p-4 pt-12 text-center">
-                        <h3 class="font-semibold text-gray-800">Alexander Kim</h3>
-                        <div class="text-sm text-gray-600 flex items-center justify-center">
-                            <i class="fas fa-map-marker-alt mr-1"></i> Seoul, South Korea
-                        </div>
-                        <div class="text-sm text-gray-500 mt-1">Technology, Street food, Photography</div>
-                        <div class="flex justify-center mt-2">
-                            <div class="flex -space-x-2">
-                                <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
-                                <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Mutual Friend" class="w-6 h-6 rounded-full border-2 border-white">
-                            </div>
-                            <span class="text-sm text-gray-600 ml-2">2 mutual friends</span>
-                        </div>
-                        <div class="mt-4 flex justify-center gap-2">
-                            <button class="border border-gray-300 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-100">Message</button>
-                            <button class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600">Profile</button>
-                        </div>
-                    </div>
-                </div>
+                <?php endforeach;?>
             </div>
-        </div>
 
     </div>
 </body>

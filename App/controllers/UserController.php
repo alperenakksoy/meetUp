@@ -233,6 +233,20 @@ class UserController extends BaseController {
             // Get pending friend requests
             $pendingRequests = $this->friendshipModel->getPendingRequestsReceived($userId);
             
+            // Get mutual Friends Count to show pending requests
+            foreach($pendingRequests as $request){
+            $request->mutualFriends = $this->friendshipModel->getMutualFriendsCount($request->user_id_2,$request->user_id_1);
+            }
+
+            // get mutual friends for the friends section.
+            foreach($friends as $friend){
+            $friend->mutualFriends = $this->friendshipModel->getMutualFriendsCount($userId,$friend->user_id);
+            $friend->mutualFriendsDetails= $this->friendshipModel->getMutualFriendsSimple($userId,$friend->user_id,2);
+
+            }
+
+            // get mutualFriends SIMPLE details
+
             loadView('users/friends', [
                 'friends' => $friends,
                 'friendsCount' => $friendsCount,

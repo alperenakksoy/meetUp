@@ -200,7 +200,6 @@ function getProfilePictureUrl($attendee) {
         </div>
     <?php endif; ?>
 </div>
-
 <!-- Recommended Events -->
 <div class="bg-white rounded-lg shadow-md overflow-hidden">
     <div class="flex justify-between items-center p-4 border-b border-gray-200">
@@ -246,18 +245,53 @@ function getProfilePictureUrl($attendee) {
                         <?= htmlspecialchars(strlen($recEvent->description) > 120 ? substr($recEvent->description, 0, 120) . '...' : $recEvent->description) ?>
                     </p>
                     
+                    <!-- Updated Attendees and Actions Section (same as upcoming events) -->
                     <div class="flex justify-between items-center">
-                        <div class="flex items-center">
-                            <span class="text-sm text-gray-500">
-                                <?php if($recEvent->attendee_count == 0): ?>
-                                    Be the first to join!
-                                <?php elseif($recEvent->attendee_count == 1): ?>
-                                    1 person going
-                                <?php else: ?>
-                                    <?= $recEvent->attendee_count ?> people going
-                                <?php endif; ?>
-                            </span>
+                        <!-- Left side: Profile pics and count -->
+                        <div class="flex items-center space-x-2">
+                            <?php if (!empty($recEvent->attendees) && is_array($recEvent->attendees)): ?>
+                                <div class="flex -space-x-2">
+                                    <?php foreach (array_slice($recEvent->attendees, 0, 5) as $attendee): ?>
+                                        <?php $profileUrl = getProfilePictureUrl($attendee); ?>
+                                        <img src="<?= htmlspecialchars($profileUrl) ?>" 
+                                             alt="<?= htmlspecialchars($attendee->first_name ?? 'Attendee') ?>" 
+                                             class="w-8 h-8 rounded-full border-2 border-white group-hover:ring-2 group-hover:ring-orange-200 object-cover"
+                                             onerror="this.src='https://ui-avatars.com/api/?name=<?= urlencode(($attendee->first_name ?? 'U') . '+' . ($attendee->last_name ?? 'ser')) ?>&size=32&background=dc2626&color=fff&rounded=true';"
+                                             loading="lazy">
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php endif; ?>
+                            
+                            <?php 
+                            $attendeeCount = !empty($recEvent->attendees) ? count($recEvent->attendees) : 0;
+                            $indicator = '';
+                            $userIsAttending = false;
+                            
+                            // Check if current user is attending this event
+                            if (!empty($recEvent->attendees)) {
+                                foreach($recEvent->attendees as $attendee) {
+                                    if($attendee->user_id == $user->user_id) {
+                                        $userIsAttending = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            
+                            if($attendeeCount == 0):
+                                $indicator = "Be the first to join!";
+                            elseif($attendeeCount == 1 && $userIsAttending):
+                                $indicator = "Only you going";
+                            elseif($attendeeCount == 1):
+                                $indicator = "1 person going";
+                            else:
+                                $indicator = "{$attendeeCount} people going";
+                            endif;
+                            ?>
+                            
+                            <span class="text-sm text-gray-500"><?= $indicator ?></span>
                         </div>
+                        
+                        <!-- Right side: Action buttons -->
                         <div class="flex space-x-2">
                             <a href="#" class="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-3 rounded-lg transition duration-200">
                                 <i class="far fa-bookmark mr-1"></i> Save
@@ -284,7 +318,6 @@ function getProfilePictureUrl($attendee) {
         </div>
     <?php endif; ?>
 </div>
-
             <!-- Friend Activity -->
             <div class="bg-white rounded-lg shadow-md overflow-hidden">
                 <div class="flex justify-between items-center p-4 border-b border-gray-200">
