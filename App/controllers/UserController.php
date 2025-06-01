@@ -242,15 +242,20 @@ class UserController extends BaseController {
             foreach($friends as $friend){
             $friend->mutualFriends = $this->friendshipModel->getMutualFriendsCount($userId,$friend->user_id);
             $friend->mutualFriendsDetails= $this->friendshipModel->getMutualFriendsSimple($userId,$friend->user_id,2);
-
             }
 
-            // get mutualFriends SIMPLE details
-
+            // get friend request that USER sent getPendingRequestsSent
+            $sentRequests = $this->friendshipModel->getPendingRequestsReceived($userId);
+            // get mutual friends of pending sent request
+            foreach($sentRequests as $sentRequest){
+                $sentRequest->mutuals = $this->friendshipModel->getMutualFriendsSimple($userId,$sentRequest->user_id_1);
+            }
+            
             loadView('users/friends', [
                 'friends' => $friends,
                 'friendsCount' => $friendsCount,
-                'pendingRequests' => $pendingRequests
+                'pendingRequests' => $pendingRequests,
+                'sentRequests' => $sentRequests
             ]);
             
         } catch (Exception $e) {
