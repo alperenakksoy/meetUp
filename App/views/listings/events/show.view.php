@@ -56,7 +56,7 @@ $isLoggedIn = true;
             <!-- Event Comments -->
             <div class="p-6 border-t border-gray-200">
                 <div class="flex justify-between items-center mb-5">
-                    <h3 class="text-xl font-semibold">Comments and Questions (8)</h3>
+                    <h3 class="text-xl font-semibold">Comments and Questions (<?=count($eventComments) ?? 0 ?>)</h3>
                 </div>
 
                 <form class="flex gap-4 mb-6">
@@ -66,15 +66,16 @@ $isLoggedIn = true;
 
                 <div class="space-y-5">
                     <!-- Comment 1 -->
+                    <?php foreach($eventComments as $comment):?> 
                     <div class="flex gap-4">
-                        <img src="https://randomuser.me/api/portraits/women/63.jpg" alt="User" class="w-10 h-10 rounded-full object-cover">
+                        <img src="<?=$comment->profile_picture ?? 'default.png'?>" alt="User" class="w-10 h-10 rounded-full object-cover">
                         <div class="flex-1 bg-gray-100 p-4 rounded-lg">
-                            <div class="font-semibold mb-1">Emma Johnson</div>
+                            <div class="font-semibold mb-1"><?="{$comment->first_name} {$comment->last_name}"?></div>
                             <div class="mb-2">
-                                This sounds great! Will there be vegetarian food options available?
-                            </div>
+                                <?=$comment->content?>
+                        </div>
                             <div class="flex justify-between text-sm text-gray-600">
-                                <span>2 days ago</span>
+                                <span><?=timeSince($comment->created_at)?></span>
                                 <div class="flex gap-4">
                                     <a href="#" class="hover:text-[#f5a623]">Reply</a>
                                     <a href="#" class="hover:text-[#f5a623]">Like</a>
@@ -82,45 +83,12 @@ $isLoggedIn = true;
                             </div>
                         </div>
                     </div>
+                    <?php endforeach;?>
 
-                    <!-- Comment 2 with Reply -->
-                    <div class="flex gap-4">
-                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="w-10 h-10 rounded-full object-cover">
-                        <div class="flex-1 bg-gray-100 p-4 rounded-lg">
-                            <div class="font-semibold mb-1">Ahmet Alperen Aksoy (Host)</div>
-                            <div class="mb-2">
-                                Hi Emma! This is primarily a coffee gathering, but the café does offer some small pastries that include vegetarian options. Let me know if you have any other questions!
-                            </div>
-                            <div class="flex justify-between text-sm text-gray-600">
-                                <span>1 day ago</span>
-                                <div class="flex gap-4">
-                                    <a href="#" class="hover:text-[#f5a623]">Like</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Comment 3 -->
-                    <div class="flex gap-4">
-                        <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="User" class="w-10 h-10 rounded-full object-cover">
-                        <div class="flex-1 bg-gray-100 p-4 rounded-lg">
-                            <div class="font-semibold mb-1">David Wilson</div>
-                            <div class="mb-2">
-                                Is this suitable for someone who doesn't speak Turkish at all?
-                            </div>
-                            <div class="flex justify-between text-sm text-gray-600">
-                                <span>12 hours ago</span>
-                                <div class="flex gap-4">
-                                    <a href="#" class="hover:text-[#f5a623]">Reply</a>
-                                    <a href="#" class="hover:text-[#f5a623]">Like</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    
                 </div>
             </div>
         </div>
-
         <!-- Event Sidebar -->
         <div class="space-y-5">
             <!-- Join Event Card -->
@@ -138,16 +106,23 @@ $isLoggedIn = true;
             <div class="bg-white p-5 rounded-lg shadow">
                 <h3 class="text-lg font-semibold mb-3 pb-2 border-b border-gray-100">Host</h3>
                 <div class="flex items-center mb-4">
-                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Host" class="w-15 h-15 rounded-full object-cover border-4 border-[#f5a623] mr-4">
+                <img src="<?=$host->profile_picture?>" alt="Host" class="w-20 h-20 rounded-full object-cover border-4 border-[#f5a623] mr-4">
                     <div>
-                        <div class="font-semibold mb-1">Ahmet Alperen Aksoy</div>
+                        <div class="font-semibold mb-1"><?="{$event->first_name} {$event->last_name}"?></div>
                         <div class="text-sm text-gray-600">
-                            <div class="mb-1"><i class="fas fa-map-marker-alt mr-2 text-[#f5a623]"></i> Istanbul, Turkey</div>
-                            <div><i class="fas fa-calendar-check mr-2 text-[#f5a623]"></i> 24 events hosted</div>
+                            <div class="mb-1"><i class="fas fa-map-marker-alt mr-2 text-[#f5a623]"></i><?="{$host->city}, {$host->country}"?></div>
+                            <?php if(count($event->hostedEvents) == 0):?>
+                                <?php $indicator='This user has not hosted an event yet.'?>
+                            <?php elseif(count($event->hostedEvents) == 1):?>
+                                <?php $indicator='1 event hosted,'?>
+                            <?php else:?>
+                                <?php $indicator = count($event->hostedEvents).' events hosted,'?>                               
+                            <div><i class="fas fa-calendar-check mr-2 text-[#f5a623]"></i><?=$indicator?></div>
+                            <?php endif;?>
                         </div>
                     </div>
                 </div>
-                <a href="profile.php?id=123" class="block text-center py-2 border border-[#f5a623] text-[#f5a623] rounded hover:bg-[#f5a623] hover:text-white transition-colors">View Profile</a>
+                <a href="/users/profile/<?$host->user_id?>" class="block text-center py-2 border border-[#f5a623] text-[#f5a623] rounded hover:bg-[#f5a623] hover:text-white transition-colors">View Profile</a>
             </div>
 
             <!-- Attendees -->
@@ -226,6 +201,8 @@ $isLoggedIn = true;
         </div>
     </div>
 </div>
+<?=inspectAndDie($event);?>
+
 
     <script>
         // Join Event functionality

@@ -3,15 +3,26 @@ namespace App\Controllers;
 
 use Framework\Database;
 use App\Models\Event;
+use App\Models\EventCategory;
 use App\Models\EventTag;
+use App\Models\EventComment;
 use App\Models\UserActivity;
+use App\Models\BaseModel;
+use App\Models\User;
 use Framework\Validation;
 use Exception; 
 
 class EventController extends BaseController {
     protected $eventModel;
+    protected $eventCategory;
+    protected $eventComment;
+    protected $userModel;
+
     public function __construct() {
         $this->eventModel = new Event(); 
+        $this->eventCategory = new EventCategory();
+        $this->eventComment = new EventComment();
+        $this->userModel = new User(); 
     }
     
     public function index() {
@@ -124,9 +135,15 @@ class EventController extends BaseController {
     
     public function show($params) {
       $event = $this->eventModel->getEventWithDetails($params['id']);    
-
+      $host= $this->userModel->usergetById($event->host_id); 
+      // get events that hosted by host
+      $event->hostedEvents=$this->eventModel->getEventsByHost($event->host_id);
+      $eventComments = $this->eventComment->getCommentsByEvent($event->event_id);
         loadView('events/show',[
-            'event' => $event
+            'event' => $event,
+            'eventComments'=>$eventComments,
+            'host' => $host,
+            
         ]);
     }
     

@@ -2,15 +2,19 @@
 // Home routes
 $router->get('/', 'HomeController@index');
 
-
 // User routes
 $router->get('/users/references', 'UserController@references');
 $router->get('/users/friends', 'UserController@friends');
 $router->get('/users/settings', 'UserController@settings');
+
 // Current user's profile (no ID needed)
 $router->get('/users/profile', 'UserController@profile');
 // Specific user's profile (with ID)
-$router->get('/users/profile/{id}', 'UserController@profile');$router->get('/users/{id}', 'UserController@edit');
+$router->get('/users/profile/{id}', 'UserController@profile');
+
+// User edit routes
+$router->get('/users/edit', 'UserController@edit');
+$router->get('/users/{id}', 'UserController@edit');
 $router->put('/users/{id}', 'UserController@update');
 
 // Event routes
@@ -45,3 +49,19 @@ $router->get('/admin/users', 'AdminController@users');
 $router->get('/admin/events', 'AdminController@events');
 $router->get('/admin/reports', 'AdminController@reports');
 
+// API routes for AJAX calls
+$router->get('/api/notifications/count', 'MessageController@getCount');
+
+// Static pages routes
+$router->get('/about', 'PageController@about');
+$router->get('/howitworks', 'PageController@howitworks');
+$router->get('/faq', 'PageController@faq');
+$router->get('/report', 'PageController@report');
+$router->get('/safety', 'PageController@safety');
+$router->get('/features', 'PageController@features');
+$router->get('/contact', 'PageController@contact');
+$router->post('/contact', 'PageController@submitContact');
+
+// Error handling routes
+$router->get('/404', 'ErrorController@notFound');
+$router->get('/403', 'ErrorController@unauthorized');
