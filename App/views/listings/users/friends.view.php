@@ -134,8 +134,10 @@ $isLoggedIn = true;
         </div>
     </div>
 </div>
+                <!-- RECEIVED FRIEND REQUESTS -->
 
-       <!-- Friend Requests Section -->
+ 
+<!-- Friend Requests Section -->
 <div id="requestsSection" class="tab-content hidden">
     <!-- Received Friend Requests -->
     <div class="bg-white rounded-lg shadow-md p-6 mb-6">
@@ -146,10 +148,10 @@ $isLoggedIn = true;
         <div class="space-y-4" id="friendRequestsContainer">
             <?php if(!empty($pendingRequests)): ?>
                 <?php foreach($pendingRequests as $request): ?>
+                    <!-- FIXED: Added data-friendship-id attribute to the container -->
                     <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50" 
                          data-friendship-id="<?= $request->friendship_id ?>">
                         <div class="flex items-center">
-                            <!-- Clickable profile picture with hover effect -->
                             <a href="/users/profile/<?= $request->user_id_1 ?>" class="group relative">
                                 <img src="<?= $request->profile_picture ?? '/uploads/profiles/default_profile.png' ?>" 
                                     alt="Friend" 
@@ -166,12 +168,11 @@ $isLoggedIn = true;
                             </div>
                         </div>
                         <div class="flex gap-2">
-                            <button class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 flex items-center transition-colors"
-                                    onclick="handleFriendRequest(<?= $request->friendship_id ?>, 'accept')">
+                            <!-- FIXED: Simplified buttons without onclick, rely on event listeners -->
+                            <button class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 flex items-center transition-colors accept-btn">
                                 <i class="fas fa-check mr-2"></i> Accept
                             </button>
-                            <button class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 flex items-center transition-colors"
-                                    onclick="handleFriendRequest(<?= $request->friendship_id ?>, 'decline')">
+                            <button class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 flex items-center transition-colors decline-btn">
                                 <i class="fas fa-times mr-2"></i> Decline
                             </button>
                         </div>
@@ -186,51 +187,55 @@ $isLoggedIn = true;
         </div>
     </div>
 
-    <!-- Sent Requests -->
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-semibold text-gray-800">Friend Requests Sent</h2>
-            <span class="text-sm text-gray-500"><?= count($sentRequests ?? []) ?> pending requests</span>
-        </div>
-        <div class="space-y-4">
-            <?php if(!empty($sentRequests)): ?>
-                <?php foreach($sentRequests as $request): ?>
-                    <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-                        <div class="flex items-center">
-                            <!-- Clickable profile picture with hover effect -->
-                            <a href="/users/profile/<?= $request->user_id_2 ?>" class="group relative">
-                                <img src="<?= $request->profile_picture ?? '/uploads/profiles/default_profile.png' ?>" 
-                                    alt="Friend" 
-                                    class="w-12 h-12 rounded-full mr-4 object-cover border-2 border-transparent group-hover:border-orange-500 transition-all">
-                            </a>
-                            <div>
-                                <div class="font-semibold text-gray-800"><?= "{$request->first_name} {$request->last_name}" ?></div>
-                                <?php if(!empty($request->mutuals) && count($request->mutuals) > 0): ?>
-                                    <div class="text-sm text-gray-600">
-                                        <i class="fas fa-user-friends mr-1"></i> <?= count($request->mutuals) ?> mutual friends
-                                    </div>
-                                <?php endif; ?>
-                                <div class="text-sm text-gray-500">Sent <?= timeSince($request->created_at) ?></div>
-                            </div>
-                        </div>
-                        <div class="flex gap-2">
-                            <span class="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-lg text-sm">Pending</span>
-                            <button class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 flex items-center transition-colors">
-                                <i class="fas fa-times mr-2"></i> Cancel
-                            </button>
+    
+<!-- Sent Requests -->
+<div class="bg-white rounded-lg shadow-md p-6">
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-semibold text-gray-800">Friend Requests Sent</h2>
+        <span class="text-sm text-gray-500"><?= count($sentRequests ?? []) ?> pending requests</span>
+    </div>
+    <div class="space-y-4" id="sentRequestsContainer">
+        <?php if(!empty($sentRequests)): ?>
+            <?php foreach($sentRequests as $request): ?>
+                <!-- FIXED: Added data-friendship-id for cancel functionality -->
+                <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg sent-request-item" 
+                     data-friendship-id="<?= $request->friendship_id ?>">
+                    <div class="flex items-center">
+                        <a href="/users/profile/<?= $request->user_id_2 ?>" class="group relative">
+                            <img src="<?= $request->profile_picture ?? '/uploads/profiles/default_profile.png' ?>" 
+                                alt="Friend" 
+                                class="w-12 h-12 rounded-full mr-4 object-cover border-2 border-transparent group-hover:border-orange-500 transition-all">
+                        </a>
+                        <div>
+                            <div class="font-semibold text-gray-800"><?= "{$request->first_name} {$request->last_name}" ?></div>
+                            <?php if(!empty($request->mutuals) && count($request->mutuals) > 0): ?>
+                                <div class="text-sm text-gray-600">
+                                    <i class="fas fa-user-friends mr-1"></i> <?= count($request->mutuals) ?> mutual friends
+                                </div>
+                            <?php endif; ?>
+                            <div class="text-sm text-gray-500">Sent <?= timeSince($request->created_at) ?></div>
                         </div>
                     </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <div class="text-center py-8 text-gray-500">
-                    <i class="fas fa-paper-plane fa-3x mb-4"></i>
-                    <p>No pending sent requests</p>
+                    <div class="flex gap-2">
+                        <span class="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-lg text-sm">
+                            <i class="fas fa-clock mr-1"></i> Pending
+                        </span>
+                        <!-- FIXED: Updated cancel button with proper functionality -->
+                        <button class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 flex items-center transition-colors cancel-request-btn">
+                            <i class="fas fa-times mr-2"></i> Cancel
+                        </button>
+                    </div>
                 </div>
-            <?php endif; ?>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <div class="text-center py-8 text-gray-500">
+                <i class="fas fa-paper-plane fa-3x mb-4"></i>
+                <p>No pending sent requests</p>
+            </div>
+        <?php endif; ?>
+         </div>
         </div>
-    </div>
 </div>
-
         <!-- Find Friends Section -->
         <div id="findFriendsSection" class="tab-content hidden">
             <div class="bg-white rounded-lg shadow-md p-6 mb-6">
@@ -346,292 +351,17 @@ $isLoggedIn = true;
                 </div>
             </div>
         </div>
-            </div>
 
-            <script>
-/**
- * Handle friend request actions (accept/decline)
- */
-async function handleFriendRequest(friendshipId, action) {
-    console.log('Handling friend request:', friendshipId, action); // Debug log
-    
-    // Show loading state
-    const requestElement = document.querySelector(`[data-friendship-id="${friendshipId}"]`);
-    if (requestElement) {
-        requestElement.style.opacity = '0.6';
-        requestElement.style.pointerEvents = 'none';
-    }
-    
-    try {
-        const response = await fetch('/api/friendship/handle', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            body: JSON.stringify({
-                friendship_id: parseInt(friendshipId),
-                action: action
-            })
-        });
-        
-        console.log('Response status:', response.status); // Debug log
-        console.log('Response headers:', response.headers); // Debug log
-        
-        // Check if response is JSON
-        const contentType = response.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) {
-            console.error('Response is not JSON:', await response.text());
-            throw new Error('Server returned non-JSON response');
-        }
-        
-        const data = await response.json();
-        console.log('Response data:', data); // Debug log
-        
-        if (response.ok && data.success) {
-            // Show success message
-            showNotification(data.message, 'success');
-            
-            // Update UI based on action
-            if (action === 'accept') {
-                updateRequestUI(friendshipId, 'accepted');
-            } else if (action === 'decline') {
-                updateRequestUI(friendshipId, 'declined');
-            }
-            
-            // Update counters
-            updateRequestCounters();
-            
-        } else {
-            // Show error message
-            showNotification(data.message || 'An error occurred', 'error');
-            
-            // Restore element state
-            if (requestElement) {
-                requestElement.style.opacity = '1';
-                requestElement.style.pointerEvents = 'auto';
-            }
-        }
-        
-    } catch (error) {
-        console.error('Error handling friend request:', error);
-        
-        // More specific error message based on error type
-        let errorMessage = 'Network error occurred';
-        if (error.message.includes('JSON')) {
-            errorMessage = 'Server response error. Please try again.';
-        } else if (error.name === 'TypeError') {
-            errorMessage = 'Connection failed. Check your internet connection.';
-        }
-        
-        showNotification(errorMessage, 'error');
-        
-        // Restore element state
-        if (requestElement) {
-            requestElement.style.opacity = '1';
-            requestElement.style.pointerEvents = 'auto';
-        }
-    }
-}
+        <!-- Replace the script section at the bottom of your friends.view.php with this: -->
 
-/**
- * Send a friend request
- */
-async function sendFriendRequest(userId) {
-    const button = document.querySelector(`[data-user-id="${userId}"]`);
-    if (button) {
-        button.disabled = true;
-        button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Sending...';
-    }
-    
-    try {
-        const response = await fetch('/api/friendship/send', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            body: JSON.stringify({
-                user_id: userId
-            })
-        });
-        
-        const data = await response.json();
-        
-        if (response.ok && data.success) {
-            showNotification(data.message, 'success');
-            
-            if (button) {
-                button.innerHTML = '<i class="fas fa-clock mr-2"></i>Request Sent';
-                button.classList.remove('bg-orange-500', 'hover:bg-orange-600');
-                button.classList.add('bg-gray-400', 'cursor-not-allowed');
-            }
-        } else {
-            showNotification(data.message || 'Failed to send request', 'error');
-            
-            if (button) {
-                button.disabled = false;
-                button.innerHTML = '<i class="fas fa-user-plus mr-2"></i>Add Friend';
-            }
-        }
-        
-    } catch (error) {
-        console.error('Error sending friend request:', error);
-        showNotification('Network error occurred', 'error');
-        
-        if (button) {
-            button.disabled = false;
-            button.innerHTML = '<i class="fas fa-user-plus mr-2"></i>Add Friend';
-        }
-    }
-}
-
-/**
- * Update the UI after processing a friend request
- */
-function updateRequestUI(friendshipId, action) {
-    const requestElement = document.querySelector(`[data-friendship-id="${friendshipId}"]`);
-    
-    if (!requestElement) return;
-    
-    if (action === 'accepted') {
-        // Update to show "Friends" status
-        const imgElement = requestElement.querySelector('img');
-        const nameElement = requestElement.querySelector('.font-semibold');
-        const userName = nameElement ? nameElement.textContent : 'User';
-        
-        requestElement.innerHTML = `
-            <div class="flex items-center justify-between p-4 border border-green-200 rounded-lg bg-green-50">
-                <div class="flex items-center">
-                    ${imgElement ? imgElement.outerHTML : ''}
-                    <div>
-                        <div class="font-semibold text-gray-800">${userName}</div>
-                        <div class="text-sm text-green-600">
-                            <i class="fas fa-check mr-1"></i> Friend request accepted
-                        </div>
-                    </div>
-                </div>
-                <div class="flex gap-2">
-                    <button class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600" onclick="window.location.href='/messages'">
-                        <i class="fas fa-envelope mr-2"></i> Message
-                    </button>
-                </div>
-            </div>
-        `;
-        
-        // Auto-hide after 3 seconds
-        setTimeout(() => {
-            requestElement.style.transition = 'opacity 0.5s ease-out';
-            requestElement.style.opacity = '0';
-            setTimeout(() => {
-                requestElement.remove();
-            }, 500);
-        }, 3000);
-        
-    } else if (action === 'declined') {
-        // Fade out and remove
-        requestElement.style.transition = 'opacity 0.5s ease-out, height 0.3s ease-out';
-        requestElement.style.opacity = '0';
-        requestElement.style.height = '0px';
-        requestElement.style.marginBottom = '0px';
-        requestElement.style.paddingTop = '0px';
-        requestElement.style.paddingBottom = '0px';
-        
-        setTimeout(() => {
-            requestElement.remove();
-        }, 500);
-    }
-}
-
-/**
- * Update request counters in the UI
- */
-function updateRequestCounters() {
-    const badge = document.querySelector('.notification-badge');
-    if (badge) {
-        let currentCount = parseInt(badge.textContent) || 0;
-        currentCount = Math.max(0, currentCount - 1);
-        
-        if (currentCount === 0) {
-            badge.style.display = 'none';
-        } else {
-            badge.textContent = currentCount;
-        }
-    }
-    
-    // Update tab counter
-    const requestsTab = document.getElementById('requestsTab');
-    if (requestsTab) {
-        const tabBadge = requestsTab.querySelector('span');
-        if (tabBadge) {
-            let currentTabCount = parseInt(tabBadge.textContent) || 0;
-            currentTabCount = Math.max(0, currentTabCount - 1);
-            tabBadge.textContent = currentTabCount;
-            
-            if (currentTabCount === 0) {
-                tabBadge.style.display = 'none';
-            }
-        }
-    }
-}
-
-/**
- * Show notification messages
- */
-function showNotification(message, type = 'info') {
-    // Remove existing notifications
-    const existingNotifications = document.querySelectorAll('.notification-toast');
-    existingNotifications.forEach(notif => notif.remove());
-    
-    const notification = document.createElement('div');
-    notification.className = `notification-toast fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg text-white max-w-sm ${
-        type === 'success' ? 'bg-green-500' : 
-        type === 'error' ? 'bg-red-500' : 
-        'bg-blue-500'
-    }`;
-    
-    notification.innerHTML = `
-        <div class="flex items-center">
-            <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'} mr-2"></i>
-            <span>${message}</span>
-            <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white hover:text-gray-200">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-    `;
-    
-    document.body.appendChild(notification);
-    
-    // Auto-remove after 5 seconds
-    setTimeout(() => {
-        if (notification.parentElement) {
-            notification.style.transition = 'opacity 0.3s ease-out';
-            notification.style.opacity = '0';
-            setTimeout(() => {
-                notification.remove();
-            }, 300);
-        }
-    }, 5000);
-}
-
-// Main DOM Ready Functions
+<script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Handle "Find Friends" button click from empty state
-    const findFriendsFromEmpty = document.getElementById('findFriendsFromEmpty');
-    if (findFriendsFromEmpty) {
-        findFriendsFromEmpty.addEventListener('click', function() {
-            // Switch to Find Friends tab (assuming the tab switching function exists)
-            if (typeof switchTab === 'function') {
-                switchTab('findFriendsTabBtn', 'findFriendsSection');
-            }
-        });
-    }
-    
+    console.log('Friendship system initializing...');
+
     // Tab switching functionality
     const tabItems = document.querySelectorAll('.tab-item');
     const tabContents = document.querySelectorAll('.tab-content');
     
-    // Function to switch tabs
     function switchTab(activeTabId, activeContentId) {
         // Remove active classes from all tabs
         tabItems.forEach(tab => {
@@ -658,101 +388,98 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Make switchTab function globally available
-    window.switchTab = switchTab;
-    
     // Tab click handlers
     const allFriendsTab = document.getElementById('allFriendsTab');
     const requestsTab = document.getElementById('requestsTab');
     const findFriendsTabBtn = document.getElementById('findFriendsTabBtn');
     const findFriendsBtn = document.getElementById('findFriendsBtn');
+    const findFriendsFromEmpty = document.getElementById('findFriendsFromEmpty');
     
     if (allFriendsTab) {
-        allFriendsTab.addEventListener('click', function() {
-            switchTab('allFriendsTab', 'allFriendsSection');
-        });
+        allFriendsTab.addEventListener('click', () => switchTab('allFriendsTab', 'allFriendsSection'));
     }
     
     if (requestsTab) {
-        requestsTab.addEventListener('click', function() {
-            switchTab('requestsTab', 'requestsSection');
-        });
+        requestsTab.addEventListener('click', () => switchTab('requestsTab', 'requestsSection'));
     }
     
     if (findFriendsTabBtn) {
-        findFriendsTabBtn.addEventListener('click', function() {
-            switchTab('findFriendsTabBtn', 'findFriendsSection');
-        });
+        findFriendsTabBtn.addEventListener('click', () => switchTab('findFriendsTabBtn', 'findFriendsSection'));
     }
     
-    // Find Friends button in header
     if (findFriendsBtn) {
-        findFriendsBtn.addEventListener('click', function() {
-            switchTab('findFriendsTabBtn', 'findFriendsSection');
-        });
+        findFriendsBtn.addEventListener('click', () => switchTab('findFriendsTabBtn', 'findFriendsSection'));
+    }
+    
+    if (findFriendsFromEmpty) {
+        findFriendsFromEmpty.addEventListener('click', () => switchTab('findFriendsTabBtn', 'findFriendsSection'));
     }
 
-    // Add Friend button functionality
-    document.querySelectorAll('.add-friend-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const userId = this.getAttribute('data-user-id');
-            if (userId) {
-                sendFriendRequest(userId);
-            }
-        });
-    });
-
-    // General "Add Friend" buttons (for buttons with orange background)
-    document.querySelectorAll('.bg-orange-500').forEach(button => {
-        if (button.textContent.includes('Add Friend')) {
-            button.addEventListener('click', function() {
-                const userId = this.getAttribute('data-user-id');
-                if (userId) {
-                    sendFriendRequest(userId);
-                }
-            });
-        }
-    });
-
-    // Decline button functionality (remove from UI immediately)
-    document.querySelectorAll('.bg-red-500').forEach(button => {
-        if (button.textContent.includes('Decline')) {
-            button.addEventListener('click', function() {
-                const friendshipId = this.getAttribute('data-friendship-id') || 
-                                   this.closest('[data-friendship-id]')?.getAttribute('data-friendship-id');
+    // Friend request handlers - FIXED: Removed duplicate code
+    document.querySelectorAll('button').forEach(button => {
+        const buttonText = button.textContent.trim();
+        
+        if (buttonText.includes('Accept')) {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const friendshipId = this.closest('[data-friendship-id]')?.getAttribute('data-friendship-id');
                 if (friendshipId) {
-                    handleFriendRequest(friendshipId, 'decline');
-                }
-            });
-        }
-    });
-
-    // Accept button functionality
-    document.querySelectorAll('.bg-green-500').forEach(button => {
-        if (button.textContent.includes('Accept')) {
-            button.addEventListener('click', function() {
-                const friendshipId = this.getAttribute('data-friendship-id') || 
-                                   this.closest('[data-friendship-id]')?.getAttribute('data-friendship-id');
-                if (friendshipId) {
+                    console.log('Accept clicked for friendship:', friendshipId);
                     handleFriendRequest(friendshipId, 'accept');
+                } else {
+                    console.error('No friendship ID found for accept button');
+                }
+            });
+        }
+        
+        if (buttonText.includes('Decline')) {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const friendshipId = this.closest('[data-friendship-id]')?.getAttribute('data-friendship-id');
+                if (friendshipId) {
+                    console.log('Decline clicked for friendship:', friendshipId);
+                    handleFriendRequest(friendshipId, 'decline');
+                } else {
+                    console.error('No friendship ID found for decline button');
+                }
+            });
+        }
+        
+        // Cancel request handler
+        if (buttonText.includes('Cancel')) {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const friendshipId = this.closest('[data-friendship-id]')?.getAttribute('data-friendship-id');
+                if (friendshipId) {
+                    console.log('Cancel clicked for friendship:', friendshipId);
+                    
+                    // Show confirmation dialog
+                    if (confirm('Are you sure you want to cancel this friend request?')) {
+                        cancelFriendRequest(friendshipId);
+                    }
+                } else {
+                    console.error('No friendship ID found for cancel button');
                 }
             });
         }
     });
 
     // Search functionality
-    const searchInput = document.querySelector('input[placeholder*="Search"]');
+    const searchInput = document.querySelector('input[placeholder*="Search friends"]');
     if (searchInput) {
         searchInput.addEventListener('keyup', function() {
             const searchTerm = this.value.toLowerCase();
-            const friendCards = document.querySelectorAll('.bg-gray-50, .flex.items-center.p-4');
+            const friendCards = document.querySelectorAll('.bg-gray-50');
             
             friendCards.forEach(card => {
-                const name = card.querySelector('.font-semibold');
-                if (name && name.textContent.toLowerCase().includes(searchTerm)) {
-                    card.style.display = '';
-                } else if (name) {
-                    card.style.display = 'none';
+                const nameElement = card.querySelector('.font-semibold');
+                if (nameElement) {
+                    const name = nameElement.textContent.toLowerCase();
+                    if (name.includes(searchTerm)) {
+                        card.style.display = '';
+                    } else {
+                        card.style.display = 'none';
+                    }
                 }
             });
         });
@@ -761,10 +488,311 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Friendship system initialized successfully');
 });
 
-// Make functions globally available
-window.handleFriendRequest = handleFriendRequest;
-window.sendFriendRequest = sendFriendRequest;
-window.showNotification = showNotification;
+/**
+ * Handle friend request - Accept/Decline functionality
+ */
+async function handleFriendRequest(friendshipId, action) {
+    console.log('Processing friendship request:', friendshipId, action);
+    
+    // Validate inputs
+    if (!friendshipId || !action) {
+        console.error('Missing friendship ID or action');
+        showNotification('Invalid request data', 'error');
+        return;
+    }
+    
+    // Find the request element
+    const requestElement = document.querySelector(`[data-friendship-id="${friendshipId}"]`);
+    if (!requestElement) {
+        console.error('Request element not found');
+        showNotification('Request element not found', 'error');
+        return;
+    }
+    
+    // Show loading state
+    requestElement.style.opacity = '0.6';
+    requestElement.style.pointerEvents = 'none';
+    
+    // Find and disable buttons
+    const buttons = requestElement.querySelectorAll('button');
+    buttons.forEach(btn => {
+        btn.disabled = true;
+        if (btn.textContent.includes('Accept')) {
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processing...';
+        }
+    });
+    
+    try {
+        console.log('Sending request to /api/friendship/handle');
+        
+        const response = await fetch('/api/friendship/handle', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({
+                friendship_id: parseInt(friendshipId),
+                action: action
+            })
+        });
+        
+        console.log('Response status:', response.status);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        // Check if response is actually JSON
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            const textResponse = await response.text();
+            console.error('Full server response:', textResponse);
+            console.error('Content-Type header:', contentType);
+            console.error('Response status:', response.status);
+            console.error('Response headers:', [...response.headers.entries()]);
+            throw new Error(`Server error: Expected JSON but got ${contentType || 'unknown content type'}. Check console for full response.`);
+        }
+        
+        const data = await response.json();
+        console.log('Server response:', data);
+        
+        if (data.success) {
+            showNotification(data.message, 'success');
+            
+            // Remove the request from UI with animation
+            requestElement.style.transition = 'all 0.5s ease';
+            requestElement.style.opacity = '0';
+            requestElement.style.height = '0px';
+            requestElement.style.marginBottom = '0px';
+            requestElement.style.paddingTop = '0px';
+            requestElement.style.paddingBottom = '0px';
+            
+            setTimeout(() => {
+                requestElement.remove();
+                updateRequestCounter();
+                
+                // Check if no more requests
+                const remainingRequests = document.querySelectorAll('[data-friendship-id]');
+                if (remainingRequests.length === 0) {
+                    const container = document.getElementById('friendRequestsContainer');
+                    if (container) {
+                        container.innerHTML = `
+                            <div class="text-center py-8 text-gray-500">
+                                <i class="fas fa-user-plus fa-3x mb-4"></i>
+                                <p>No pending friend requests</p>
+                            </div>
+                        `;
+                    }
+                }
+            }, 500);
+            
+        } else {
+            throw new Error(data.message || 'Unknown error occurred');
+        }
+        
+    } catch (error) {
+        console.error('Request failed:', error);
+        showNotification(error.message || 'Network error. Please try again.', 'error');
+        
+        // Restore element state
+        requestElement.style.opacity = '1';
+        requestElement.style.pointerEvents = 'auto';
+        
+        // Restore buttons
+        buttons.forEach(btn => {
+            btn.disabled = false;
+            if (btn.textContent.includes('Processing')) {
+                btn.innerHTML = '<i class="fas fa-check mr-2"></i> Accept';
+            }
+        });
+    }
+}
+
+/**
+ * Cancel a sent friend request
+ */
+async function cancelFriendRequest(friendshipId) {
+    console.log('Cancelling friend request:', friendshipId);
+    
+    // Validate input
+    if (!friendshipId) {
+        console.error('Missing friendship ID');
+        showNotification('Invalid request data', 'error');
+        return;
+    }
+    
+    // Find the request element
+    const requestElement = document.querySelector(`[data-friendship-id="${friendshipId}"]`);
+    if (!requestElement) {
+        console.error('Request element not found');
+        showNotification('Request element not found', 'error');
+        return;
+    }
+    
+    // Show loading state
+    requestElement.style.opacity = '0.6';
+    requestElement.style.pointerEvents = 'none';
+    
+    // Find and disable button
+    const cancelButton = requestElement.querySelector('.cancel-request-btn, button');
+    if (cancelButton) {
+        cancelButton.disabled = true;
+        cancelButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Cancelling...';
+    }
+    
+    try {
+        console.log('Sending cancel request to /api/friendship/cancel');
+        
+        const response = await fetch('/api/friendship/cancel', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({
+                friendship_id: parseInt(friendshipId)
+            })
+        });
+        
+        console.log('Cancel response status:', response.status);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        // Check if response is actually JSON
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            const textResponse = await response.text();
+            console.error('Full server response:', textResponse);
+            console.error('Content-Type header:', contentType);
+            console.error('Response status:', response.status);
+            console.error('Response headers:', [...response.headers.entries()]);
+            throw new Error(`Server error: Expected JSON but got ${contentType || 'unknown content type'}. Check console for full response.`);
+        }
+        
+        const data = await response.json();
+        console.log('Cancel server response:', data);
+        
+        if (data.success) {
+            showNotification(data.message, 'success');
+            
+            // Remove the request from UI with animation
+            requestElement.style.transition = 'all 0.5s ease';
+            requestElement.style.opacity = '0';
+            requestElement.style.height = '0px';
+            requestElement.style.marginBottom = '0px';
+            requestElement.style.paddingTop = '0px';
+            requestElement.style.paddingBottom = '0px';
+            
+            setTimeout(() => {
+                requestElement.remove();
+                updateSentRequestCounter();
+                
+                // Check if no more sent requests
+                const remainingSentRequests = document.querySelectorAll('.sent-request-item');
+                if (remainingSentRequests.length === 0) {
+                    const container = document.getElementById('sentRequestsContainer');
+                    if (container) {
+                        container.innerHTML = `
+                            <div class="text-center py-8 text-gray-500">
+                                <i class="fas fa-paper-plane fa-3x mb-4"></i>
+                                <p>No pending sent requests</p>
+                            </div>
+                        `;
+                    }
+                }
+            }, 500);
+            
+        } else {
+            throw new Error(data.message || 'Unknown error occurred');
+        }
+        
+    } catch (error) {
+        console.error('Cancel request failed:', error);
+        showNotification(error.message || 'Network error. Please try again.', 'error');
+        
+        // Restore element state
+        requestElement.style.opacity = '1';
+        requestElement.style.pointerEvents = 'auto';
+        
+        // Restore button
+        if (cancelButton) {
+            cancelButton.disabled = false;
+            cancelButton.innerHTML = '<i class="fas fa-times mr-2"></i> Cancel';
+        }
+    }
+}
+
+/**
+ * Update request counter in the tab
+ */
+function updateRequestCounter() {
+    const badge = document.querySelector('#requestsTab span');
+    if (badge) {
+        let count = parseInt(badge.textContent) || 0;
+        count = Math.max(0, count - 1);
+        badge.textContent = count;
+        
+        if (count === 0) {
+            badge.style.display = 'none';
+        }
+    }
+}
+
+/**
+ * Update sent request counter
+ */
+function updateSentRequestCounter() {
+    const container = document.getElementById('sentRequestsContainer');
+    if (container) {
+        const sentRequestsTitle = container.closest('.bg-white')?.querySelector('span');
+        if (sentRequestsTitle) {
+            const currentText = sentRequestsTitle.textContent;
+            const match = currentText.match(/(\d+)/);
+            const currentCount = match ? parseInt(match[1]) : 0;
+            const newCount = Math.max(0, currentCount - 1);
+            sentRequestsTitle.textContent = `${newCount} pending requests`;
+        }
+    }
+}
+
+/**
+ * Show notification toast
+ */
+function showNotification(message, type = 'info') {
+    // Remove existing notifications
+    document.querySelectorAll('.notification-toast').forEach(n => n.remove());
+    
+    const notification = document.createElement('div');
+    notification.className = `notification-toast fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg text-white max-w-sm ${
+        type === 'success' ? 'bg-green-500' : 
+        type === 'error' ? 'bg-red-500' : 
+        'bg-blue-500'
+    }`;
+    
+    notification.innerHTML = `
+        <div class="flex items-center">
+            <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'} mr-2"></i>
+            <span>${message}</span>
+            <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white hover:text-gray-200 focus:outline-none">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentElement) {
+            notification.style.transition = 'opacity 0.3s ease';
+            notification.style.opacity = '0';
+            setTimeout(() => notification.remove(), 300);
+        }
+    }, 5000);
+}
 </script>
 
     <?= loadPartial('scripts'); ?>

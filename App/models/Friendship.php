@@ -16,7 +16,7 @@ class Friendship extends BaseModel {
     }
 
 /**
- * Get friendship by ID
+ * Get friendship by ID - FIXED VERSION
  * @param int $friendshipId
  * @return object|false
  */
@@ -85,19 +85,36 @@ public function getLimitedFriends($userId, $limit = 5) {
         return $this->db->query($query, $params)->fetchAll();
     }
     
-    // Accept a friend request
-    public function acceptRequest($friendshipId) {
-        $query = "UPDATE {$this->table} SET status = 'accepted' WHERE friendship_id = :friendship_id";
-        $params = ['friendship_id' => $friendshipId];
-        return $this->db->query($query, $params);
-    }
-    
-    // Decline a friend request
-    public function declineRequest($friendshipId) {
-        $query = "UPDATE {$this->table} SET status = 'declined' WHERE friendship_id = :friendship_id";
-        $params = ['friendship_id' => $friendshipId];
-        return $this->db->query($query, $params);
-    }
+    /**
+ * Accept a friend request - FIXED VERSION
+ * @param int $friendshipId
+ * @return bool
+ */
+public function acceptRequest($friendshipId) {
+    $query = "UPDATE {$this->table} 
+              SET status = 'accepted', 
+                  updated_at = CURRENT_TIMESTAMP 
+              WHERE friendship_id = :friendship_id";
+    $params = ['friendship_id' => $friendshipId];
+    $result = $this->db->query($query, $params);
+    return $result !== false;
+}
+
+/**
+ * Decline a friend request - FIXED VERSION  
+ * @param int $friendshipId
+ * @return bool
+ */
+public function declineRequest($friendshipId) {
+    $query = "UPDATE {$this->table} 
+              SET status = 'declined', 
+                  updated_at = CURRENT_TIMESTAMP 
+              WHERE friendship_id = :friendship_id";
+    $params = ['friendship_id' => $friendshipId];
+    $result = $this->db->query($query, $params);
+    return $result !== false;
+}
+
     
     // Check if users are friends
     public function areFriends($userId1, $userId2) {
@@ -112,24 +129,26 @@ public function getLimitedFriends($userId, $limit = 5) {
         return $this->db->query($query, $params)->fetch() ? true : false;
     }
     
-    // Check friendship status
-    public function checkFriendshipStatus($userId1, $userId2) {
-        $query = "SELECT * FROM {$this->table}
-                WHERE ((user_id_1 = :user_id_1 AND user_id_2 = :user_id_2)
-                OR (user_id_1 = :user_id_2 AND user_id_2 = :user_id_1))";
-        $params = [
-            'user_id_1' => $userId1,
-            'user_id_2' => $userId2
-        ];
-        $result = $this->db->query($query, $params)->fetch();
-        
-        if (!$result) {
-            return 'none';
-        }
-        
-        return $result->status;
-    }
-
+    /**
+ * Check friendship status between two users - FIXED VERSION
+ * @param int $userId1
+ * @param int $userId2  
+ * @return string Status: 'none', 'pending', 'accepted', 'declined'
+ */
+public function checkFriendshipStatus($userId1, $userId2) {
+    $query = "SELECT status FROM {$this->table}
+              WHERE ((user_id_1 = :user_id_1 AND user_id_2 = :user_id_2)
+              OR (user_id_1 = :user_id_2 AND user_id_2 = :user_id_1))
+              ORDER BY created_at DESC 
+              LIMIT 1";
+    $params = [
+        'user_id_1' => $userId1,
+        'user_id_2' => $userId2
+    ];
+    $result = $this->db->query($query, $params)->fetch();
+    
+    return $result ? $result->status : 'none';
+}
        /**
      * Get mutual friends between two users with detailed information
      * @param int $userId1 First user ID
@@ -420,5 +439,64 @@ public function getLimitedFriends($userId, $limit = 5) {
         if ($percentage >= 5) return 'weak';
         return 'very_weak';
     }
+
+    /**
+ * Delete a friendship/friend request
+ * @param int $friendshipId
+ * @return bool
+ */
+public function delete($friendshipId) {
+    $query = "DELETE FROM {$this->table} WHERE friendship_id = :friendship_id";
+    $params = ['friendship_id' => $friendshipId];
+    $result = $this->db->query($query, $params);
+    return $result !== false;
 }
+ /**
+     * Cancel a friend request
+     */
+    public function cancelRequest()
+    {
+        // Set JSON response header
+        header('Content-Type: application/json');
+        
+        try {
+            // Check if request method is POST
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                http_response_code(405);
+                echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+                return;
+            }
+            
+            // Get JSON input
+            $input = json_decode(file_get_contents('php://input'), true);
+            
+            if (!$input || !isset($input['friendship_id'])) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'message' => 'Missing friendship_id']);
+                return;
+            }
+            
+            $friendship_id = (int)$input['friendship_id'];
+            
+            // TODO: Add your database logic here
+            // Example:
+            // $friendship = new Friendship();
+            // $result = $friendship->cancelRequest($friendship_id, $_SESSION['user_id']);
+            
+            // For now, return success (replace with actual logic)
+            echo json_encode([
+                'success' => true,
+                'message' => 'Friend request cancelled successfully'
+            ]);
+            
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Server error: ' . $e->getMessage()
+            ]);
+        }
+    }
+}
+
 

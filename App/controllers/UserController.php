@@ -2,6 +2,7 @@
 namespace App\Controllers;
 use App\Models\User;
 use App\Models\Event;
+use App\Models\Notification;
 use App\Models\Friendship;
 use App\Models\Review;
 use App\Models\EventAttendee;
@@ -14,6 +15,8 @@ class UserController extends BaseController {
     protected $friendshipModel;
     protected $reviewModel;
     protected $eventAttendeeModel;
+
+    protected $notificationModel;
     
     public function __construct() {
         parent::__construct();
@@ -22,6 +25,9 @@ class UserController extends BaseController {
         $this->friendshipModel = new Friendship();
         $this->reviewModel = new Review();
         $this->eventAttendeeModel = new EventAttendee(); 
+        $this->notificationModel = new Notification();
+
+        
     }
     
     /**
@@ -249,6 +255,14 @@ class UserController extends BaseController {
             // get mutual friends of pending sent request
             foreach($sentRequests as $sentRequest){
                 $sentRequest->mutuals = $this->friendshipModel->getMutualFriendsSimple($sentRequest->user_id_1,$sentRequest->user_id_2);
+            }
+
+            // UserController.php içinde friends metodunda ekleme
+        $notifications = $this->notificationModel = new Notification();
+              $pendingRequests = $this->friendshipModel->getPendingRequestsReceived($userId);
+            foreach ($pendingRequests as $request) {
+                $request->mutualFriends = $this->friendshipModel->getMutualFriendsCount($request->user_id_2, $request->user_id_1);
+                $request->notification = $this->notificationModel->getUserNotifications($userId);
             }
 
             loadView('users/friends', [
