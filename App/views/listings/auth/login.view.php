@@ -1,56 +1,83 @@
 <?=loadWelcomePartial('headWl'); ?>
-<body class="bg-lightbg min-h-screen flex flex-col items-center pt-20">
+
+<body class="min-h-screen" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
     <!-- Header -->
     <?=loadWelcomePartial('headerWl'); ?>
 
     <!-- Main Content -->
-    <div class="bg-white rounded-lg w-full max-w-md mt-auto mb-20 py-5 shadow-md ">
-        <form action="/login" class="px-5" method="POST">
-            <h1 class="mt-2.5 text-3xl text-center">Login</h1>
-            <?=loadPartial('errors',['errors' => $errors ?? []])?>
-            <div class="w-[90%] h-12 mx-5 my-8">
-                <input 
-                    type="text" 
-                    placeholder="Email" 
-                    name="email"
-                    required
-                    class="w-full h-full bg-transparent border border-gray-600 outline-none rounded-3xl px-5 placeholder-black"
-                >
-            </div>
-            <div class="w-[90%] h-12 mx-5 my-8">
-                <input 
-                    type="password" 
-                    placeholder="Password" 
-                    name="password"
-                    required
-                    class="w-full h-full bg-transparent border border-gray-600 outline-none rounded-3xl px-5 placeholder-black"
-                >
-            </div>
-            <div class="flex text-sm justify-between mx-2.5 mb-4 mt-[-15px]">
-                <label class="flex items-center">
-                    <input type="checkbox" class="mr-0.5">
-                    Remember me
-                </label>
-                <a href="/forgot-password" class="text-black no-underline hover:underline">Forgot password?</a>
-            </div>
+    <main class="flex items-center justify-center px-4" style="min-height: calc(100vh - 140px); margin-top: 70px;">
+        <div class="w-full max-w-md">
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <!-- Simple Header -->
+                <div class="text-center mb-8">
+                    <h1 class="text-2xl font-bold text-gray-800 mb-2">Welcome Back</h1>
+                    <p class="text-gray-600">Please sign in to your account</p>
+                </div>
 
-            <button type="submit" id="loginBtn" class="w-full h-[45px] border-none outline-none rounded-3xl cursor-pointer text-base font-semibold">Login</button>
+                <!-- Login Form -->
+                <form action="/login" method="POST" class="space-y-6">
+                    <?=loadPartial('errors',['errors' => $errors ?? []])?>
+                    
+                    <!-- Email Field -->
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                        <input 
+                            type="email" 
+                            id="email"
+                            name="email"
+                            placeholder="Enter your email"
+                            required
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                        >
+                    </div>
 
-            <div class="register-link py-2.5 text-center">
-                <p>Don't have an account? <a href="/register" class="text-black no-underline font-semibold hover:underline"> Register</a></p>
+                    <!-- Password Field -->
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                        <input 
+                            type="password" 
+                            id="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            required
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                        >
+                    </div>
+
+                    <!-- Remember & Forgot -->
+                    <div class="flex items-center justify-between text-sm">
+                        <label class="flex items-center">
+                            <input type="checkbox" name="remember" class="mr-2">
+                            <span class="text-gray-600">Remember me</span>
+                        </label>
+                        <a href="/forgot-password" class="text-primary hover:underline">
+                            Forgot password?
+                        </a>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button 
+                        type="submit" 
+                        class="w-full bg-secondary text-white font-medium py-3 px-4 rounded-lg hover:bg-gray-700 transition duration-200"
+                    >
+                        Sign In
+                    </button>
+
+                    <!-- Register Link -->
+                    <div class="text-center pt-4 border-t border-gray-200">
+                        <p class="text-gray-600">
+                            Don't have an account? 
+                            <a href="/register" class="text-primary font-medium hover:underline">
+                                Create one
+                            </a>
+                        </p>
+                    </div>
+                </form>
             </div>
-        </form>
-    </div>
+        </div>
+    </main>
 
-    <!--Footer -->
+    <!-- Footer -->
     <?=loadWelcomePartial('footerWl'); ?>
-    <script>
-
-        // Button styling
-        document.addEventListener('DOMContentLoaded', function() {
-            const loginBtn = document.getElementById('loginBtn');
-            loginBtn.classList.add('bg-secondary', 'text-white', 'hover:bg-gray-500');
-        });
-    </script>
 </body>
 </html>

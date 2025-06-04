@@ -157,17 +157,18 @@ $isLoggedIn = true;
                 </div>
             </div>
             <div class="flex gap-2">
-                <button class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 flex items-center transition-colors">
+                <button class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 flex items-center transition-colors"
+                onclick="handleFriendRequest(<?= $request->friendship_id?>,'accept')">
                     <i class="fas fa-check mr-2"></i> Accept
                 </button>
-                <button class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 flex items-center transition-colors">
+                <button class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 flex items-center transition-colors"
+                onclick="handleFriendRequest(<?= $request->friendship_id?>,'decline')">
                     <i class="fas fa-times mr-2"></i> Decline
                 </button>
             </div>
         </div>
     <?php endforeach; ?>
 <?php endif; ?>
-
 
             <!-- Sent Requests -->
             <div class="bg-white rounded-lg shadow-md p-6">
@@ -393,22 +394,34 @@ $isLoggedIn = true;
             });
 
             // Accept/Decline button functionality
-            document.querySelectorAll('.bg-green-500').forEach(button => {
-                button.addEventListener('click', function() {
-                    if (this.textContent.includes('Accept')) {
-                        this.closest('.flex').style.opacity = '0.6';
-                        this.innerHTML = '<i class="fas fa-check mr-2"></i> Accepted';
-                        this.disabled = true;
-                        this.classList.add('opacity-75', 'cursor-not-allowed');
+
+            function handleFriendRequest(friendshipId,action){
+                const requestElement = document.querySelector('<?=$request->friendship_id?>');
+                 // Add loading state
+                requestElement.classList.add('loading');
+                // Clear any previous messages
+                 clearMessages();
+                 
+
+                
+            }
+
+            // document.querySelectorAll('.bg-green-500').forEach(button => {
+            //     button.addEventListener('click', function() {
+            //         if (this.textContent.includes('Accept')) {
+            //             this.closest('.flex').style.opacity = '0.6';
+            //             this.innerHTML = '<i class="fas fa-check mr-2"></i> Accepted';
+            //             this.disabled = true;
+            //             this.classList.add('opacity-75', 'cursor-not-allowed');
                         
-                        // Hide decline button
-                        const declineBtn = this.parentElement.querySelector('.bg-red-500');
-                        if (declineBtn) {
-                            declineBtn.style.display = 'none';
-                        }
-                    }
-                });
-            });
+            //             // Hide decline button
+            //             const declineBtn = this.parentElement.querySelector('.bg-red-500');
+            //             if (declineBtn) {
+            //                 declineBtn.style.display = 'none';
+            //             }
+            //         }
+            //     });
+            // });
 
             document.querySelectorAll('.bg-red-500').forEach(button => {
                 button.addEventListener('click', function() {
