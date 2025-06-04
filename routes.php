@@ -17,6 +17,10 @@ $router->get('/users/edit', 'UserController@edit');
 $router->get('/users/{id}', 'UserController@edit');
 $router->put('/users/{id}', 'UserController@update');
 
+// Friendship Routes
+$router->post('/api/friendship/handle', 'FriendshipController@handleRequest');
+$router->post('/api/friendship/send', 'FriendshipController@sendRequest');
+
 // Event routes
 $router->get('/events', 'EventController@index');
 $router->get('/events/create', 'EventController@create');

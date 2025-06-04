@@ -14,6 +14,18 @@ class Friendship extends BaseModel {
         $params = ['user_id' => $userId];
         return $this->db->query($query, $params)->fetchAll();
     }
+
+/**
+ * Get friendship by ID
+ * @param int $friendshipId
+ * @return object|false
+ */
+public function getById($friendshipId) {
+    $query = "SELECT * FROM {$this->table} WHERE friendship_id = :friendship_id";
+    $params = ['friendship_id' => $friendshipId];
+    return $this->db->query($query, $params)->fetch();
+}
+
     /**
  * Get the count of friends for a user
  * @param int $userId
