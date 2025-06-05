@@ -16,8 +16,8 @@ $isLoggedIn = true;
                 <h1 class="text-3xl font-bold text-gray-800">Find Friends</h1>
                 <p class="text-gray-600 mt-1">Discover and connect with new people</p>
             </div>
-            <a href="/users/friends" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg transition-colors">
-                <i class="fas fa-arrow-left mr-2"></i> Back to Friends
+            <a href="/" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg transition-colors">
+                <i class="fas fa-arrow-left mr-2"></i> Back to Home Page
             </a>
         </div>
         <!-- Search and Filters -->
@@ -25,28 +25,6 @@ $isLoggedIn = true;
             <div class="relative mb-4">
                 <input type="text" class="w-full p-3 pl-10 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="Search friends...">
                 <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-            </div>
-            <div class="flex flex-wrap gap-4">
-                <select class="p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500">
-                    <option value="">All Locations</option>
-                    <option value="istanbul">Istanbul</option>
-                    <option value="ankara">Ankara</option>
-                    <option value="izmir">Izmir</option>
-                    <option value="international">International</option>
-                </select>
-                <select class="p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500">
-                    <option value="">All Interests</option>
-                    <option value="travel">Travel</option>
-                    <option value="photography">Photography</option>
-                    <option value="food">Food</option>
-                    <option value="sports">Sports</option>
-                    <option value="culture">Culture</option>
-                </select>
-                <select class="p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500">
-                    <option value="">Sort By</option>
-                    <option value="recent">Recently Added</option>
-                    <option value="name">Name (A-Z)</option>
-                </select>
             </div>
         </div>
 
@@ -238,119 +216,80 @@ $isLoggedIn = true;
          </div>
         </div>
 </div>
-        <!-- Find Friends Section -->
-        <div id="findFriendsSection" class="tab-content hidden">
-            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-semibold text-gray-800">Discover New Friends</h2>
-                    <div class="flex gap-2">
-                        <select class="p-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500">
-                            <option value="">Filter by Location</option>
-                            <option value="istanbul">Istanbul</option>
-                            <option value="ankara">Ankara</option>
-                            <option value="izmir">Izmir</option>
-                        </select>
-                        <select class="p-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500">
-                            <option value="">Filter by Interest</option>
-                            <option value="travel">Travel</option>
-                            <option value="photography">Photography</option>
-                            <option value="food">Food</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Suggested Friends -->
-                <div class="mb-6">
-                    <h3 class="text-lg font-medium text-gray-800 mb-4">People You May Know</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Suggested Friend 1 -->
-                        <div class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
-                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Suggested Friend" class="w-16 h-16 rounded-full mr-4 object-cover">
-                            <div class="flex-1">
-                                <div class="font-semibold text-gray-800">Lisa Martinez</div>
-                                <div class="text-sm text-gray-600 mb-1">
-                                    <i class="fas fa-map-marker-alt mr-1"></i>Madrid, Spain
-                                </div>
-                                <div class="text-sm text-gray-500 mb-2">Travel blogger, Photography enthusiast</div>
-                                <div class="text-xs text-gray-500">
-                                    <i class="fas fa-user-friends mr-1"></i>3 mutual friends: Emma, David, Alex
-                                </div>
+      <!-- Find Friends Section -->
+<div id="findFriendsSection" class="tab-content hidden">
+    <!-- Friend Suggestions (NEW SECTION) -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-semibold text-gray-800">People You May Know</h2>
+            <span class="text-sm text-gray-500"><?= count($friendSuggestions ?? []) ?> suggestions</span>
+        </div>
+        
+        <div class="space-y-4">
+            <?php if(!empty($friendSuggestions)): ?>
+                <?php foreach($friendSuggestions as $suggestion): ?>
+                    <div class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
+                        <a href="/users/profile/<?= $suggestion->user_id ?>" class="group relative">
+                            <img src="<?= $suggestion->profile_picture ?? '/uploads/profiles/default_profile.png' ?>" 
+                                 alt="<?= $suggestion->first_name ?> <?= $suggestion->last_name ?>" 
+                                 class="w-16 h-16 rounded-full mr-4 object-cover border-2 border-transparent group-hover:border-orange-500 transition-all">
+                        </a>
+                        <div class="flex-1">
+                            <div class="font-semibold text-gray-800"><?= $suggestion->first_name ?> <?= $suggestion->last_name ?></div>
+                            <div class="text-sm text-gray-600 mb-1">
+                                <i class="fas fa-map-marker-alt mr-1"></i>
+                                <?= $suggestion->city ?>, <?= $suggestion->country ?>
                             </div>
-                            <button class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 flex items-center transition-colors">
-                                <i class="fas fa-user-plus mr-2"></i> Add Friend
-                            </button>
+                            <?php if(!empty($suggestion->occupation)): ?>
+                                <div class="text-sm text-gray-500 mb-2"><?= $suggestion->occupation ?></div>
+                            <?php endif; ?>
+                            
+                            <!-- Mutual Friends Display -->
+                            <div class="flex items-center text-sm text-gray-600">
+                                <i class="fas fa-user-friends mr-1"></i>
+                                <span><?= $suggestion->mutual_friends_count ?> mutual friend<?= $suggestion->mutual_friends_count != 1 ? 's' : '' ?></span>
+                                
+                                <?php if(!empty($suggestion->mutualFriendsDetails)): ?>
+                                    <div class="flex -space-x-1 ml-2">
+                                        <?php foreach($suggestion->mutualFriendsDetails as $mutual): ?>
+                                            <img src="<?= $mutual->profile_picture ?? 'https://ui-avatars.com/api/?name=' . urlencode($mutual->first_name . '+' . $mutual->last_name) . '&size=20&background=667eea&color=fff&rounded=true' ?>" 
+                                                 alt="<?= $mutual->first_name ?> <?= $mutual->last_name ?>" 
+                                                 class="w-5 h-5 rounded-full border border-white object-cover"
+                                                 title="<?= $mutual->first_name ?> <?= $mutual->last_name ?>">
+                                        <?php endforeach; ?>
+                                        
+                                        <?php if($suggestion->mutual_friends_count > count($suggestion->mutualFriendsDetails)): ?>
+                                            <div class="w-5 h-5 rounded-full border border-white bg-gray-300 flex items-center justify-center text-xs text-gray-600">
+                                                +<?= $suggestion->mutual_friends_count - count($suggestion->mutualFriendsDetails) ?>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
                         </div>
-
-                        <!-- Suggested Friend 2 -->
-                        <div class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
-                            <img src="https://randomuser.me/api/portraits/men/67.jpg" alt="Suggested Friend" class="w-16 h-16 rounded-full mr-4 object-cover">
-                            <div class="flex-1">
-                                <div class="font-semibold text-gray-800">Marco Rossi</div>
-                                <div class="text-sm text-gray-600 mb-1">
-                                    <i class="fas fa-map-marker-alt mr-1"></i>Rome, Italy
-                                </div>
-                                <div class="text-sm text-gray-500 mb-2">Chef, Food culture explorer</div>
-                                <div class="text-xs text-gray-500">
-                                    <i class="fas fa-user-friends mr-1"></i>2 mutual friends: Maria, Sofia
-                                </div>
-                            </div>
-                            <button class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 flex items-center transition-colors">
-                                <i class="fas fa-user-plus mr-2"></i> Add Friend
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Search Results -->
-                <div class="mb-6">
-                    <h3 class="text-lg font-medium text-gray-800 mb-4">Search Results</h3>
-                    <div class="relative mb-4">
-                        <input type="text" class="w-full p-3 pl-10 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="Search by name, email, or interests...">
-                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                    </div>
-                    
-                    <div class="space-y-4">
-                        <!-- Search Result 1 -->
-                        <div class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
-                            <img src="https://randomuser.me/api/portraits/women/91.jpg" alt="Search Result" class="w-12 h-12 rounded-full mr-4 object-cover">
-                            <div class="flex-1">
-                                <div class="font-semibold text-gray-800">Anna Kowalski</div>
-                                <div class="text-sm text-gray-600">
-                                    <i class="fas fa-map-marker-alt mr-1"></i>Warsaw, Poland
-                                </div>
-                                <div class="text-sm text-gray-500">Software Engineer, Tech enthusiast</div>
-                            </div>
-                            <div class="flex gap-2">
+                        <div class="flex gap-2">
+                            <a href="/users/profile/<?= $suggestion->user_id ?>">
                                 <button class="border border-gray-300 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">
                                     View Profile
                                 </button>
-                                <button class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 flex items-center transition-colors">
-                                    <i class="fas fa-user-plus mr-2"></i> Add Friend
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Search Result 2 -->
-                        <div class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
-                            <img src="https://randomuser.me/api/portraits/men/85.jpg" alt="Search Result" class="w-12 h-12 rounded-full mr-4 object-cover">
-                            <div class="flex-1">
-                                <div class="font-semibold text-gray-800">Raj Patel</div>
-                                <div class="text-sm text-gray-600">
-                                    <i class="fas fa-map-marker-alt mr-1"></i>Mumbai, India
-                                </div>
-                                <div class="text-sm text-gray-500">Digital marketer, Cricket fan</div>
-                            </div>
-                            <div class="flex gap-2">
-                                <button class="border border-gray-300 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">
-                                    View Profile
-                                </button>
-                                <button class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 flex items-center transition-colors">
-                                    <i class="fas fa-user-plus mr-2"></i> Add Friend
-                                </button>
-                            </div>
+                            </a>
+                            <button class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 flex items-center transition-colors send-friend-request" 
+                                    data-user-id="<?= $suggestion->user_id ?>">
+                                <i class="fas fa-user-plus mr-2"></i> Add Friend
+                            </button>
                         </div>
                     </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="text-center py-8 text-gray-500">
+                    <i class="fas fa-users fa-3x mb-4"></i>
+                    <p>No friend suggestions available</p>
+                    <p class="text-sm">Connect with more people to get suggestions!</p>
                 </div>
+            <?php endif; ?>
+        </div>
+    </div>
+            
             </div>
         </div>
 
@@ -758,6 +697,93 @@ function showNotification(message, type = 'info') {
             setTimeout(() => notification.remove(), 300);
         }
     }, 5000);
+}
+document.addEventListener('click', function(e) {
+    const button = e.target.closest('button');
+    if (!button) return;
+    
+    // Handle existing Accept, Decline, Cancel buttons (keep existing code)
+    const buttonText = button.textContent.trim();
+    const friendshipId = button.closest('[data-friendship-id]')?.getAttribute('data-friendship-id');
+    
+    if (friendshipId) {
+        // Existing friendship handling code (keep as is)
+        if (buttonText.includes('Accept')) {
+            e.preventDefault();
+            handleFriendRequest(friendshipId, 'accept');
+        }
+        else if (buttonText.includes('Decline')) {
+            e.preventDefault();
+            handleFriendRequest(friendshipId, 'decline');
+        }
+        else if (buttonText.includes('Cancel')) {
+            e.preventDefault();
+            if (confirm('Are you sure you want to cancel this friend request?')) {
+                handleCancelRequest(friendshipId);
+            }
+        }
+    }
+    
+    // NEW: Handle send friend request for suggestions
+    if (button.classList.contains('send-friend-request')) {
+        e.preventDefault();
+        const userId = button.getAttribute('data-user-id');
+        if (userId) {
+            handleSendFriendRequest(userId, button);
+        }
+    }
+});
+
+/**
+ * Send friend request to suggested user - NEW FUNCTION
+ */
+async function handleSendFriendRequest(userId, button) {
+    console.log('Sending friend request to user:', userId);
+    
+    // Show loading state
+    const originalHTML = button.innerHTML;
+    button.disabled = true;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Sending...';
+    
+    try {
+        const response = await fetch('/api/friendship/send', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({
+                user_id: parseInt(userId)
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showNotification('Friend request sent successfully!', 'success');
+            
+            // Update button to show sent state
+            button.innerHTML = '<i class="fas fa-clock mr-2"></i>Request Sent';
+            button.classList.remove('bg-orange-500', 'hover:bg-orange-600', 'send-friend-request');
+            button.classList.add('bg-gray-400', 'cursor-not-allowed');
+            button.disabled = true;
+            
+        } else {
+            throw new Error(data.message || 'Failed to send friend request');
+        }
+        
+    } catch (error) {
+        console.error('Send friend request failed:', error);
+        showNotification(error.message || 'Failed to send friend request', 'error');
+        
+        // Restore button state
+        button.disabled = false;
+        button.innerHTML = originalHTML;
+    }
 }
 </script>
 

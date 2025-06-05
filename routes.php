@@ -20,6 +20,8 @@ $router->put('/users/{id}', 'UserController@update');
 $router->post('/api/friendship/handle', 'FriendshipController@handleRequest');
 $router->post('/api/friendship/cancel', 'FriendshipController@cancelRequest');
 
+// friendship  send
+$router->post('/api/friendship/send', 'FriendshipController@sendRequest');
 // Event routes
 $router->get('/events', 'EventController@index');
 $router->get('/events/create', 'EventController@create');

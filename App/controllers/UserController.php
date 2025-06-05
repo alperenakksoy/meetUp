@@ -228,55 +228,53 @@ class UserController extends BaseController {
         $userId = Session::get('user_id');
         if (!$userId) {
             redirect('/login');
-            return;
+        }
+    
+        // Get current user data
+        $currentUser = $this->userModel->usergetById($userId);
+        
+        // Get friends with mutual friends data
+        $friends = $this->friendshipModel->getFriends($userId);
+        $friendsCount = $this->friendshipModel->getFriendCount($userId);
+        
+        // Add mutual friends data to each friend
+        foreach($friends as $friend) {
+            $friend->mutualFriends = $this->friendshipModel->getMutualFriendsCount($userId, $friend->user_id);
+            $friend->mutualFriendsDetails = $this->friendshipModel->getMutualFriendsSimple($userId, $friend->user_id, 3);
         }
         
-        try {
-            // Get user's friends
-            $friends = $this->friendshipModel->getFriends($userId);
-            $friendsCount = $this->friendshipModel->getFriendCount($userId);
-            
-            // Get pending friend requests
-            $pendingRequests = $this->friendshipModel->getPendingRequestsReceived($userId);
-            
-            // Get mutual Friends Count to show pending requests
-            foreach($pendingRequests as $request){
-            $request->mutualFriends = $this->friendshipModel->getMutualFriendsCount($request->user_id_2,$request->user_id_1);
-            }
-
-            // get mutual friends for the friends section.
-            foreach($friends as $friend){
-            $friend->mutualFriends = $this->friendshipModel->getMutualFriendsCount($userId,$friend->user_id);
-            $friend->mutualFriendsDetails= $this->friendshipModel->getMutualFriendsSimple($userId,$friend->user_id,2);
-            }
-
-            // get friend request that USER sent getPendingRequestsSent
-            $sentRequests = $this->friendshipModel->getPendingRequestsSent($userId);
-            // get mutual friends of pending sent request
-            foreach($sentRequests as $sentRequest){
-                $sentRequest->mutuals = $this->friendshipModel->getMutualFriendsSimple($sentRequest->user_id_1,$sentRequest->user_id_2);
-            }
-
-            // UserController.php içinde friends metodunda ekleme
-        $notifications = $this->notificationModel = new Notification();
-              $pendingRequests = $this->friendshipModel->getPendingRequestsReceived($userId);
-            foreach ($pendingRequests as $request) {
-                $request->mutualFriends = $this->friendshipModel->getMutualFriendsCount($request->user_id_2, $request->user_id_1);
-                $request->notification = $this->notificationModel->getUserNotifications($userId);
-            }
-
-            loadView('users/friends', [
-                'friends' => $friends,
-                'friendsCount' => $friendsCount,
-                'pendingRequests' => $pendingRequests,
-                'sentRequests' => $sentRequests
-            ]);
-            
-        } catch (Exception $e) {
-            error_log("Error in friends method: " . $e->getMessage());
-            $_SESSION['error_message'] = 'Error loading friends data';
-            redirect('/users/profile');
+        // Get pending requests received
+        $pendingRequests = $this->friendshipModel->getPendingRequestsReceived($userId);
+        
+        // Add mutual friends count to pending requests
+        foreach($pendingRequests as $request) {
+            $request->mutualFriends = $this->friendshipModel->getMutualFriendsCount($userId, $request->user_id_1);
         }
+        
+        // Get sent requests
+        $sentRequests = $this->friendshipModel->getPendingRequestsSent($userId);
+        
+        // Add mutual friends data to sent requests
+        foreach($sentRequests as $request) {
+            $request->mutualFriends = $this->friendshipModel->getMutualFriendsCount($userId, $request->user_id_2);
+            $request->mutuals = $this->friendshipModel->getMutualFriendsSimple($userId, $request->user_id_2, 3);
+        }
+        
+        // NEW: Get friend suggestions (users with 2+ mutual friends)
+        $friendSuggestions = $this->friendshipModel->getFriendSuggestionsWithMutuals($userId, 2, 5);
+        
+        // Add mutual friends details to suggestions
+        foreach($friendSuggestions as $suggestion) {
+            $suggestion->mutualFriendsDetails = $this->friendshipModel->getMutualFriendsForSuggestion($userId, $suggestion->user_id, 3);
+        }
+    
+        loadView('users/friends', [
+            'friends' => $friends,
+            'friendsCount' => $friendsCount,
+            'pendingRequests' => $pendingRequests,
+            'sentRequests' => $sentRequests,
+            'friendSuggestions' => $friendSuggestions // NEW: Pass suggestions to view
+        ]);
     }
     
     /**
