@@ -12,12 +12,14 @@ $isLoggedIn = true;
     <div class="container mx-auto px-4 py-8">
         <!-- Page Header -->
         <div class="flex justify-between items-center mb-6 mt-20">
-            <h1 class="text-3xl font-bold text-gray-800">Friends</h1>
-            <button id="findFriendsBtn" class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 flex items-center transition-colors">
-                <i class="fas fa-user-plus mr-2"></i> Find Friends
-            </button>
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800">Find Friends</h1>
+                <p class="text-gray-600 mt-1">Discover and connect with new people</p>
+            </div>
+            <a href="/users/friends" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg transition-colors">
+                <i class="fas fa-arrow-left mr-2"></i> Back to Friends
+            </a>
         </div>
-
         <!-- Search and Filters -->
         <div class="mb-6">
             <div class="relative mb-4">
@@ -415,34 +417,42 @@ document.addEventListener('DOMContentLoaded', function() {
         findFriendsFromEmpty.addEventListener('click', () => switchTab('findFriendsTabBtn', 'findFriendsSection'));
     }
 
-    // Friend request handlers - SIMPLIFIED AND WORKING
-    document.querySelectorAll('button').forEach(button => {
-        const buttonText = button.textContent.trim();
+    // Enhanced button handlers - IMPROVED VERSION
+    document.addEventListener('click', function(e) {
+        const button = e.target.closest('button');
+        if (!button) return;
         
-        if (buttonText.includes('Accept')) {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                const friendshipId = this.closest('[data-friendship-id]')?.getAttribute('data-friendship-id');
-                if (friendshipId) {
-                    console.log('Accept clicked for friendship:', friendshipId);
-                    handleFriendRequest(friendshipId, 'accept');
-                } else {
-                    console.error('No friendship ID found for accept button');
-                }
-            });
+        const buttonText = button.textContent.trim();
+        const friendshipId = button.closest('[data-friendship-id]')?.getAttribute('data-friendship-id');
+        
+        if (!friendshipId) {
+            console.error('No friendship ID found for button:', buttonText);
+            return;
         }
         
-        if (buttonText.includes('Decline')) {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                const friendshipId = this.closest('[data-friendship-id]')?.getAttribute('data-friendship-id');
-                if (friendshipId) {
-                    console.log('Decline clicked for friendship:', friendshipId);
-                    handleFriendRequest(friendshipId, 'decline');
-                } else {
-                    console.error('No friendship ID found for decline button');
-                }
-            });
+        // Handle Accept button
+        if (buttonText.includes('Accept')) {
+            e.preventDefault();
+            console.log('Accept clicked for friendship:', friendshipId);
+            handleFriendRequest(friendshipId, 'accept');
+        }
+        
+        // Handle Decline button  
+        else if (buttonText.includes('Decline')) {
+            e.preventDefault();
+            console.log('Decline clicked for friendship:', friendshipId);
+            handleFriendRequest(friendshipId, 'decline');
+        }
+        
+        // Handle Cancel button (NEW)
+        else if (buttonText.includes('Cancel')) {
+            e.preventDefault();
+            console.log('Cancel clicked for friendship:', friendshipId);
+            
+            // Show confirmation dialog
+            if (confirm('Are you sure you want to cancel this friend request?')) {
+                handleCancelRequest(friendshipId);
+            }
         }
     });
 
@@ -471,7 +481,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 /**
- * Handle friend request - WORKING VERSION
+ * Handle friend request accept/decline - EXISTING FUNCTION
  */
 async function handleFriendRequest(friendshipId, action) {
     console.log('Processing friendship request:', friendshipId, action);
@@ -581,7 +591,112 @@ async function handleFriendRequest(friendshipId, action) {
 }
 
 /**
- * Update request counter
+ * Handle cancel sent friend request - NEW FUNCTION
+ */
+async function handleCancelRequest(friendshipId) {
+    console.log('Canceling friendship request:', friendshipId);
+    
+    // Validate input
+    if (!friendshipId) {
+        console.error('Missing friendship ID');
+        showNotification('Invalid request data', 'error');
+        return;
+    }
+    
+    // Find the request element
+    const requestElement = document.querySelector(`[data-friendship-id="${friendshipId}"]`);
+    if (!requestElement) {
+        console.error('Request element not found');
+        showNotification('Request element not found', 'error');
+        return;
+    }
+    
+    // Show loading state
+    requestElement.style.opacity = '0.6';
+    requestElement.style.pointerEvents = 'none';
+    
+    // Find and update cancel button
+    const cancelButton = requestElement.querySelector('.cancel-request-btn');
+    if (cancelButton) {
+        cancelButton.disabled = true;
+        cancelButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Canceling...';
+    }
+    
+    try {
+        console.log('Sending cancel request to /api/friendship/cancel');
+        
+        const response = await fetch('/api/friendship/cancel', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({
+                friendship_id: parseInt(friendshipId)
+            })
+        });
+        
+        console.log('Response status:', response.status);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('Server response:', data);
+        
+        if (data.success) {
+            showNotification(data.message, 'success');
+            
+            // Remove the request from UI with animation
+            requestElement.style.transition = 'all 0.5s ease';
+            requestElement.style.opacity = '0';
+            requestElement.style.height = '0px';
+            requestElement.style.marginBottom = '0px';
+            requestElement.style.paddingTop = '0px';
+            requestElement.style.paddingBottom = '0px';
+            
+            setTimeout(() => {
+                requestElement.remove();
+                updateSentRequestCounter();
+                
+                // Check if no more sent requests
+                const remainingSentRequests = document.querySelectorAll('.sent-request-item');
+                if (remainingSentRequests.length === 0) {
+                    const container = document.getElementById('sentRequestsContainer');
+                    if (container) {
+                        container.innerHTML = `
+                            <div class="text-center py-8 text-gray-500">
+                                <i class="fas fa-paper-plane fa-3x mb-4"></i>
+                                <p>No pending sent requests</p>
+                            </div>
+                        `;
+                    }
+                }
+            }, 500);
+            
+        } else {
+            throw new Error(data.message || 'Unknown error occurred');
+        }
+        
+    } catch (error) {
+        console.error('Cancel request failed:', error);
+        showNotification(error.message || 'Network error. Please try again.', 'error');
+        
+        // Restore element state
+        requestElement.style.opacity = '1';
+        requestElement.style.pointerEvents = 'auto';
+        
+        // Restore cancel button
+        if (cancelButton) {
+            cancelButton.disabled = false;
+            cancelButton.innerHTML = '<i class="fas fa-times mr-2"></i> Cancel';
+        }
+    }
+}
+
+/**
+ * Update received request counter
  */
 function updateRequestCounter() {
     const badge = document.querySelector('#requestsTab span');
@@ -593,6 +708,19 @@ function updateRequestCounter() {
         if (count === 0) {
             badge.style.display = 'none';
         }
+    }
+}
+
+/**
+ * Update sent request counter - NEW FUNCTION
+ */
+function updateSentRequestCounter() {
+    // Update the sent requests count display if you have one
+    const sentCountElement = document.querySelector('.sent-requests-count');
+    if (sentCountElement) {
+        let count = parseInt(sentCountElement.textContent) || 0;
+        count = Math.max(0, count - 1);
+        sentCountElement.textContent = count;
     }
 }
 

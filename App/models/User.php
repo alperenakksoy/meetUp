@@ -73,4 +73,5 @@ class User extends BaseModel {
         $params = ['user_id' => $userId];
         return $this->db->query($query, $params)->fetch();
     }
+    
 }

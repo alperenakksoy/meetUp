@@ -18,6 +18,7 @@ $router->get('/users/{id}', 'UserController@edit');
 $router->put('/users/{id}', 'UserController@update');
 // friendsip Handle
 $router->post('/api/friendship/handle', 'FriendshipController@handleRequest');
+$router->post('/api/friendship/cancel', 'FriendshipController@cancelRequest');
 
 // Event routes
 $router->get('/events', 'EventController@index');

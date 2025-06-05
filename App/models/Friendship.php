@@ -451,5 +451,300 @@ public function delete($friendshipId) {
     $result = $this->db->query($query, $params);
     return $result !== false;
 }
+
+
+/**
+ * Get friend suggestions based on mutual friends (2+ mutual friends)
+ * @param int $userId The user to find suggestions for
+ * @param int $minMutualFriends Minimum number of mutual friends required (default: 2)
+ * @param int $limit Number of suggestions to return
+ * @return array Users with mutual friend counts
+ */
+public function getFriendSuggestionsWithMutuals($userId, $minMutualFriends = 2, $limit = 10) {
+    $query = "SELECT 
+        u.user_id,
+        u.first_name,
+        u.last_name,
+        u.profile_picture,
+        u.city,
+        u.country,
+        u.occupation,
+        u.bio,
+        COUNT(DISTINCT mutual_friend.user_id) as mutual_friends_count
+        
+    FROM users u
+    
+    -- Find users who are friends with our user's friends
+    JOIN friendships f_mutual ON (
+        (f_mutual.user_id_1 = u.user_id OR f_mutual.user_id_2 = u.user_id)
+        AND f_mutual.status = 'accepted'
+    )
+    
+    -- Get the mutual friend
+    JOIN users mutual_friend ON (
+        CASE 
+            WHEN f_mutual.user_id_1 = u.user_id THEN f_mutual.user_id_2
+            ELSE f_mutual.user_id_1
+        END = mutual_friend.user_id
+    )
+    
+    -- Make sure the mutual friend is actually friends with our target user
+    JOIN friendships f_target ON (
+        (f_target.user_id_1 = :user_id AND f_target.user_id_2 = mutual_friend.user_id) OR
+        (f_target.user_id_2 = :user_id AND f_target.user_id_1 = mutual_friend.user_id)
+    )
+    
+    WHERE u.user_id != :user_id  -- Don't suggest the user themselves
+    AND f_target.status = 'accepted'
+    
+    -- Exclude users who are already friends with our target user
+    AND u.user_id NOT IN (
+        SELECT CASE 
+            WHEN existing.user_id_1 = :user_id THEN existing.user_id_2
+            ELSE existing.user_id_1
+        END
+        FROM friendships existing
+        WHERE (existing.user_id_1 = :user_id OR existing.user_id_2 = :user_id)
+        AND existing.status IN ('accepted', 'pending')
+    )
+    
+    GROUP BY u.user_id
+    HAVING mutual_friends_count >= :min_mutual_friends
+    ORDER BY mutual_friends_count DESC, u.first_name
+    LIMIT :limit";
+    
+    $params = [
+        'user_id' => $userId,
+        'min_mutual_friends' => $minMutualFriends,
+        'limit' => $limit
+    ];
+    
+    return $this->db->query($query, $params)->fetchAll();
+}
+
+/**
+ * Get mutual friends details for suggestions
+ * @param int $userId1 Current user ID
+ * @param int $userId2 Suggested user ID
+ * @param int $limit Number of mutual friends to show
+ * @return array Mutual friends with basic info
+ */
+public function getMutualFriendsForSuggestion($userId1, $userId2, $limit = 3) {
+    $query = "SELECT DISTINCT
+        u.user_id,
+        u.first_name,
+        u.last_name,
+        u.profile_picture
+        
+    FROM users u
+    
+    -- Friends with user1
+    JOIN friendships f1 ON (
+        (f1.user_id_1 = :user_id_1 AND f1.user_id_2 = u.user_id) OR
+        (f1.user_id_2 = :user_id_1 AND f1.user_id_1 = u.user_id)
+    )
+    
+    -- Also friends with user2
+    JOIN friendships f2 ON (
+        (f2.user_id_1 = :user_id_2 AND f2.user_id_2 = u.user_id) OR
+        (f2.user_id_2 = :user_id_2 AND f2.user_id_1 = u.user_id)
+    )
+    
+    WHERE f1.status = 'accepted' 
+    AND f2.status = 'accepted'
+    AND u.user_id != :user_id_1 
+    AND u.user_id != :user_id_2
+    
+    ORDER BY u.first_name
+    LIMIT :limit";
+    
+    $params = [
+        'user_id_1' => $userId1,
+        'user_id_2' => $userId2,
+        'limit' => $limit
+    ];
+    
+    return $this->db->query($query, $params)->fetchAll();
+}
+
+/**
+ * Get additional friend suggestions based on location and interests
+ * @param int $userId The user to find suggestions for
+ * @param string $city User's city
+ * @param string $country User's country
+ * @param array $interests User's interests
+ * @param int $limit Number of suggestions to return
+ * @return array Users from same location or with similar interests
+ */
+public function getLocationAndInterestSuggestions($userId, $city = null, $country = null, $interests = [], $limit = 10) {
+    $conditions = [];
+    $params = ['user_id' => $userId, 'limit' => $limit];
+    
+    // Location condition
+    if ($city && $country) {
+        $conditions[] = "(u.city = :city AND u.country = :country)";
+        $params['city'] = $city;
+        $params['country'] = $country;
+    } elseif ($country) {
+        $conditions[] = "u.country = :country";
+        $params['country'] = $country;
+    }
+    
+    // Interests condition (if provided)
+    if (!empty($interests)) {
+        $interestConditions = [];
+        foreach ($interests as $index => $interest) {
+            $interestConditions[] = "u.interests LIKE :interest_$index";
+            $params["interest_$index"] = "%$interest%";
+        }
+        if (!empty($interestConditions)) {
+            $conditions[] = "(" . implode(" OR ", $interestConditions) . ")";
+        }
+    }
+    
+    $whereClause = !empty($conditions) ? "AND (" . implode(" OR ", $conditions) . ")" : "";
+    
+    $query = "SELECT DISTINCT
+        u.user_id,
+        u.first_name,
+        u.last_name,
+        u.profile_picture,
+        u.city,
+        u.country,
+        u.occupation,
+        u.bio,
+        u.interests,
+        0 as mutual_friends_count,
+        CASE 
+            WHEN u.city = :user_city AND u.country = :user_country THEN 'same_city'
+            WHEN u.country = :user_country THEN 'same_country'
+            ELSE 'interests'
+        END as suggestion_reason
+        
+    FROM users u
+    
+    WHERE u.user_id != :user_id
+    AND u.is_active = 1
+    
+    -- Exclude users who are already friends or have pending requests
+    AND u.user_id NOT IN (
+        SELECT CASE 
+            WHEN existing.user_id_1 = :user_id THEN existing.user_id_2
+            ELSE existing.user_id_1
+        END
+        FROM friendships existing
+        WHERE (existing.user_id_1 = :user_id OR existing.user_id_2 = :user_id)
+        AND existing.status IN ('accepted', 'pending')
+    )
+    
+    $whereClause
+    
+    ORDER BY 
+        CASE 
+            WHEN u.city = :user_city AND u.country = :user_country THEN 1
+            WHEN u.country = :user_country THEN 2
+            ELSE 3
+        END,
+        u.first_name
+    LIMIT :limit";
+    
+    $params['user_city'] = $city;
+    $params['user_country'] = $country;
+    
+    return $this->db->query($query, $params)->fetchAll();
+}
+
+/**
+ * Search users by name, email, or other criteria
+ * @param int $currentUserId Current user ID (to exclude from results)
+ * @param string $searchTerm Search term
+ * @param int $limit Number of results to return
+ * @return array Search results
+ */
+public function searchUsers($currentUserId, $searchTerm, $limit = 20) {
+    $searchTerm = "%$searchTerm%";
+    
+    $query = "SELECT 
+        u.user_id,
+        u.first_name,
+        u.last_name,
+        u.profile_picture,
+        u.city,
+        u.country,
+        u.occupation,
+        u.bio,
+        
+        -- Get friendship status if any
+        f.status as friendship_status,
+        CASE 
+            WHEN f.user_id_1 = :current_user_id THEN 'sent'
+            WHEN f.user_id_2 = :current_user_id THEN 'received'
+            ELSE NULL
+        END as request_direction
+        
+    FROM users u
+    
+    -- Left join to check existing friendship
+    LEFT JOIN friendships f ON (
+        (f.user_id_1 = :current_user_id AND f.user_id_2 = u.user_id) OR
+        (f.user_id_2 = :current_user_id AND f.user_id_1 = u.user_id)
+    )
+    
+    WHERE u.user_id != :current_user_id
+    AND u.is_active = 1
+    AND (
+        u.first_name LIKE :search_term OR
+        u.last_name LIKE :search_term OR
+        CONCAT(u.first_name, ' ', u.last_name) LIKE :search_term OR
+        u.email LIKE :search_term OR
+        u.city LIKE :search_term OR
+        u.country LIKE :search_term OR
+        u.occupation LIKE :search_term
+    )
+    
+    ORDER BY 
+        -- Prioritize exact matches
+        CASE 
+            WHEN CONCAT(u.first_name, ' ', u.last_name) LIKE :exact_search THEN 1
+            WHEN u.first_name LIKE :exact_search OR u.last_name LIKE :exact_search THEN 2
+            ELSE 3
+        END,
+        u.first_name, u.last_name
+    
+    LIMIT :limit";
+    
+    $params = [
+        'current_user_id' => $currentUserId,
+        'search_term' => $searchTerm,
+        'exact_search' => trim($searchTerm, '%'),
+        'limit' => $limit
+    ];
+    
+    return $this->db->query($query, $params)->fetchAll();
+}
+
+/**
+ * Send a friend request
+ * @param int $senderId Sender user ID
+ * @param int $receiverId Receiver user ID
+ * @return int|false The friendship ID if successful, false otherwise
+ */
+public function sendFriendRequest($senderId, $receiverId) {
+    // Check if friendship already exists
+    $existingStatus = $this->checkFriendshipStatus($senderId, $receiverId);
+    
+    if ($existingStatus !== 'none') {
+        return false; // Friendship already exists
+    }
+    
+    // Create new friend request
+    return $this->create([
+        'user_id_1' => $senderId,
+        'user_id_2' => $receiverId,
+        'status' => 'pending'
+    ]);
+}
+
+
 }
 
