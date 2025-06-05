@@ -46,6 +46,9 @@ function getNavbarProfilePicture($user) {
                 <a href="/events" class="text-gray-700 hover:text-orange-600 transition-colors">
                     <i class="fas fa-calendar-alt mr-1"></i> Events
                 </a>
+                <a href="/hangouts/index" class="text-gray-700 hover:text-orange-600 transition-colors">
+                <i class="fas fa-list-alt mr-2"></i> Hangouts
+                </a>
                 <a href="/users/friends" class="text-gray-700 hover:text-orange-600 transition-colors">
                     <i class="fas fa-users mr-1"></i> Friends
                 </a>

@@ -20,6 +20,7 @@ $router->put('/users/{id}', 'UserController@update');
 $router->post('/api/friendship/handle', 'FriendshipController@handleRequest');
 $router->post('/api/friendship/cancel', 'FriendshipController@cancelRequest');
 
+$router->get('/hangouts/index','HangoutController@index');
 // friendship  send
 $router->post('/api/friendship/send', 'FriendshipController@sendRequest');
 // Event routes
@@ -34,6 +35,20 @@ $router->put('/events/{id}', 'EventController@update');
 $router->delete('/events/{id}', 'EventController@destroy');
 $router->get('/events/reviews/{id}', 'EventController@reviews');
 
+
+// Hangout routes
+$router->get('/hangouts', 'HangoutController@index');
+$router->post('/hangouts', 'HangoutController@store');
+$router->get('/hangouts/{id}', 'HangoutController@show');
+$router->post('/hangouts/{id}/join', 'HangoutController@join');
+$router->post('/hangouts/{id}/leave', 'HangoutController@leave');
+$router->delete('/hangouts/{id}', 'HangoutController@destroy');
+
+// Hangout API routes for AJAX
+$router->get('/api/hangouts/filter', 'HangoutController@filter');
+$router->get('/api/hangouts/search', 'HangoutController@search');
+$router->get('/api/hangouts/nearby', 'HangoutController@nearby');
+$router->get('/api/hangouts/starting-soon', 'HangoutController@startingSoon');
 // Message routes
 $router->get('/messages', 'MessageController@index');
 $router->post('/messages/send', 'MessageController@send');

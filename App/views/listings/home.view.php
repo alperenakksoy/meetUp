@@ -46,10 +46,10 @@ function getProfilePictureUrl($attendee) {
                     <?= $user->city ?? null?>, <?= $user->country ?? null?>
                 </div>
                 <a href="/events/create" class="block mt-6 bg-orange-600 hover:bg-orange-700 text-white text-center py-2 px-4 rounded-lg transition duration-200">
-                    <i class="fas fa-plus mr-2"></i> Create New Event
+                <i class="fas fa-calendar-alt mr-1"></i> Create an Event
                 </a>
-                <a href="/events/create" class="block mt-6 bg-blue-600 hover:bg-blue-700 text-white text-center py-2 px-4 rounded-lg transition duration-200">
-                    <i class="fas fa-plus mr-2"></i> Create New Hangout
+                <a href="/hangouts/index" class="block mt-6 bg-blue-600 hover:bg-blue-700 text-white text-center py-2 px-4 rounded-lg transition duration-200">
+                <i class="fas fa-list-alt mr-2"></i> Create a Hangout
                 </a>
             </div>
             <div class="border-t border-gray-200 px-6 py-4">
