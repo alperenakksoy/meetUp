@@ -40,8 +40,8 @@ function getProfilePictureUrl($attendee) {
                 <div class="flex justify-center -mt-16">
                     <img src="<?=$user->profile_picture?>" alt="Profile Picture" class="w-24 h-24 rounded-full border-4 border-white shadow-md">
                 </div>
-                <h2 class="text-xl font-bold text-center mt-2"><?= ucfirst($user->first_name).' '.ucfirst($user->last_name) ?></h2>
-                <div class="flex items-center justify-center text-gray-600 mt-1">
+                <h2 class="text-xl font-bold text-center mt-2">
+    <?= htmlspecialchars(mb_convert_case(mb_strtolower($user->first_name . ' ' . $user->last_name, 'UTF-8'), MB_CASE_TITLE, 'UTF-8')) ?></h2>                <div class="flex items-center justify-center text-gray-600 mt-1">
                     <i class="fas fa-map-marker-alt mr-1"></i>
                     <?= $user->city ?? null?>, <?= $user->country ?? null?>
                 </div>

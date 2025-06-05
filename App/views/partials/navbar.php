@@ -12,6 +12,7 @@ function getNavbarProfilePicture($user) {
         // Generate placeholder with user initials
         $firstName = $user['first_name'] ?? 'U';
         $lastName = $user['last_name'] ?? 'ser';
+       
         $initials = strtoupper(substr($firstName, 0, 1) . substr($lastName, 0, 1));
         return "https://ui-avatars.com/api/?name=" . urlencode($firstName . '+' . $lastName) . "&size=40&background=f97316&color=fff&rounded=true";
     }
@@ -74,12 +75,7 @@ function getNavbarProfilePicture($user) {
                                  alt="<?= htmlspecialchars(($user['first_name'] ?? '') . ' ' . ($user['last_name'] ?? '')) ?>" 
                                  class="w-10 h-10 rounded-full border-2 border-gray-200 hover:border-orange-500 transition-colors object-cover"
                                  onerror="this.src='https://ui-avatars.com/api/?name=<?= urlencode(($user['first_name'] ?? 'U') . '+' . ($user['last_name'] ?? 'ser')) ?>&size=40&background=dc2626&color=fff&rounded=true';">
-                            
-                            <!-- User Name -->
-                            <span class="hidden lg:block font-medium">
-                                <?= htmlspecialchars($user['first_name'] ?? 'User') ?>
-                            </span>
-                            
+          
                             <!-- Dropdown Arrow -->
                             <i class="fas fa-chevron-down text-sm"></i>
                         </button>
@@ -94,7 +90,12 @@ function getNavbarProfilePicture($user) {
                                          class="w-12 h-12 rounded-full object-cover">
                                     <div>
                                         <div class="font-semibold text-gray-800">
-                                            <?= htmlspecialchars(($user['first_name'] ?? '') . ' ' . ($user['last_name'] ?? '')) ?>
+                                            <?php
+                                                $fullname = strtolower(($user['first_name'] ?? '') . " " . ($user['last_name'] ?? ''));
+                                                $fullname = ucwords($fullname);
+                                                ?>
+                                                <?= htmlspecialchars($fullname) ?>
+
                                         </div>
                                         <div class="text-sm text-gray-600">
                                             <?= htmlspecialchars($user['email'] ?? '') ?>

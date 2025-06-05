@@ -415,7 +415,7 @@ document.addEventListener('DOMContentLoaded', function() {
         findFriendsFromEmpty.addEventListener('click', () => switchTab('findFriendsTabBtn', 'findFriendsSection'));
     }
 
-    // Friend request handlers - FIXED: Removed duplicate code
+    // Friend request handlers - SIMPLIFIED AND WORKING
     document.querySelectorAll('button').forEach(button => {
         const buttonText = button.textContent.trim();
         
@@ -441,24 +441,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     handleFriendRequest(friendshipId, 'decline');
                 } else {
                     console.error('No friendship ID found for decline button');
-                }
-            });
-        }
-        
-        // Cancel request handler
-        if (buttonText.includes('Cancel')) {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                const friendshipId = this.closest('[data-friendship-id]')?.getAttribute('data-friendship-id');
-                if (friendshipId) {
-                    console.log('Cancel clicked for friendship:', friendshipId);
-                    
-                    // Show confirmation dialog
-                    if (confirm('Are you sure you want to cancel this friend request?')) {
-                        cancelFriendRequest(friendshipId);
-                    }
-                } else {
-                    console.error('No friendship ID found for cancel button');
                 }
             });
         }
@@ -489,7 +471,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 /**
- * Handle friend request - Accept/Decline functionality
+ * Handle friend request - WORKING VERSION
  */
 async function handleFriendRequest(friendshipId, action) {
     console.log('Processing friendship request:', friendshipId, action);
@@ -541,17 +523,6 @@ async function handleFriendRequest(friendshipId, action) {
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        // Check if response is actually JSON
-        const contentType = response.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) {
-            const textResponse = await response.text();
-            console.error('Full server response:', textResponse);
-            console.error('Content-Type header:', contentType);
-            console.error('Response status:', response.status);
-            console.error('Response headers:', [...response.headers.entries()]);
-            throw new Error(`Server error: Expected JSON but got ${contentType || 'unknown content type'}. Check console for full response.`);
         }
         
         const data = await response.json();
@@ -610,123 +581,7 @@ async function handleFriendRequest(friendshipId, action) {
 }
 
 /**
- * Cancel a sent friend request
- */
-async function cancelFriendRequest(friendshipId) {
-    console.log('Cancelling friend request:', friendshipId);
-    
-    // Validate input
-    if (!friendshipId) {
-        console.error('Missing friendship ID');
-        showNotification('Invalid request data', 'error');
-        return;
-    }
-    
-    // Find the request element
-    const requestElement = document.querySelector(`[data-friendship-id="${friendshipId}"]`);
-    if (!requestElement) {
-        console.error('Request element not found');
-        showNotification('Request element not found', 'error');
-        return;
-    }
-    
-    // Show loading state
-    requestElement.style.opacity = '0.6';
-    requestElement.style.pointerEvents = 'none';
-    
-    // Find and disable button
-    const cancelButton = requestElement.querySelector('.cancel-request-btn, button');
-    if (cancelButton) {
-        cancelButton.disabled = true;
-        cancelButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Cancelling...';
-    }
-    
-    try {
-        console.log('Sending cancel request to /api/friendship/cancel');
-        
-        const response = await fetch('/api/friendship/cancel', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            body: JSON.stringify({
-                friendship_id: parseInt(friendshipId)
-            })
-        });
-        
-        console.log('Cancel response status:', response.status);
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        // Check if response is actually JSON
-        const contentType = response.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) {
-            const textResponse = await response.text();
-            console.error('Full server response:', textResponse);
-            console.error('Content-Type header:', contentType);
-            console.error('Response status:', response.status);
-            console.error('Response headers:', [...response.headers.entries()]);
-            throw new Error(`Server error: Expected JSON but got ${contentType || 'unknown content type'}. Check console for full response.`);
-        }
-        
-        const data = await response.json();
-        console.log('Cancel server response:', data);
-        
-        if (data.success) {
-            showNotification(data.message, 'success');
-            
-            // Remove the request from UI with animation
-            requestElement.style.transition = 'all 0.5s ease';
-            requestElement.style.opacity = '0';
-            requestElement.style.height = '0px';
-            requestElement.style.marginBottom = '0px';
-            requestElement.style.paddingTop = '0px';
-            requestElement.style.paddingBottom = '0px';
-            
-            setTimeout(() => {
-                requestElement.remove();
-                updateSentRequestCounter();
-                
-                // Check if no more sent requests
-                const remainingSentRequests = document.querySelectorAll('.sent-request-item');
-                if (remainingSentRequests.length === 0) {
-                    const container = document.getElementById('sentRequestsContainer');
-                    if (container) {
-                        container.innerHTML = `
-                            <div class="text-center py-8 text-gray-500">
-                                <i class="fas fa-paper-plane fa-3x mb-4"></i>
-                                <p>No pending sent requests</p>
-                            </div>
-                        `;
-                    }
-                }
-            }, 500);
-            
-        } else {
-            throw new Error(data.message || 'Unknown error occurred');
-        }
-        
-    } catch (error) {
-        console.error('Cancel request failed:', error);
-        showNotification(error.message || 'Network error. Please try again.', 'error');
-        
-        // Restore element state
-        requestElement.style.opacity = '1';
-        requestElement.style.pointerEvents = 'auto';
-        
-        // Restore button
-        if (cancelButton) {
-            cancelButton.disabled = false;
-            cancelButton.innerHTML = '<i class="fas fa-times mr-2"></i> Cancel';
-        }
-    }
-}
-
-/**
- * Update request counter in the tab
+ * Update request counter
  */
 function updateRequestCounter() {
     const badge = document.querySelector('#requestsTab span');
@@ -742,24 +597,7 @@ function updateRequestCounter() {
 }
 
 /**
- * Update sent request counter
- */
-function updateSentRequestCounter() {
-    const container = document.getElementById('sentRequestsContainer');
-    if (container) {
-        const sentRequestsTitle = container.closest('.bg-white')?.querySelector('span');
-        if (sentRequestsTitle) {
-            const currentText = sentRequestsTitle.textContent;
-            const match = currentText.match(/(\d+)/);
-            const currentCount = match ? parseInt(match[1]) : 0;
-            const newCount = Math.max(0, currentCount - 1);
-            sentRequestsTitle.textContent = `${newCount} pending requests`;
-        }
-    }
-}
-
-/**
- * Show notification toast
+ * Show notification
  */
 function showNotification(message, type = 'info') {
     // Remove existing notifications

@@ -19,7 +19,8 @@ loadPartial('head') ?>
                     <div class="mx-auto mb-4">
                         <img src="<?=$user->profile_picture?>" alt="Profile Picture" class="w-36 h-36 rounded-full border-4 border-gray-100 mx-auto">
                     </div>
-                    <h1 class="text-xl font-bold font-volkhov text-gray-800 mb-1"><?="{$user->first_name} {$user->last_name}"?></h1>
+                    <h1 class="text-xl font-bold font-volkhov text-gray-800 mb-1"> <?= htmlspecialchars(mb_convert_case(mb_strtolower($user->first_name . ' ' . $user->last_name, 'UTF-8'), MB_CASE_TITLE, 'UTF-8')) ?>
+                    </h1>
                     <div class="flex items-center justify-center text-gray-600 mb-4">
                         <i class="fas fa-map-marker-alt text-orange-500 mr-1"></i>
                         <span><?= $user->city .', '.$user->country ?></span>

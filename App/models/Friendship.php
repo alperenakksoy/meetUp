@@ -451,52 +451,5 @@ public function delete($friendshipId) {
     $result = $this->db->query($query, $params);
     return $result !== false;
 }
- /**
-     * Cancel a friend request
-     */
-    public function cancelRequest()
-    {
-        // Set JSON response header
-        header('Content-Type: application/json');
-        
-        try {
-            // Check if request method is POST
-            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-                http_response_code(405);
-                echo json_encode(['success' => false, 'message' => 'Method not allowed']);
-                return;
-            }
-            
-            // Get JSON input
-            $input = json_decode(file_get_contents('php://input'), true);
-            
-            if (!$input || !isset($input['friendship_id'])) {
-                http_response_code(400);
-                echo json_encode(['success' => false, 'message' => 'Missing friendship_id']);
-                return;
-            }
-            
-            $friendship_id = (int)$input['friendship_id'];
-            
-            // TODO: Add your database logic here
-            // Example:
-            // $friendship = new Friendship();
-            // $result = $friendship->cancelRequest($friendship_id, $_SESSION['user_id']);
-            
-            // For now, return success (replace with actual logic)
-            echo json_encode([
-                'success' => true,
-                'message' => 'Friend request cancelled successfully'
-            ]);
-            
-        } catch (Exception $e) {
-            http_response_code(500);
-            echo json_encode([
-                'success' => false,
-                'message' => 'Server error: ' . $e->getMessage()
-            ]);
-        }
-    }
 }
-
 
