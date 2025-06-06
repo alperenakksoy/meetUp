@@ -5,6 +5,17 @@ $activePage = 'profile';
 $isLoggedIn = true;
 ?>
 <?php loadPartial('head') ?>
+
+<?php if(!isset($user->profile_picture) && $user->gender == 'Male'):?>
+                            <?php $profiePic='https://images.unsplash.com/vector-1742828264271-3ebf9c62a2b6?q=80&w=2180&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';?>
+                            <?php elseif(!isset($user->profile_picture) && $user->gender=='Female'):?>
+                                <?php $profiePic='https://images.unsplash.com/vector-1743527707496-20efb8b8b79f?q=80&w=2232&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';?>
+                            <?php else:?>
+                                <?php $profiePic=$user->profile_picture; ?>
+                            <?php endif;
+                            ?>
+<?php $ppholder = 'https://images.unsplash.com/vector-1743527707496-20efb8b8b79f?q=80&w=2232&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'?>
+
 <body class="bg-gray-50 pt-20">
     <?=loadPartial('navbar')?>
     <!-- Main Content -->
@@ -13,15 +24,12 @@ $isLoggedIn = true;
             <!-- Page Header -->
             <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
                 <div class="flex items-center">
-                    <a href="/users/profile/1" class="text-gray-500 hover:text-orange-500 mr-2">
+                    <a href="/users/profile/<?=$user->user_id?>" class="text-gray-500 hover:text-orange-500 mr-2">
                         <i class="fas fa-arrow-left"></i>
                     </a>
                     <h1 class="text-2xl font-bold text-gray-800 font-volkhov">References</h1>
                 </div>
                 <div class="flex items-center gap-3">
-                    <a href="/users/profile/1" class="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded-lg transition-colors">
-                        Back to Profile
-                    </a>
                     <div class="bg-gray-200 text-gray-700 py-2 px-4 rounded-lg">
     <i class="fas fa-star text-orange-500 mr-1"></i>
     <span class="font-semibold"><?= number_format($averageRating, 1) ?></span>
@@ -36,13 +44,10 @@ $isLoggedIn = true;
                 <div class="bg-white rounded-lg shadow-sm overflow-hidden mb-6">
                     <div class="bg-gradient-to-r from-orange-500 to-orange-600 h-24"></div>
                     <div class="p-4 text-center relative">
-                        <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="User Profile" class="w-24 h-24 rounded-full border-4 border-white mx-auto absolute -top-12 left-1/2 transform -translate-x-1/2">
+                       
+                        <img src="<?=$profiePic?>" alt="User Profile" class="w-24 h-24 rounded-full border-4 border-white mx-auto absolute -top-12 left-1/2 transform -translate-x-1/2">
                         <div class="mt-14">
-                            <h2 class="text-xl font-bold text-gray-800"><?=$user->first_name.' '. $user->last_name?></h2>
-                            <div class="flex items-center justify-center text-gray-600 mt-1">
-                                <i class="fas fa-map-marker-alt text-orange-500 mr-1"></i>
-                                <span><?=$user->city.', '. $user->country?></span>
-                            </div> 
+                        <h1 class="text-xl font-bold font-volkhov text-gray-800 mb-1"> <?= htmlspecialchars(mb_convert_case(mb_strtolower($user->first_name . ' ' . $user->last_name, 'UTF-8'), MB_CASE_TITLE, 'UTF-8')) ?> 
                         </div>
                     </div>
                 </div>
@@ -196,7 +201,7 @@ $isLoggedIn = true;
                         <!-- References -->
                         <div class="p-5">
                             <div class="flex gap-4 mb-4">
-                            <img src="/uploads/profiles/<?=$review->reviewer_profile_picture ?? 'default_profile.png' ?>" alt="<?=$review->reviewer_first_name.' '. $review->reviewer_last_name?>" class="w-12 h-12 rounded-full object-cover">
+                            <img src="<?=$review->reviewer_profile_picture ?? $ppholder ?>" alt="<?=$review->reviewer_first_name.' '. $review->reviewer_last_name?>" class="w-12 h-12 rounded-full object-cover">
                                 <div class="flex-1">
                                     <div class="flex justify-between items-start">
                                         <div>
