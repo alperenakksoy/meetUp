@@ -164,41 +164,43 @@ $activityInfo = getActivityDetails($hangout->activity_type);
 
                 <!-- Action Buttons -->
                 <div class="flex gap-3">
-    <?php if ($isHost): ?>
-        <button class="flex-1 bg-gray-500 text-white py-3 px-4 rounded-lg font-medium cursor-not-allowed" disabled>
-            <i class="fas fa-crown mr-2"></i> You're Hosting
-        </button>
-        <form action="/hangouts/<?= $hangout->hangout_id ?>" method="POST" class="flex-1" onsubmit="return confirm('Are you sure you want to cancel this hangout?');">
-            <input type="hidden" name="_method" value="DELETE">
-            <button type="submit" class="w-full bg-red-500 hover:bg-red-600 text-white py-3 px-4 rounded-lg font-medium transition-colors">
-                <i class="fas fa-trash mr-2"></i> Cancel Hangout
-            </button>
-        </form>
-    <?php elseif ($isAttending): ?>
-        <button class="flex-1 bg-green-500 text-white py-3 px-4 rounded-lg font-medium cursor-not-allowed" disabled>
-            <i class="fas fa-check-circle mr-2"></i> You're Attending
-        </button>
-        <button class="flex-1 leave-btn bg-red-500 hover:bg-red-600 text-white py-3 px-4 rounded-lg font-medium transition-colors"
-                data-hangout-id="<?= $hangout->hangout_id ?>">
-            <i class="fas fa-times mr-2"></i> Leave Hangout
-        </button>
-    <?php elseif ($canJoin): ?>
-        <?php if ($hangout->max_people && $hangout->attendee_count >= $hangout->max_people): ?>
-            <button class="flex-1 bg-gray-400 text-white py-3 px-4 rounded-lg font-medium cursor-not-allowed" disabled>
-                <i class="fas fa-user-slash mr-2"></i> Hangout Full
-            </button>
-        <?php else: ?>
-            <button class="flex-1 join-btn bg-orange-500 hover:bg-orange-600 text-white py-3 px-4 rounded-lg font-medium transition-colors"
-                    data-hangout-id="<?= $hangout->hangout_id ?>">
-                <i class="fas fa-plus-circle mr-2"></i> Join Hangout
-            </button>
-        <?php endif; ?>
-    <?php else: ?>
-        <button class="flex-1 bg-gray-400 text-white py-3 px-4 rounded-lg font-medium cursor-not-allowed" disabled>
-            <i class="fas fa-clock mr-2"></i> Hangout Ended
-        </button>
-    <?php endif; ?>
-</div>
+                    <?php if ($isHost): ?>
+                        <button class="flex-1 bg-gray-500 text-white py-3 px-4 rounded-lg font-medium cursor-not-allowed" disabled>
+                            <i class="fas fa-crown mr-2"></i> You're Hosting
+                        </button>
+                        <form action="/hangouts/<?= $hangout->hangout_id ?>" method="POST" class="flex-1" onsubmit="return confirm('Are you sure you want to cancel this hangout?');">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit" class="w-full bg-red-500 hover:bg-red-600 text-white py-3 px-4 rounded-lg font-medium transition-colors">
+                                <i class="fas fa-trash mr-2"></i> Cancel Hangout
+                            </button>
+                        </form>
+                    <?php elseif ($isAttending): ?>
+                        <button class="flex-1 bg-green-500 text-white py-3 px-4 rounded-lg font-medium cursor-not-allowed" disabled>
+                            <i class="fas fa-check-circle mr-2"></i> You're Attending
+                        </button>
+                        <button class="flex-1 leave-btn bg-red-500 hover:bg-red-600 text-white py-3 px-4 rounded-lg font-medium transition-colors"
+                                data-hangout-id="<?= $hangout->hangout_id ?>">
+                            <i class="fas fa-times mr-2"></i> Leave Hangout
+                        </button>
+                    <?php elseif ($canJoin): ?>
+                        <?php if ($hangout->max_people && $hangout->attendee_count >= $hangout->max_people): ?>
+                            <button class="flex-1 bg-gray-400 text-white py-3 px-4 rounded-lg font-medium cursor-not-allowed" disabled>
+                                <i class="fas fa-user-slash mr-2"></i> Hangout Full
+                            </button>
+                        <?php else: ?>
+                            <button class="flex-1 join-btn bg-orange-500 hover:bg-orange-600 text-white py-3 px-4 rounded-lg font-medium transition-colors"
+                                    data-hangout-id="<?= $hangout->hangout_id ?>">
+                                <i class="fas fa-plus-circle mr-2"></i> Join Hangout
+                            </button>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        <button class="flex-1 bg-gray-400 text-white py-3 px-4 rounded-lg font-medium cursor-not-allowed" disabled>
+                            <i class="fas fa-clock mr-2"></i> Hangout Ended
+                        </button>
+                    <?php endif; ?>
+                </div>
+            </div>
+
             <!-- Attendees Card -->
             <div class="bg-white rounded-lg shadow-md p-6">
                 <h2 class="text-lg font-semibold text-gray-800 mb-4">
@@ -270,270 +272,204 @@ $activityInfo = getActivityDetails($hangout->activity_type);
                     <?php endif; ?>
                 </div>
             </div>
-
-            <!-- Share Card -->
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-lg font-semibold text-gray-800 mb-4">
-                    <i class="fas fa-share-alt text-orange-500 mr-2"></i> Share
-                </h2>
-                
-                <div class="space-y-3">
-                    <button onclick="copyToClipboard('<?= url('/hangouts/' . $hangout->hangout_id) ?>')" 
-                            class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 px-4 rounded-lg transition-colors">
-                        <i class="fas fa-link mr-2"></i> Copy Link
-                    </button>
-                    
-                    <div class="flex gap-2">
-                        <a href="https://www.facebook.com/sharer/sharer.php?u=<?= urlencode(url('/hangouts/' . $hangout->hangout_id)) ?>" 
-                           target="_blank"
-                           class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg text-center transition-colors">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a href="https://twitter.com/intent/tweet?url=<?= urlencode(url('/hangouts/' . $hangout->hangout_id)) ?>&text=<?= urlencode("Join me for {$hangout->description}!") ?>" 
-                           target="_blank"
-                           class="flex-1 bg-sky-500 hover:bg-sky-600 text-white py-2 px-4 rounded-lg text-center transition-colors">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="https://wa.me/?text=<?= urlencode("Join me for {$hangout->description}! " . url('/hangouts/' . $hangout->hangout_id)) ?>" 
-                           target="_blank"
-                           class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg text-center transition-colors">
-                            <i class="fab fa-whatsapp"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
 
-<!-- Success/Error Messages -->
+<!-- Message Container -->
 <div id="messageContainer" class="fixed top-20 right-4 z-50"></div>
 
+<!-- FIXED JAVASCRIPT SECTION -->
 <script>
+console.log('Hangout show page script starting...');
+
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Hangout show page loaded');
+    console.log('DOM loaded, initializing hangout functionality');
     
-    // Join/Leave functionality with improved error handling
-    document.addEventListener('click', async (e) => {
-        const joinBtn = e.target.closest('.join-btn');
-        if (joinBtn) {
-            e.preventDefault();
-            const hangoutId = joinBtn.dataset.hangoutId;
-            console.log('Join button clicked for hangout:', hangoutId);
-            await joinHangout(hangoutId, joinBtn);
-            return;
-        }
-        
-        const leaveBtn = e.target.closest('.leave-btn');
-        if (leaveBtn) {
-            e.preventDefault();
-            const hangoutId = leaveBtn.dataset.hangoutId;
-            console.log('Leave button clicked for hangout:', hangoutId);
-            
-            if (confirm('Are you sure you want to leave this hangout?')) {
-                await leaveHangout(hangoutId, leaveBtn);
-            }
-            return;
-        }
-    });
-
-    async function joinHangout(hangoutId, button) {
-        if (!hangoutId) {
-            console.error('No hangout ID provided');
-            showMessage('Invalid hangout ID', 'error');
-            return;
-        }
-        
-        const originalText = button.innerHTML;
-        
-        try {
-            console.log('Attempting to join hangout:', hangoutId);
-            
-            button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Joining...';
-            button.disabled = true;
-            
-            const response = await fetch(`/hangouts/${hangoutId}/join`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                credentials: 'same-origin'
-            });
-            
-            console.log('Response status:', response.status);
-            console.log('Response headers:', response.headers);
-            
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            }
-            
-            const contentType = response.headers.get('content-type');
-            if (!contentType || !contentType.includes('application/json')) {
-                const textResponse = await response.text();
-                console.error('Non-JSON response:', textResponse);
-                throw new Error('Server returned non-JSON response');
-            }
-            
-            const result = await response.json();
-            console.log('Join response:', result);
-            
-            if (result.success) {
-                showMessage(result.message, 'success');
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1500);
-            } else {
-                showMessage(result.message || 'Failed to join hangout', 'error');
-                button.innerHTML = originalText;
-                button.disabled = false;
-            }
-            
-        } catch (error) {
-            console.error('Error joining hangout:', error);
-            showMessage(`Network error: ${error.message}`, 'error');
-            button.innerHTML = originalText;
-            button.disabled = false;
-        }
-    }
-
-    async function leaveHangout(hangoutId, button) {
-        if (!hangoutId) {
-            console.error('No hangout ID provided');
-            showMessage('Invalid hangout ID', 'error');
-            return;
-        }
-        
-        const originalText = button.innerHTML;
-        
-        try {
-            console.log('Attempting to leave hangout:', hangoutId);
-            
-            button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Leaving...';
-            button.disabled = true;
-            
-            const response = await fetch(`/hangouts/${hangoutId}/leave`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                credentials: 'same-origin'
-            });
-            
-            console.log('Response status:', response.status);
-            
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            }
-            
-            const contentType = response.headers.get('content-type');
-            if (!contentType || !contentType.includes('application/json')) {
-                const textResponse = await response.text();
-                console.error('Non-JSON response:', textResponse);
-                throw new Error('Server returned non-JSON response');
-            }
-            
-            const result = await response.json();
-            console.log('Leave response:', result);
-            
-            if (result.success) {
-                showMessage(result.message, 'success');
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1500);
-            } else {
-                showMessage(result.message || 'Failed to leave hangout', 'error');
-                button.innerHTML = originalText;
-                button.disabled = false;
-            }
-            
-        } catch (error) {
-            console.error('Error leaving hangout:', error);
-            showMessage(`Network error: ${error.message}`, 'error');
-            button.innerHTML = originalText;
-            button.disabled = false;
-        }
-    }
-
-    function showMessage(message, type = 'info') {
-        // Remove existing notifications
-        document.querySelectorAll('.notification-toast').forEach(n => n.remove());
-        
-        const container = document.getElementById('messageContainer');
-        if (!container) {
-            console.error('Message container not found');
-            return;
-        }
-        
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `notification-toast px-6 py-3 rounded-lg shadow-lg text-white max-w-sm mb-3 ${
-            type === 'success' ? 'bg-green-500' : 
-            type === 'error' ? 'bg-red-500' : 
-            'bg-blue-500'
-        }`;
-        
-        messageDiv.innerHTML = `
-            <div class="flex items-center justify-between">
-                <span>${message}</span>
-                <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white hover:text-gray-200 focus:outline-none">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-        `;
-        
-        container.appendChild(messageDiv);
-        
-        // Auto-remove after 5 seconds
-        setTimeout(() => {
-            if (messageDiv.parentElement) {
-                messageDiv.style.transition = 'opacity 0.3s ease';
-                messageDiv.style.opacity = '0';
-                setTimeout(() => messageDiv.remove(), 300);
-            }
-        }, 5000);
-    }
+    // Add event delegation for join/leave buttons
+    document.addEventListener('click', handleButtonClick);
+    
+    console.log('Event listeners attached successfully');
 });
 
-// Copy to clipboard function
-function copyToClipboard(text) {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(() => {
-            showMessage('Link copied to clipboard!', 'success');
-        }).catch(err => {
-            console.error('Failed to copy text: ', err);
-            showMessage('Failed to copy link', 'error');
-        });
-    } else {
-        // Fallback for older browsers
-        const textArea = document.createElement('textarea');
-        textArea.value = text;
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        try {
-            document.execCommand('copy');
-            showMessage('Link copied to clipboard!', 'success');
-        } catch (err) {
-            console.error('Fallback copy failed: ', err);
-            showMessage('Failed to copy link', 'error');
+async function handleButtonClick(e) {
+    console.log('Click detected on:', e.target);
+    
+    // Check if click is on join button or inside it
+    const joinBtn = e.target.closest('.join-btn');
+    if (joinBtn) {
+        e.preventDefault();
+        console.log('Join button clicked');
+        
+        const hangoutId = joinBtn.dataset.hangoutId;
+        console.log('Hangout ID:', hangoutId);
+        
+        if (!hangoutId) {
+            console.error('No hangout ID found');
+            showMessage('Error: No hangout ID found', 'error');
+            return;
         }
-        document.body.removeChild(textArea);
+        
+        await handleJoin(hangoutId, joinBtn);
+        return;
+    }
+    
+    // Check if click is on leave button or inside it
+    const leaveBtn = e.target.closest('.leave-btn');
+    if (leaveBtn) {
+        e.preventDefault();
+        console.log('Leave button clicked');
+        
+        const hangoutId = leaveBtn.dataset.hangoutId;
+        console.log('Hangout ID:', hangoutId);
+        
+        if (!hangoutId) {
+            console.error('No hangout ID found');
+            showMessage('Error: No hangout ID found', 'error');
+            return;
+        }
+        
+        if (confirm('Are you sure you want to leave this hangout?')) {
+            await handleLeave(hangoutId, leaveBtn);
+        }
+        return;
     }
 }
 
-// Helper function to generate full URL
-function url(path) {
-    return window.location.origin + path;
+async function handleJoin(hangoutId, button) {
+    console.log(`Starting join process for hangout ${hangoutId}`);
+    
+    const originalHTML = button.innerHTML;
+    
+    try {
+        // Show loading state
+        button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Joining...';
+        button.disabled = true;
+        
+        console.log('Making fetch request...');
+        
+        const response = await fetch(`/hangouts/${hangoutId}/join`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            credentials: 'same-origin'
+        });
+        
+        console.log('Response received:', response.status, response.statusText);
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('HTTP Error:', response.status, errorText);
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const contentType = response.headers.get('content-type');
+        console.log('Content-Type:', contentType);
+        
+        if (!contentType || !contentType.includes('application/json')) {
+            const textResponse = await response.text();
+            console.error('Non-JSON response received:', textResponse);
+            throw new Error('Server returned non-JSON response');
+        }
+        
+        const data = await response.json();
+        console.log('Join response data:', data);
+        
+        if (data.success) {
+            showMessage(data.message || 'Successfully joined!', 'success');
+            // Reload page after short delay
+            setTimeout(() => {
+                window.location.reload();
+            }, 1500);
+        } else {
+            showMessage(data.message || 'Failed to join hangout', 'error');
+            button.innerHTML = originalHTML;
+            button.disabled = false;
+        }
+        
+    } catch (error) {
+        console.error('Join error:', error);
+        showMessage(`Error: ${error.message}`, 'error');
+        button.innerHTML = originalHTML;
+        button.disabled = false;
+    }
 }
 
-// Show message function (global)
+async function handleLeave(hangoutId, button) {
+    console.log(`Starting leave process for hangout ${hangoutId}`);
+    
+    const originalHTML = button.innerHTML;
+    
+    try {
+        // Show loading state
+        button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Leaving...';
+        button.disabled = true;
+        
+        console.log('Making leave request...');
+        
+        const response = await fetch(`/hangouts/${hangoutId}/leave`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            credentials: 'same-origin'
+        });
+        
+        console.log('Leave response received:', response.status, response.statusText);
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('HTTP Error:', response.status, errorText);
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            const textResponse = await response.text();
+            console.error('Non-JSON response received:', textResponse);
+            throw new Error('Server returned non-JSON response');
+        }
+        
+        const data = await response.json();
+        console.log('Leave response data:', data);
+        
+        if (data.success) {
+            showMessage(data.message || 'Successfully left hangout', 'success');
+            // Reload page after short delay
+            setTimeout(() => {
+                window.location.reload();
+            }, 1500);
+        } else {
+            showMessage(data.message || 'Failed to leave hangout', 'error');
+            button.innerHTML = originalHTML;
+            button.disabled = false;
+        }
+        
+    } catch (error) {
+        console.error('Leave error:', error);
+        showMessage(`Error: ${error.message}`, 'error');
+        button.innerHTML = originalHTML;
+        button.disabled = false;
+    }
+}
+
 function showMessage(message, type = 'info') {
+    console.log(`Showing message: ${message} (${type})`);
+    
+    // Remove existing messages
+    document.querySelectorAll('.notification-message').forEach(msg => msg.remove());
+    
     const container = document.getElementById('messageContainer');
-    if (!container) return;
+    if (!container) {
+        console.error('Message container not found');
+        return;
+    }
     
     const messageDiv = document.createElement('div');
-    messageDiv.className = `px-6 py-3 rounded-lg shadow-lg text-white max-w-sm mb-3 ${
+    messageDiv.className = `notification-message px-6 py-3 rounded-lg shadow-lg text-white max-w-sm mb-3 ${
         type === 'success' ? 'bg-green-500' : 
         type === 'error' ? 'bg-red-500' : 
         'bg-blue-500'
@@ -542,7 +478,7 @@ function showMessage(message, type = 'info') {
     messageDiv.innerHTML = `
         <div class="flex items-center justify-between">
             <span>${message}</span>
-            <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white hover:text-gray-200">
+            <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white hover:text-gray-200 focus:outline-none">
                 <i class="fas fa-times"></i>
             </button>
         </div>
@@ -550,16 +486,15 @@ function showMessage(message, type = 'info') {
     
     container.appendChild(messageDiv);
     
+    // Auto-remove after 5 seconds
     setTimeout(() => {
         if (messageDiv.parentElement) {
             messageDiv.remove();
         }
     }, 5000);
 }
-// Helper function to generate full URL
-function url(path) {
-    return window.location.origin + path;
-}
+
+console.log('Script loaded successfully');
 </script>
 
 <?= loadPartial('scripts'); ?>

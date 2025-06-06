@@ -296,39 +296,42 @@ function isUserAttending($hangout, $currentUserId) {
                         
                         <!-- Right side: Action buttons -->
                         <div class="flex space-x-2">
-                            <?php if ($isHost): ?>
-                                <button class="bg-gray-500 text-white px-3 py-1 rounded text-sm font-medium cursor-not-allowed" disabled>
-                                    <i class="fas fa-crown mr-1"></i> Host
-                                </button>
-                            <?php elseif ($userIsAttending): ?>
-                                <button class="leave-btn bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm font-medium"
-                                        data-hangout-id="<?= $hangout->hangout_id ?>">
-                                    <i class="fas fa-times mr-1"></i> Leave
-                                </button>
-                            <?php else: ?>
-                                <?php 
-                                $isLive = false;
-                                $now = new DateTime();
-                                $start = new DateTime($hangout->start_time);
-                                if ($start <= $now) {
-                                    $diff = $now->diff($start);
-                                    $minutesPast = $diff->i + ($diff->h * 60) + ($diff->days * 24 * 60);
-                                    $isLive = $minutesPast <= 180;
-                                }
-                                ?>
-                                <?php if ($isLive): ?>
-                                    <button class="join-btn bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm font-medium"
-                                            data-hangout-id="<?= $hangout->hangout_id ?>">
-                                        <i class="fas fa-running mr-1"></i> Join Live
-                                    </button>
-                                <?php else: ?>
-                                    <button class="join-btn bg-orange-500 hover:bg-orange-600 text-white px-3 py-1 rounded text-sm font-medium"
-                                            data-hangout-id="<?= $hangout->hangout_id ?>">
-                                        <i class="fas fa-plus mr-1"></i> Join
-                                    </button>
-                                <?php endif; ?>
-                            <?php endif; ?>
-                        </div>
+    <?php if ($isHost): ?>
+        <button class="bg-gray-500 text-white px-3 py-1 rounded text-sm font-medium cursor-not-allowed" disabled>
+            <i class="fas fa-crown mr-1"></i> Host
+        </button>
+    <?php elseif ($userIsAttending): ?>
+        <button class="leave-btn bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm font-medium"
+                data-hangout-id="<?= $hangout->hangout_id ?>">
+            <i class="fas fa-times mr-1"></i> Leave
+        </button>
+    <?php else: ?>
+        <?php 
+        $isLive = false;
+        $now = new DateTime();
+        $start = new DateTime($hangout->start_time);
+        if ($start <= $now) {
+            $diff = $now->diff($start);
+            $minutesPast = $diff->i + ($diff->h * 60) + ($diff->days * 24 * 60);
+            $isLive = $minutesPast <= 180;
+        }
+        ?>
+        <button onclick="window.location.href='/hangouts/<?=$hangout->hangout_id?>'"  class="view-btn bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm font-medium">
+            <i class="fas fa-eye mr-1"></i> View
+        </button>
+        <?php if ($isLive): ?>
+            <button class="join-btn bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm font-medium"
+                    data-hangout-id="<?= $hangout->hangout_id ?>">
+                <i class="fas fa-running mr-1"></i> Join Live
+            </button>
+        <?php else: ?>
+            <button class="join-btn bg-orange-500 hover:bg-orange-600 text-white px-3 py-1 rounded text-sm font-medium"
+                    data-hangout-id="<?= $hangout->hangout_id ?>">
+                <i class="fas fa-plus mr-1"></i> Join
+            </button>
+        <?php endif; ?>
+    <?php endif; ?>
+</div>
                     </div>
                 </div>
             <?php endforeach; ?>
