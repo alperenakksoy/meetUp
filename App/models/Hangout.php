@@ -5,23 +5,27 @@ namespace App\Models;
 class Hangout extends BaseModel {
     protected $table = 'hangouts';
     
-    /**
-     * Get all active hangouts (not expired)
-     */
-    public function getActiveHangouts($limit = 20) {
-        $query = "SELECT h.*, u.first_name, u.last_name, u.profile_picture,
-                  TIMESTAMPDIFF(MINUTE, NOW(), h.start_time) as minutes_until_start
-                  FROM {$this->table} h
-                  JOIN users u ON h.host_id = u.user_id
-                  WHERE h.status = 'active' 
-                  AND h.start_time > DATE_SUB(NOW(), INTERVAL 3 HOUR)
-                  ORDER BY h.start_time ASC
-                  LIMIT :limit";
-        
-        $params = ['limit' => $limit];
-        return $this->db->query($query, $params)->fetchAll();
-    }
+  /**
+ * Get all active hangouts (not expired)
+ */
+public function getActiveHangouts($limit = 20) {
+    $query = "SELECT h.*, u.first_name, u.last_name, u.profile_picture, u.city, u.country,
+              TIMESTAMPDIFF(MINUTE, NOW(), h.start_time) as minutes_until_start
+              FROM {$this->table} h
+              JOIN users u ON h.host_id = u.user_id
+              WHERE h.status = 'active' 
+              AND h.start_time > DATE_SUB(NOW(), INTERVAL 4 HOUR)
+              ORDER BY 
+                CASE 
+                  WHEN h.start_time <= NOW() AND h.start_time > DATE_SUB(NOW(), INTERVAL 3 HOUR) THEN 1
+                  ELSE 2
+                END,
+                h.start_time ASC
+              LIMIT :limit";
     
+    $params = ['limit' => $limit];
+    return $this->db->query($query, $params)->fetchAll();
+}
     /**
      * Get hangouts by category/activity type
      */
@@ -326,4 +330,20 @@ class Hangout extends BaseModel {
         $params = ['days' => $days];
         return $this->db->query($query, $params)->fetchAll();
     }
+    /**
+ * Calculate start time based on when selection
+ */
+private function calculateStartTime($when) {
+    switch ($when) {
+        case 'now':
+            // Add 5 minutes buffer for "now" to avoid immediate expiry
+            return date('Y-m-d H:i:s', strtotime('+5 minutes'));
+        case '30min':
+            return date('Y-m-d H:i:s', strtotime('+30 minutes'));
+        case '1hour':
+            return date('Y-m-d H:i:s', strtotime('+1 hour'));
+        default:
+            return date('Y-m-d H:i:s', strtotime('+5 minutes'));
+    }
+}
 }

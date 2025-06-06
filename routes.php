@@ -43,14 +43,26 @@ $router->post('/hangouts/{id}/join', 'HangoutController@join');
 $router->post('/hangouts/{id}/leave', 'HangoutController@leave');
 $router->delete('/hangouts/{id}', 'HangoutController@destroy');
 
-// Hangout routes
+
+// Remove duplicate routes and fix the structure
 $router->get('/hangouts', 'HangoutController@index');
-$router->get('/hangouts/create', 'HangoutController@create');  // Add this if you want a create form page
+$router->get('/hangouts/index', 'HangoutController@index'); // Redirect alias
+$router->get('/hangouts/create', 'HangoutController@create'); // Optional create form page
 $router->post('/hangouts', 'HangoutController@store');
 $router->get('/hangouts/{id}', 'HangoutController@show');
+
+// AJAX routes for join/leave (these need to be POST requests)
 $router->post('/hangouts/{id}/join', 'HangoutController@join');
 $router->post('/hangouts/{id}/leave', 'HangoutController@leave');
+
+// Delete hangout (using proper method override)
 $router->delete('/hangouts/{id}', 'HangoutController@destroy');
+
+// Additional API routes for filtering/searching
+$router->get('/api/hangouts/filter', 'HangoutController@filter');
+$router->get('/api/hangouts/search', 'HangoutController@search');
+$router->get('/api/hangouts/nearby', 'HangoutController@nearby');
+$router->get('/api/hangouts/starting-soon', 'HangoutController@startingSoon');
 
 // Hangout API routes for AJAX
 $router->get('/api/hangouts/filter', 'HangoutController@filter');
