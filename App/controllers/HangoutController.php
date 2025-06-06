@@ -46,6 +46,55 @@ class HangoutController extends BaseController {
     }
     
     /**
+     * Show hangout details
+     */
+    public function show($params) {
+        $hangoutId = $params['id'] ?? null;
+        if (!$hangoutId) {
+            $_SESSION['error_message'] = 'Hangout not found';
+            redirect('/hangouts');
+            return;
+        }
+        
+        try {
+            $hangout = $this->hangoutModel->getHangoutWithDetails($hangoutId);
+            if (!$hangout) {
+                $_SESSION['error_message'] = 'Hangout not found';
+                redirect('/hangouts');
+                return;
+            }
+            
+            // Get attendees
+            $attendees = $this->hangoutAttendeeModel->getAttendeesByHangout($hangoutId);
+            
+            loadView('hangouts/show', [
+                'hangout' => $hangout,
+                'attendees' => $attendees
+            ]);
+            
+        } catch (Exception $e) {
+            error_log("Error showing hangout: " . $e->getMessage());
+            $_SESSION['error_message'] = 'Error loading hangout';
+            redirect('/hangouts');
+        }
+    }
+    
+    /**
+     * Show create hangout form (optional)
+     */
+    public function create() {
+        // Check if user is logged in
+        $userId = Session::get('user_id');
+        if (!$userId) {
+            $_SESSION['error_message'] = 'Please log in to create hangouts';
+            redirect('/login');
+            return;
+        }
+        
+        loadView('hangouts/create');
+    }
+    
+    /**
      * Store a new hangout
      */
     public function store() {
@@ -271,86 +320,6 @@ class HangoutController extends BaseController {
     }
     
     /**
-     * Get hangouts by filter (AJAX endpoint)
-     */
-    public function filter() {
-        $category = $_GET['category'] ?? 'all';
-        
-        try {
-            if ($category === 'all') {
-                $hangouts = $this->hangoutModel->getActiveHangouts();
-            } else {
-                $hangouts = $this->hangoutModel->getHangoutsByCategory($category);
-            }
-            
-            // Add attendee information
-            foreach($hangouts as $hangout) {
-                $hangout->attendees = $this->hangoutAttendeeModel->getAttendeesByHangout($hangout->hangout_id);
-                $hangout->attendee_count = count($hangout->attendees);
-            }
-            
-            header('Content-Type: application/json');
-            echo json_encode(['success' => true, 'hangouts' => $hangouts]);
-            
-        } catch (Exception $e) {
-            error_log("Error filtering hangouts: " . $e->getMessage());
-            header('Content-Type: application/json');
-            echo json_encode(['success' => false, 'message' => 'Error filtering hangouts']);
-        }
-        exit;
-    }
-    
-    /**
-     * Calculate start time based on when selection
-     */
-    private function calculateStartTime($when) {
-        switch ($when) {
-            case 'now':
-                return date('Y-m-d H:i:s');
-            case '30min':
-                return date('Y-m-d H:i:s', strtotime('+30 minutes'));
-            case '1hour':
-                return date('Y-m-d H:i:s', strtotime('+1 hour'));
-            default:
-                return date('Y-m-d H:i:s');
-        }
-    }
-    
-    /**
-     * Show hangout details
-     */
-    public function show($params) {
-        $hangoutId = $params['id'] ?? null;
-        if (!$hangoutId) {
-            $_SESSION['error_message'] = 'Hangout not found';
-            redirect('/hangouts');
-            return;
-        }
-        
-        try {
-            $hangout = $this->hangoutModel->getHangoutWithDetails($hangoutId);
-            if (!$hangout) {
-                $_SESSION['error_message'] = 'Hangout not found';
-                redirect('/hangouts');
-                return;
-            }
-            
-            // Get attendees
-            $attendees = $this->hangoutAttendeeModel->getAttendeesByHangout($hangoutId);
-            
-            loadView('hangouts/show', [
-                'hangout' => $hangout,
-                'attendees' => $attendees
-            ]);
-            
-        } catch (Exception $e) {
-            error_log("Error showing hangout: " . $e->getMessage());
-            $_SESSION['error_message'] = 'Error loading hangout';
-            redirect('/hangouts');
-        }
-    }
-    
-    /**
      * Delete a hangout (only by host)
      */
     public function destroy($params) {
@@ -387,16 +356,152 @@ class HangoutController extends BaseController {
             $result = $this->hangoutModel->delete($hangoutId);
             
             if ($result) {
-                $_SESSION['success_message'] = 'Hangout deleted successfully';
+                $_SESSION['success_message'] = 'Hangout cancelled successfully';
             } else {
-                $_SESSION['error_message'] = 'Failed to delete hangout';
+                $_SESSION['error_message'] = 'Failed to cancel hangout';
             }
             
         } catch (Exception $e) {
             error_log("Error deleting hangout: " . $e->getMessage());
-            $_SESSION['error_message'] = 'An error occurred while deleting the hangout';
+            $_SESSION['error_message'] = 'An error occurred while cancelling the hangout';
         }
         
         redirect('/hangouts');
+    }
+    
+    /**
+     * Get hangouts by filter (AJAX endpoint)
+     */
+    public function filter() {
+        $category = $_GET['category'] ?? 'all';
+        
+        try {
+            if ($category === 'all') {
+                $hangouts = $this->hangoutModel->getActiveHangouts();
+            } else if ($category === 'starting-soon') {
+                $hangouts = $this->hangoutModel->getStartingSoonHangouts();
+            } else {
+                $hangouts = $this->hangoutModel->getHangoutsByCategory($category);
+            }
+            
+            // Add attendee information
+            foreach($hangouts as $hangout) {
+                $hangout->attendees = $this->hangoutAttendeeModel->getAttendeesByHangout($hangout->hangout_id);
+                $hangout->attendee_count = count($hangout->attendees);
+            }
+            
+            header('Content-Type: application/json');
+            echo json_encode(['success' => true, 'hangouts' => $hangouts]);
+            
+        } catch (Exception $e) {
+            error_log("Error filtering hangouts: " . $e->getMessage());
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Error filtering hangouts']);
+        }
+        exit;
+    }
+    
+    /**
+     * Search hangouts (AJAX endpoint)
+     */
+    public function search() {
+        $searchTerm = $_GET['q'] ?? '';
+        
+        if (empty($searchTerm)) {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Search term required']);
+            exit;
+        }
+        
+        try {
+            $hangouts = $this->hangoutModel->searchHangouts($searchTerm);
+            
+            // Add attendee information
+            foreach($hangouts as $hangout) {
+                $hangout->attendees = $this->hangoutAttendeeModel->getAttendeesByHangout($hangout->hangout_id);
+                $hangout->attendee_count = count($hangout->attendees);
+            }
+            
+            header('Content-Type: application/json');
+            echo json_encode(['success' => true, 'hangouts' => $hangouts]);
+            
+        } catch (Exception $e) {
+            error_log("Error searching hangouts: " . $e->getMessage());
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Error searching hangouts']);
+        }
+        exit;
+    }
+    
+    /**
+     * Get nearby hangouts (AJAX endpoint)
+     */
+    public function nearby() {
+        $location = $_GET['location'] ?? '';
+        
+        if (empty($location)) {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Location required']);
+            exit;
+        }
+        
+        try {
+            $hangouts = $this->hangoutModel->getNearbyHangouts($location);
+            
+            // Add attendee information
+            foreach($hangouts as $hangout) {
+                $hangout->attendees = $this->hangoutAttendeeModel->getAttendeesByHangout($hangout->hangout_id);
+                $hangout->attendee_count = count($hangout->attendees);
+            }
+            
+            header('Content-Type: application/json');
+            echo json_encode(['success' => true, 'hangouts' => $hangouts]);
+            
+        } catch (Exception $e) {
+            error_log("Error getting nearby hangouts: " . $e->getMessage());
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Error getting nearby hangouts']);
+        }
+        exit;
+    }
+    
+    /**
+     * Get starting soon hangouts (AJAX endpoint)
+     */
+    public function startingSoon() {
+        try {
+            $hangouts = $this->hangoutModel->getStartingSoonHangouts();
+            
+            // Add attendee information
+            foreach($hangouts as $hangout) {
+                $hangout->attendees = $this->hangoutAttendeeModel->getAttendeesByHangout($hangout->hangout_id);
+                $hangout->attendee_count = count($hangout->attendees);
+            }
+            
+            header('Content-Type: application/json');
+            echo json_encode(['success' => true, 'hangouts' => $hangouts]);
+            
+        } catch (Exception $e) {
+            error_log("Error getting starting soon hangouts: " . $e->getMessage());
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Error getting starting soon hangouts']);
+        }
+        exit;
+    }
+    
+    /**
+     * Calculate start time based on when selection
+     */
+    private function calculateStartTime($when) {
+        switch ($when) {
+            case 'now':
+                return date('Y-m-d H:i:s');
+            case '30min':
+                return date('Y-m-d H:i:s', strtotime('+30 minutes'));
+            case '1hour':
+                return date('Y-m-d H:i:s', strtotime('+1 hour'));
+            default:
+                return date('Y-m-d H:i:s');
+        }
     }
 }

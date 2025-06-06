@@ -16,13 +16,12 @@ $router->get('/users/profile/{id}', 'UserController@profile');
 $router->get('/users/edit', 'UserController@edit');
 $router->get('/users/{id}', 'UserController@edit');
 $router->put('/users/{id}', 'UserController@update');
-// friendsip Handle
+
+// Friendship Handle
 $router->post('/api/friendship/handle', 'FriendshipController@handleRequest');
 $router->post('/api/friendship/cancel', 'FriendshipController@cancelRequest');
-
-$router->get('/hangouts/index','HangoutController@index');
-// friendship  send
 $router->post('/api/friendship/send', 'FriendshipController@sendRequest');
+
 // Event routes
 $router->get('/events', 'EventController@index');
 $router->get('/events/create', 'EventController@create');
@@ -35,9 +34,18 @@ $router->put('/events/{id}', 'EventController@update');
 $router->delete('/events/{id}', 'EventController@destroy');
 $router->get('/events/reviews/{id}', 'EventController@reviews');
 
+// Hangout routes
+$router->get('/hangouts', 'HangoutController@index');
+$router->get('/hangouts/index', 'HangoutController@index');
+$router->post('/hangouts', 'HangoutController@store');
+$router->get('/hangouts/{id}', 'HangoutController@show');
+$router->post('/hangouts/{id}/join', 'HangoutController@join');
+$router->post('/hangouts/{id}/leave', 'HangoutController@leave');
+$router->delete('/hangouts/{id}', 'HangoutController@destroy');
 
 // Hangout routes
 $router->get('/hangouts', 'HangoutController@index');
+$router->get('/hangouts/create', 'HangoutController@create');  // Add this if you want a create form page
 $router->post('/hangouts', 'HangoutController@store');
 $router->get('/hangouts/{id}', 'HangoutController@show');
 $router->post('/hangouts/{id}/join', 'HangoutController@join');

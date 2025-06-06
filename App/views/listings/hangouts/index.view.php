@@ -5,6 +5,57 @@
 $pageTitle = 'Hangouts';
 $activePage = 'hangouts';
 $isLoggedIn = true;
+
+use Framework\Session;
+$currentUserId = Session::get('user_id');
+
+// Helper function to get activity emoji
+function getActivityEmoji($activityType) {
+    $emojis = [
+        'coffee' => '☕',
+        'food' => '🍕',
+        'walk' => '🚶',
+        'drink' => '🍺'
+    ];
+    return $emojis[$activityType] ?? '📍';
+}
+
+// Helper function to get activity color
+function getActivityColor($activityType) {
+    $colors = [
+        'coffee' => 'bg-amber-100 text-amber-800',
+        'food' => 'bg-blue-100 text-blue-800',
+        'walk' => 'bg-purple-100 text-purple-800',
+        'drink' => 'bg-green-100 text-green-800'
+    ];
+    return $colors[$activityType] ?? 'bg-gray-100 text-gray-800';
+}
+
+// Helper function to get profile picture URL
+function getHangoutProfilePicture($user) {
+    if (empty($user->profile_picture) || $user->profile_picture === 'default_profile.jpg') {
+        $name = ($user->first_name ?? 'U') . '+' . ($user->last_name ?? 'ser');
+        return "https://ui-avatars.com/api/?name=" . urlencode($name) . "&size=40&background=667eea&color=fff&rounded=true";
+    }
+    
+    if (strpos($user->profile_picture, 'http') === 0) {
+        return $user->profile_picture;
+    }
+    
+    return "/uploads/profiles/{$user->profile_picture}";
+}
+
+// Helper function to check if current user is attending
+function isUserAttending($hangout, $currentUserId) {
+    if (!empty($hangout->attendees)) {
+        foreach($hangout->attendees as $attendee) {
+            if ($attendee->user_id == $currentUserId) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
 ?>
 <?php loadPartial('head') ?>
 
@@ -22,8 +73,100 @@ $isLoggedIn = true;
         <button id="createHangoutBtn" class="bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-lg inline-flex items-center transition duration-200">
             <i class="fas fa-plus mr-2"></i> Quick Hangout
         </button>
-        
     </div>
+
+    <!-- My Upcoming Hangouts Section -->
+    <?php 
+    // Get user's upcoming hangouts
+    $myUpcomingHangouts = [];
+    if ($currentUserId && !empty($hangouts)) {
+        foreach($hangouts as $hangout) {
+            if (isUserAttending($hangout, $currentUserId) || $hangout->host_id == $currentUserId) {
+                $now = new DateTime();
+                $start = new DateTime($hangout->start_time);
+                if ($start > $now) {
+                    $myUpcomingHangouts[] = $hangout;
+                }
+            }
+        }
+    }
+    ?>
+    
+    <?php if (!empty($myUpcomingHangouts)): ?>
+    <div class="mb-8 bg-blue-50 rounded-lg p-4">
+        <h2 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+            <i class="fas fa-calendar-check text-blue-600 mr-2"></i>
+            Your Upcoming Hangouts
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            <?php foreach($myUpcomingHangouts as $upcomingHangout): ?>
+                <?php 
+                $isHost = $upcomingHangout->host_id == $currentUserId;
+                $now = new DateTime();
+                $start = new DateTime($upcomingHangout->start_time);
+                $diff = $start->diff($now);
+                $totalMinutes = ($diff->days * 24 * 60) + ($diff->h * 60) + $diff->i;
+                ?>
+                <div class="bg-white rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex-1">
+                            <h4 class="font-medium text-gray-800"><?= htmlspecialchars($upcomingHangout->description) ?></h4>
+                            <p class="text-sm text-gray-600">
+                                <?= $isHost ? 'You\'re hosting' : 'Hosted by ' . htmlspecialchars($upcomingHangout->first_name) ?>
+                            </p>
+                        </div>
+                        <span class="<?= getActivityColor($upcomingHangout->activity_type) ?> text-xs px-2 py-1 rounded-full">
+                            <?= getActivityEmoji($upcomingHangout->activity_type) ?>
+                        </span>
+                    </div>
+                    
+                    <div class="space-y-1 text-sm text-gray-600">
+                        <div class="flex items-center">
+                            <i class="fas fa-clock text-blue-600 mr-2 w-4"></i>
+                            <span class="font-medium">
+                                <?php
+                                if ($totalMinutes <= 60) {
+                                    echo "In {$totalMinutes} minutes";
+                                } elseif ($totalMinutes <= 1440) {
+                                    $hours = floor($totalMinutes / 60);
+                                    echo "In {$hours} hour" . ($hours > 1 ? 's' : '');
+                                } else {
+                                    echo date('M j, g:i A', strtotime($upcomingHangout->start_time));
+                                }
+                                ?>
+                            </span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-map-marker-alt text-blue-600 mr-2 w-4"></i>
+                            <span class="truncate"><?= htmlspecialchars($upcomingHangout->location) ?></span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-users text-blue-600 mr-2 w-4"></i>
+                            <span><?= $upcomingHangout->attendee_count ?> attending</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-3 flex gap-2">
+                        <?php if (!$isHost): ?>
+                            <button class="leave-btn flex-1 bg-red-100 hover:bg-red-200 text-red-700 px-3 py-1 rounded text-sm font-medium transition-colors"
+                                    data-hangout-id="<?= $upcomingHangout->hangout_id ?>">
+                                <i class="fas fa-times mr-1"></i> Cancel
+                            </button>
+                        <?php else: ?>
+                            <button class="flex-1 bg-gray-100 text-gray-700 px-3 py-1 rounded text-sm font-medium cursor-not-allowed" disabled>
+                                <i class="fas fa-crown mr-1"></i> You're hosting
+                            </button>
+                        <?php endif; ?>
+                        <a href="/hangouts/<?= $upcomingHangout->hangout_id ?>" 
+                           class="flex-1 bg-blue-100 hover:bg-blue-200 text-blue-700 px-3 py-1 rounded text-sm font-medium text-center transition-colors">
+                            <i class="fas fa-info-circle mr-1"></i> Details
+                        </a>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <?php endif; ?>
 
     <!-- Quick Filters -->
     <div class="flex space-x-2 mb-6 overflow-x-auto pb-2">
@@ -42,122 +185,158 @@ $isLoggedIn = true;
         <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-full text-sm font-medium cursor-pointer filter-btn" data-filter="drink">
             🍺 Drinks
         </button>
-        <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-full text-sm font-medium cursor-pointer filter-btn" data-filter="active">
-            Starting Soon
+        <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-full text-sm font-medium cursor-pointer filter-btn" data-filter="starting-soon">
+            ⏰ Starting Soon
         </button>
     </div>
 
     <!-- Hangouts Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8" id="hangoutsContainer">
-        <!-- Sample Hangout Cards -->
-        <div class="hangout-card bg-white rounded-lg shadow-md hover:shadow-lg transition duration-200 p-4" data-category="coffee">
-            <div class="flex items-start justify-between mb-3">
-                <div class="flex items-center">
-                    <img src="https://randomuser.me/api/portraits/women/63.jpg" alt="Host" class="w-10 h-10 rounded-full mr-3">
-                    <div>
-                        <h3 class="font-semibold text-gray-800">Coffee at Starbucks</h3>
-                        <p class="text-sm text-gray-600">Emma Johnson</p>
+        <?php if (!empty($hangouts)): ?>
+            <?php foreach($hangouts as $hangout): ?>
+                <?php 
+                $userIsAttending = isUserAttending($hangout, $currentUserId);
+                $isHost = $hangout->host_id == $currentUserId;
+                ?>
+                <div class="hangout-card bg-white rounded-lg shadow-md hover:shadow-lg transition duration-200 p-4" 
+                     data-category="<?= htmlspecialchars($hangout->activity_type) ?>"
+                     data-hangout-id="<?= $hangout->hangout_id ?>">
+                    
+                    <!-- Header with host info and activity type -->
+                    <div class="flex items-start justify-between mb-3">
+                        <div class="flex items-center">
+                            <img src="<?= htmlspecialchars(getHangoutProfilePicture($hangout)) ?>" 
+                                 alt="Host" 
+                                 class="w-10 h-10 rounded-full mr-3 object-cover">
+                            <div>
+                                <h3 class="font-semibold text-gray-800"><?= htmlspecialchars($hangout->description) ?></h3>
+                                <p class="text-sm text-gray-600">
+                                    <?= $isHost ? 'You' : htmlspecialchars($hangout->first_name . ' ' . $hangout->last_name) ?>
+                                </p>
+                            </div>
+                        </div>
+                        <span class="<?= getActivityColor($hangout->activity_type) ?> text-xs px-2 py-1 rounded-full">
+                            <?= getActivityEmoji($hangout->activity_type) ?> <?= ucfirst($hangout->activity_type) ?>
+                        </span>
+                    </div>
+                    
+                    <!-- Location and Time Info -->
+                    <div class="space-y-2 mb-3">
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-clock mr-2 text-orange-500"></i>
+                            <span class="time-status" data-start-time="<?= $hangout->start_time ?>">
+                                <?php
+                                // Calculate time status
+                                $now = new DateTime();
+                                $start = new DateTime($hangout->start_time);
+                                $diff = $now->diff($start);
+                                
+                                if ($start <= $now) {
+                                    $minutesPast = $diff->i + ($diff->h * 60) + ($diff->days * 24 * 60);
+                                    if ($minutesPast <= 180) {
+                                        echo '<span class="text-green-600 font-medium">🔴 Live Now</span>';
+                                    } else {
+                                        echo '<span class="text-gray-500">Ended</span>';
+                                    }
+                                } else {
+                                    $totalMinutes = ($diff->days * 24 * 60) + ($diff->h * 60) + $diff->i;
+                                    if ($totalMinutes <= 30) {
+                                        echo '<span class="text-orange-600 font-medium">⏰ Starting Soon</span>';
+                                    } elseif ($totalMinutes <= 60) {
+                                        echo "In {$totalMinutes} min";
+                                    } else {
+                                        $hours = floor($totalMinutes / 60);
+                                        echo "In {$hours}h";
+                                    }
+                                }
+                                ?>
+                            </span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-map-marker-alt mr-2 text-orange-500"></i>
+                            <span><?= htmlspecialchars($hangout->location) ?></span>
+                        </div>
+                        <?php if ($hangout->max_people): ?>
+                            <div class="flex items-center text-sm text-gray-600">
+                                <i class="fas fa-users mr-2 text-orange-500"></i>
+                                <span>Max <?= $hangout->max_people ?> people</span>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                    
+                    <!-- Attendees and Action Button -->
+                    <div class="flex items-center justify-between">
+                        <!-- Left side: Profile pics and count -->
+                        <div class="flex items-center space-x-2">
+                            <?php if (!empty($hangout->attendees) && count($hangout->attendees) > 0): ?>
+                                <div class="flex -space-x-2">
+                                    <?php foreach (array_slice($hangout->attendees, 0, 4) as $attendee): ?>
+                                        <img src="<?= htmlspecialchars(getHangoutProfilePicture($attendee)) ?>" 
+                                             alt="<?= htmlspecialchars($attendee->first_name ?? 'Attendee') ?>" 
+                                             class="w-6 h-6 rounded-full border-2 border-white object-cover"
+                                             title="<?= htmlspecialchars(($attendee->first_name ?? '') . ' ' . ($attendee->last_name ?? '')) ?>">
+                                    <?php endforeach; ?>
+                                    <?php if ($hangout->attendee_count > 4): ?>
+                                        <div class="w-6 h-6 rounded-full border-2 border-white bg-gray-300 flex items-center justify-center text-xs text-gray-600">
+                                            +<?= $hangout->attendee_count - 4 ?>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endif; ?>
+                            <span class="text-sm text-gray-500">
+                                <?php if ($hangout->attendee_count == 0): ?>
+                                    Be the first to join!
+                                <?php elseif ($hangout->attendee_count == 1): ?>
+                                    1 person going
+                                <?php else: ?>
+                                    <?= $hangout->attendee_count ?> people going
+                                <?php endif; ?>
+                            </span>
+                        </div>
+                        
+                        <!-- Right side: Action buttons -->
+                        <div class="flex space-x-2">
+                            <?php if ($isHost): ?>
+                                <button class="bg-gray-500 text-white px-3 py-1 rounded text-sm font-medium cursor-not-allowed" disabled>
+                                    <i class="fas fa-crown mr-1"></i> Host
+                                </button>
+                            <?php elseif ($userIsAttending): ?>
+                                <button class="leave-btn bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm font-medium"
+                                        data-hangout-id="<?= $hangout->hangout_id ?>">
+                                    <i class="fas fa-times mr-1"></i> Leave
+                                </button>
+                            <?php else: ?>
+                                <?php 
+                                $isLive = false;
+                                $now = new DateTime();
+                                $start = new DateTime($hangout->start_time);
+                                if ($start <= $now) {
+                                    $diff = $now->diff($start);
+                                    $minutesPast = $diff->i + ($diff->h * 60) + ($diff->days * 24 * 60);
+                                    $isLive = $minutesPast <= 180;
+                                }
+                                ?>
+                                <?php if ($isLive): ?>
+                                    <button class="join-btn bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm font-medium"
+                                            data-hangout-id="<?= $hangout->hangout_id ?>">
+                                        <i class="fas fa-running mr-1"></i> Join Live
+                                    </button>
+                                <?php else: ?>
+                                    <button class="join-btn bg-orange-500 hover:bg-orange-600 text-white px-3 py-1 rounded text-sm font-medium"
+                                            data-hangout-id="<?= $hangout->hangout_id ?>">
+                                        <i class="fas fa-plus mr-1"></i> Join
+                                    </button>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
-                <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">☕ Coffee</span>
-            </div>
-            
-            <p class="text-gray-700 text-sm mb-3">Quick coffee break at Starbucks Taksim. Let's chat about travel stories!</p>
-            
-            <div class="flex items-center text-sm text-gray-600 mb-3">
-                <i class="fas fa-clock mr-2 text-orange-500"></i>
-                <span class="mr-4">In 30 minutes</span>
-                <i class="fas fa-map-marker-alt mr-2 text-orange-500"></i>
-                <span>Taksim, Istanbul</span>
-            </div>
-            
-            <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                    <div class="flex -space-x-2">
-                        <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Going" class="w-6 h-6 rounded-full border-2 border-white">
-                        <img src="https://randomuser.me/api/portraits/women/29.jpg" alt="Going" class="w-6 h-6 rounded-full border-2 border-white">
-                    </div>
-                    <span class="text-sm text-gray-500 ml-2">2 going</span>
-                </div>
-                <button class="bg-orange-500 hover:bg-orange-600 text-white px-3 py-1 rounded text-sm font-medium">
-                    Join
-                </button>
-            </div>
-        </div>
-
-        <div class="hangout-card bg-white rounded-lg shadow-md hover:shadow-lg transition duration-200 p-4" data-category="food">
-            <div class="flex items-start justify-between mb-3">
-                <div class="flex items-center">
-                    <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Host" class="w-10 h-10 rounded-full mr-3">
-                    <div>
-                        <h3 class="font-semibold text-gray-800">Lunch at Karakoy</h3>
-                        <p class="text-sm text-gray-600">Alex Thompson</p>
-                    </div>
-                </div>
-                <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">🍕 Food</span>
-            </div>
-            
-            <p class="text-gray-700 text-sm mb-3">Trying a new Turkish restaurant. Looking for foodie companions!</p>
-            
-            <div class="flex items-center text-sm text-gray-600 mb-3">
-                <i class="fas fa-clock mr-2 text-orange-500"></i>
-                <span class="mr-4">In 1 hour</span>
-                <i class="fas fa-map-marker-alt mr-2 text-orange-500"></i>
-                <span>Karakoy, Istanbul</span>
-            </div>
-            
-            <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                    <div class="flex -space-x-2">
-                        <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="Going" class="w-6 h-6 rounded-full border-2 border-white">
-                    </div>
-                    <span class="text-sm text-gray-500 ml-2">1 going</span>
-                </div>
-                <button class="bg-orange-500 hover:bg-orange-600 text-white px-3 py-1 rounded text-sm font-medium">
-                    Join
-                </button>
-            </div>
-        </div>
-
-        <div class="hangout-card bg-white rounded-lg shadow-md hover:shadow-lg transition duration-200 p-4" data-category="walk">
-            <div class="flex items-start justify-between mb-3">
-                <div class="flex items-center">
-                    <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Host" class="w-10 h-10 rounded-full mr-3">
-                    <div>
-                        <h3 class="font-semibold text-gray-800">Galata Bridge Walk</h3>
-                        <p class="text-sm text-gray-600">Sofia Martinez</p>
-                    </div>
-                </div>
-                <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">🚶 Walk</span>
-            </div>
-            
-            <p class="text-gray-700 text-sm mb-3">Sunset walk across Galata Bridge. Great for photos!</p>
-            
-            <div class="flex items-center text-sm text-gray-600 mb-3">
-                <i class="fas fa-clock mr-2 text-orange-500"></i>
-                <span class="mr-4">Starting now</span>
-                <i class="fas fa-map-marker-alt mr-2 text-orange-500"></i>
-                <span>Galata Bridge</span>
-            </div>
-            
-            <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                    <div class="flex -space-x-2">
-                        <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="Going" class="w-6 h-6 rounded-full border-2 border-white">
-                        <img src="https://randomuser.me/api/portraits/women/76.jpg" alt="Going" class="w-6 h-6 rounded-full border-2 border-white">
-                        <img src="https://randomuser.me/api/portraits/men/82.jpg" alt="Going" class="w-6 h-6 rounded-full border-2 border-white">
-                    </div>
-                    <span class="text-sm text-gray-500 ml-2">3 going</span>
-                </div>
-                <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm font-medium">
-                    <i class="fas fa-running mr-1"></i> Live
-                </button>
-            </div>
-        </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
     </div>
 
     <!-- Empty State -->
-    <div id="emptyState" class="hidden text-center py-12">
+    <div id="emptyState" class="<?= empty($hangouts) ? '' : 'hidden' ?> text-center py-12">
         <div class="text-gray-400 mb-4">
             <i class="fas fa-calendar-times fa-4x"></i>
         </div>
@@ -177,7 +356,7 @@ $isLoggedIn = true;
             <button id="closeModal" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
         </div>
         
-        <form id="quickHangoutForm" class="p-4 space-y-4">
+        <form id="quickHangoutForm" action="/hangouts" method="POST" class="p-4 space-y-4">
             <!-- Quick Activity Selection -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">What do you want to do?</label>
@@ -255,6 +434,8 @@ $isLoggedIn = true;
                     <option value="4">4 people</option>
                     <option value="5">5 people</option>
                     <option value="6">6 people</option>
+                    <option value="8">8 people</option>
+                    <option value="10">10 people</option>
                 </select>
             </div>
 
@@ -265,6 +446,21 @@ $isLoggedIn = true;
         </form>
     </div>
 </div>
+
+<!-- Success/Error Messages -->
+<?php if (isset($_SESSION['success_message'])): ?>
+    <div class="fixed top-20 right-4 z-50 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg">
+        <?= htmlspecialchars($_SESSION['success_message']) ?>
+        <?php unset($_SESSION['success_message']); ?>
+    </div>
+<?php endif; ?>
+
+<?php if (isset($_SESSION['error_message'])): ?>
+    <div class="fixed top-20 right-4 z-50 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg">
+        <?= htmlspecialchars($_SESSION['error_message']) ?>
+        <?php unset($_SESSION['error_message']); ?>
+    </div>
+<?php endif; ?>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -286,17 +482,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Hide modal
     closeModal.addEventListener('click', () => {
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
+        hideModal();
     });
 
     // Close modal when clicking outside
     modal.addEventListener('click', (e) => {
         if (e.target === modal) {
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
+            hideModal();
         }
     });
+
+    function hideModal() {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.getElementById('quickHangoutForm').reset();
+        resetFormButtons();
+    }
 
     // Activity selection
     const activityBtns = document.querySelectorAll('.activity-btn');
@@ -340,6 +541,24 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    function resetFormButtons() {
+        // Reset activity buttons
+        activityBtns.forEach(btn => {
+            btn.classList.remove('border-orange-500', 'bg-orange-50');
+            btn.classList.add('border-gray-300');
+        });
+        
+        // Reset when buttons
+        whenBtns.forEach(btn => {
+            btn.classList.remove('border-orange-500', 'bg-orange-50');
+            btn.classList.add('border-gray-300');
+        });
+        
+        // Clear hidden inputs
+        selectedActivityInput.value = '';
+        selectedWhenInput.value = '';
+    }
+
     // Filter functionality
     const filterBtns = document.querySelectorAll('.filter-btn');
     const hangoutCards = document.querySelectorAll('.hangout-card');
@@ -359,7 +578,21 @@ document.addEventListener('DOMContentLoaded', function() {
             // Filter cards
             let visibleCount = 0;
             hangoutCards.forEach(card => {
-                if (filter === 'all' || card.dataset.category === filter) {
+                const category = card.dataset.category;
+                const timeStatus = card.querySelector('.time-status');
+                
+                let shouldShow = false;
+                
+                if (filter === 'all') {
+                    shouldShow = true;
+                } else if (filter === 'starting-soon' && timeStatus) {
+                    const text = timeStatus.textContent.trim();
+                    shouldShow = text.includes('Starting Soon') || text.includes('Live Now');
+                } else {
+                    shouldShow = category === filter;
+                }
+                
+                if (shouldShow) {
                     card.style.display = 'block';
                     visibleCount++;
                 } else {
@@ -380,57 +613,209 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Form submission
+    // Form validation
     const form = document.getElementById('quickHangoutForm');
     form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
         // Basic validation
         if (!selectedActivityInput.value) {
+            e.preventDefault();
             alert('Please select an activity type');
             return;
         }
         
         if (!selectedWhenInput.value) {
+            e.preventDefault();
             alert('Please select when this hangout will happen');
             return;
         }
-        
-        // Show success message (replace with actual form submission)
-        alert('Hangout created successfully! 🎉');
-        
-        // Close modal and reset form
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-        form.reset();
-        
-        // Reset button states
-        activityBtns.forEach(btn => {
-            btn.classList.remove('border-orange-500', 'bg-orange-50');
-            btn.classList.add('border-gray-300');
-        });
-        whenBtns.forEach(btn => {
-            btn.classList.remove('border-orange-500', 'bg-orange-50');
-            btn.classList.add('border-gray-300');
-        });
     });
 
-    // Join hangout functionality
-    document.addEventListener('click', (e) => {
-        if (e.target.matches('.bg-orange-500[class*="px-3"]') || e.target.closest('.bg-orange-500[class*="px-3"]')) {
-            const btn = e.target.closest('button');
-            if (btn && btn.textContent.trim() === 'Join') {
-                btn.textContent = 'Joined';
-                btn.classList.remove('bg-orange-500', 'hover:bg-orange-600');
-                btn.classList.add('bg-green-500', 'hover:bg-green-600');
-                
-                // Update attendee count
-                const countSpan = btn.closest('.hangout-card').querySelector('.text-sm.text-gray-500');
-                const currentCount = parseInt(countSpan.textContent.match(/\d+/)[0]);
-                countSpan.textContent = `${currentCount + 1} going`;
+    // Join/Leave hangout functionality
+    document.addEventListener('click', async (e) => {
+        // Check if clicked element is or is inside a join button
+        const joinBtn = e.target.closest('.join-btn');
+        if (joinBtn) {
+            e.preventDefault();
+            const hangoutId = joinBtn.dataset.hangoutId;
+            await joinHangout(hangoutId, joinBtn);
+            return; // Stop here to prevent triggering leave button logic
+        }
+        
+        // Check if clicked element is or is inside a leave button
+        const leaveBtn = e.target.closest('.leave-btn');
+        if (leaveBtn) {
+            e.preventDefault();
+            const hangoutId = leaveBtn.dataset.hangoutId;
+            
+            if (confirm('Are you sure you want to leave this hangout?')) {
+                await leaveHangout(hangoutId, leaveBtn);
             }
+            return;
         }
     });
+
+    // Join hangout function
+    async function joinHangout(hangoutId, button) {
+        const originalText = button.innerHTML;
+        
+        try {
+            button.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Joining...';
+            button.disabled = true;
+            
+            const response = await fetch(`/hangouts/${hangoutId}/join`, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                // Update button to leave state
+                button.className = 'leave-btn bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm font-medium';
+                button.innerHTML = '<i class="fas fa-times mr-1"></i> Leave';
+                
+                // Update attendee count
+                const card = button.closest('.hangout-card');
+                const countSpan = card.querySelector('.text-sm.text-gray-500');
+                const newCount = result.attendee_count;
+                
+                if (newCount === 1) {
+                    countSpan.textContent = '1 person going';
+                } else {
+                    countSpan.textContent = `${newCount} people going`;
+                }
+                
+                // Show success message
+                showTempMessage(result.message, 'success');
+                
+            } else {
+                showTempMessage(result.message, 'error');
+                button.innerHTML = originalText;
+            }
+            
+        } catch (error) {
+            console.error('Error joining hangout:', error);
+            showTempMessage('Failed to join hangout', 'error');
+            button.innerHTML = originalText;
+        } finally {
+            button.disabled = false;
+        }
+    }
+
+    // Leave hangout function
+    async function leaveHangout(hangoutId, button) {
+        const originalText = button.innerHTML;
+        
+        try {
+            button.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Leaving...';
+            button.disabled = true;
+            
+            const response = await fetch(`/hangouts/${hangoutId}/leave`, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                // Update button to join state
+                button.className = 'join-btn bg-orange-500 hover:bg-orange-600 text-white px-3 py-1 rounded text-sm font-medium';
+                button.innerHTML = '<i class="fas fa-plus mr-1"></i> Join';
+                
+                // Update attendee count
+                const card = button.closest('.hangout-card');
+                const countSpan = card.querySelector('.text-sm.text-gray-500');
+                const newCount = result.attendee_count;
+                
+                if (newCount === 0) {
+                    countSpan.textContent = 'Be the first to join!';
+                } else if (newCount === 1) {
+                    countSpan.textContent = '1 person going';
+                } else {
+                    countSpan.textContent = `${newCount} people going`;
+                }
+                
+                // Show success message
+                showTempMessage(result.message, 'success');
+                
+            } else {
+                showTempMessage(result.message, 'error');
+                button.innerHTML = originalText;
+            }
+            
+        } catch (error) {
+            console.error('Error leaving hangout:', error);
+            showTempMessage('Failed to leave hangout', 'error');
+            button.innerHTML = originalText;
+        } finally {
+            button.disabled = false;
+        }
+    }
+
+    // Show temporary message function
+    function showTempMessage(message, type = 'info') {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `fixed top-20 right-4 z-50 px-6 py-3 rounded-lg shadow-lg text-white max-w-sm ${
+            type === 'success' ? 'bg-green-500' : 
+            type === 'error' ? 'bg-red-500' : 
+            'bg-blue-500'
+        }`;
+        
+        messageDiv.innerHTML = `
+            <div class="flex items-center justify-between">
+                <span>${message}</span>
+                <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white hover:text-gray-200">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        `;
+        
+        document.body.appendChild(messageDiv);
+        
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+            if (messageDiv.parentElement) {
+                messageDiv.remove();
+            }
+        }, 5000);
+    }
+
+    // Update time statuses every minute
+    setInterval(() => {
+        document.querySelectorAll('.time-status').forEach(statusElement => {
+            const startTime = statusElement.dataset.startTime;
+            if (startTime) {
+                const now = new Date();
+                const start = new Date(startTime);
+                const diff = now - start;
+                const diffMinutes = Math.floor(diff / 60000);
+                
+                if (diffMinutes >= 0) {
+                    // Event has started
+                    if (diffMinutes <= 180) {
+                        statusElement.innerHTML = '<span class="text-green-600 font-medium">🔴 Live Now</span>';
+                    } else {
+                        statusElement.innerHTML = '<span class="text-gray-500">Ended</span>';
+                    }
+                } else {
+                    // Event hasn't started yet
+                    const minutesUntil = Math.abs(diffMinutes);
+                    if (minutesUntil <= 30) {
+                        statusElement.innerHTML = '<span class="text-orange-600 font-medium">⏰ Starting Soon</span>';
+                    } else if (minutesUntil <= 60) {
+                        statusElement.textContent = `In ${minutesUntil} min`;
+                    } else {
+                        const hours = Math.floor(minutesUntil / 60);
+                        statusElement.textContent = `In ${hours}h`;
+                    }
+                }
+            }
+        });
+    }, 60000); // Update every minute
 });
 </script>
 
