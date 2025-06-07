@@ -201,7 +201,6 @@ $isLoggedIn = true;
         </div>
     </div>
 </div>
-<?=inspectAndDie($event);?>
 
 
     <script>

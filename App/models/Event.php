@@ -250,7 +250,13 @@ class Event extends BaseModel {
             'mindfulness' => ['cultural', 'sports']
         ];
     }
-    
+    public function getFilteredEvents($filters) {
+        $query = "SELECT * FROM events WHERE status = 'upcoming'";
+        
+        if ($filters['location']) {
+            $query .= " AND city = :location";
+        }
+    }
     /**
      * Get events by category with better filtering
      * @param string $category

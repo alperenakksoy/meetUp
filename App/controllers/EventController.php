@@ -346,7 +346,7 @@ class EventController extends BaseController {
 
     
     public function management() {
-        loadView('events/reviews');
+        loadView('events/management');
 }
 private function handleImageUpload() {
     // Check if no file was uploaded or if there was an error
