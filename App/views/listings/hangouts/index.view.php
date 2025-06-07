@@ -20,16 +20,6 @@ function getActivityEmoji($activityType) {
     return $emojis[$activityType] ?? '📍';
 }
 
-// Helper function to get activity color
-function getActivityColor($activityType) {
-    $colors = [
-        'coffee' => 'bg-amber-100 text-amber-800',
-        'food' => 'bg-blue-100 text-blue-800',
-        'walk' => 'bg-purple-100 text-purple-800',
-        'drink' => 'bg-green-100 text-green-800'
-    ];
-    return $colors[$activityType] ?? 'bg-gray-100 text-gray-800';
-}
 
 // Helper function to get profile picture URL
 function getHangoutProfilePicture($user) {

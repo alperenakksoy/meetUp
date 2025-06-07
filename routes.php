@@ -59,6 +59,13 @@ $router->get('/messages', 'MessageController@index');
 $router->post('/messages/send', 'MessageController@send');
 $router->get('/messages/{id}', 'MessageController@conversation');
 
+
+// Notification routes
+$router->get('/notifications', 'NotificationController@index');
+$router->post('/api/notifications/{id}/read', 'NotificationController@markAsRead');
+$router->post('/api/notifications/mark-all-read', 'NotificationController@markAllAsRead');
+$router->get('/api/notifications/count', 'NotificationController@getCount');
+
 // Authentication routes
 $router->get('/login', 'AuthController@loginForm');
 $router->post('/login', 'AuthController@login');

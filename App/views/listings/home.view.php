@@ -59,9 +59,9 @@ function getProfilePictureUrl($attendee) {
                 <a href="/events/past" class="flex items-center py-2 text-gray-700 hover:text-orange-600">
                     <i class="fas fa-history mr-3"></i> Past Events
                 </a>
-                <a href="notifications.php" class="flex items-center py-2 text-gray-700 hover:text-orange-600">
+                <a href="/notifications" class="flex items-center py-2 text-gray-700 hover:text-orange-600">
                     <i class="fas fa-bell mr-3"></i> Notifications
-                    <span class="ml-auto bg-yellow-500 text-white px-2 py-0.5 rounded-full text-xs">3</span>
+                    <span class="ml-auto bg-yellow-500 text-white px-2 py-0.5 rounded-full text-xs"><?=$unreadNotify ?? 0?></span>
                 </a>
                 <a href="settings.php" class="flex items-center py-2 text-gray-700 hover:text-orange-600">
                     <i class="fas fa-cog mr-3"></i> Account Settings
@@ -400,68 +400,137 @@ function getProfilePictureUrl($attendee) {
         <!-- Right Sidebar -->
         <div class="md:col-span-3 space-y-6">
             <!-- Upcoming Events -->
-            <div class="bg-white rounded-lg shadow-md p-4">
-                <h3 class="font-semibold text-lg mb-3">You're Attending</h3>
+           <!-- Popular Categories -->
+<div class="bg-white rounded-lg shadow-md p-4">
+    <h3 class="font-semibold text-lg mb-3">Popular Categories</h3>
+    <div class="space-y-2">
+        <?php if(!empty($popularCategories)): ?>
+            <?php foreach($popularCategories as $category): ?>
+                <a href="/events?category=<?= urlencode($category->category) ?>" 
+                   class="flex justify-between items-center hover:bg-gray-50 p-2 rounded cursor-pointer transition-colors">
+                    <div class="flex items-center">
+                        <i class="<?= getCategoryIcon($category->category) ?> text-orange-500 mr-2"></i>
+                        <span class="font-medium"><?= ucfirst($category->category) ?></span>
+                    </div>
+                    <div class="text-sm text-gray-500"><?= $category->event_count ?> events</div>
+                </a>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p class="text-gray-500 text-sm">No categories available</p>
+        <?php endif; ?>
+    </div>
+    <div class="mt-3 pt-3 border-t">
+        <a href="/events" class="text-orange-500 hover:text-orange-600 text-sm font-medium">
+            View All Events →
+        </a>
+    </div>
+</div>
+
+        <!-- Recent Activity Feed -->
+        <div class="bg-white rounded-lg shadow-md p-4">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-semibold text-lg flex items-center">
+                        <i class="fas fa-pulse text-orange-500 mr-2"></i>
+                        Recent Activity
+                    </h3>
+                    <span class="text-xs text-gray-500">Last 7 days</span>
+                </div>
                 
                 <div class="space-y-3">
-                    <div class="flex items-start">
-                        <div class="bg-gray-100 text-center rounded-lg p-2 mr-3 min-w-[48px]">
-                            <div class="text-xs font-bold uppercase text-gray-500">APR</div>
-                            <div class="text-lg font-bold">5</div>
+                    <?php if(!empty($recentActivity)): ?>
+                        <?php foreach($recentActivity as $activity): ?>
+                            <div class="flex items-start space-x-3 hover:bg-gray-50 p-2 rounded-lg transition-colors group">
+                                <!-- Profile Picture -->
+                                <div class="flex-shrink-0">
+                                    <img src="<?= getProfilePicture($activity) ?>" 
+                                         alt="<?= htmlspecialchars($activity->first_name) ?>" 
+                                         class="w-8 h-8 rounded-full ring-2 ring-white group-hover:ring-orange-100 transition-all">
+                                </div>
+                                
+                                <!-- Activity Content -->
+                                <div class="flex-1 min-w-0">
+                                    <?php if($activity->activity_type === 'event_created'): ?>
+                                        <p class="text-sm">
+                                            <span class="font-medium text-gray-900"><?= htmlspecialchars($activity->first_name) ?></span>
+                                            <span class="text-gray-600">created</span>
+                                            <a href="/events/<?= $activity->event_id ?>" 
+                                               class="text-orange-500 hover:text-orange-600 font-medium hover:underline">
+                                                <?= htmlspecialchars($activity->event_title) ?>
+                                            </a>
+                                            <?php if($activity->category): ?>
+                                                <span class="inline-flex items-center ml-1 px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-600">
+                                                    <i class="<?= getCategoryIcon($activity->category) ?> mr-1"></i>
+                                                    <?= ucfirst($activity->category) ?>
+                                                </span>
+                                            <?php endif; ?>
+                                        </p>
+                                        
+                                    <?php elseif($activity->activity_type === 'review_posted'): ?>
+                                        <p class="text-sm">
+                                            <span class="font-medium text-gray-900"><?= htmlspecialchars($activity->first_name) ?></span>
+                                            <span class="text-gray-600">reviewed</span>
+                                            <a href="/events/reviews/<?= $activity->event_id ?>" 
+                                               class="text-orange-500 hover:text-orange-600 font-medium hover:underline">
+                                                <?= htmlspecialchars($activity->event_title) ?>
+                                            </a>
+                                            <?php if($activity->review_rating): ?>
+                                                <span class="inline-flex items-center ml-1">
+                                                    <?php for($i = 1; $i <= 5; $i++): ?>
+                                                        <i class="fas fa-star text-xs <?= $i <= $activity->review_rating ? 'text-yellow-400' : 'text-gray-300' ?>"></i>
+                                                    <?php endfor; ?>
+                                                </span>
+                                            <?php endif; ?>
+                                        </p>
+                                        
+                                    <?php elseif($activity->activity_type === 'user_joined'): ?>
+                                        <p class="text-sm">
+                                            <span class="font-medium text-gray-900"><?= htmlspecialchars($activity->first_name) ?></span>
+                                            <span class="text-gray-600">joined SocialLoop!</span>
+                                            <span class="text-green-500 ml-1">🎉</span>
+                                        </p>
+                                        
+                                    <?php elseif($activity->activity_type === 'event_joined'): ?>
+                                        <p class="text-sm">
+                                            <span class="font-medium text-gray-900"><?= htmlspecialchars($activity->first_name) ?></span>
+                                            <span class="text-gray-600">joined</span>
+                                            <a href="/events/<?= $activity->event_id ?>" 
+                                               class="text-orange-500 hover:text-orange-600 font-medium hover:underline">
+                                                <?= htmlspecialchars($activity->event_title) ?>
+                                            </a>
+                                        </p>
+                                    <?php endif; ?>
+                                    
+                                    <!-- Timestamp -->
+                                    <p class="text-xs text-gray-500 mt-1">
+                                        <?= timeSince($activity->activity_time) ?>
+                                    </p>
+                                </div>
+                                
+                                <!-- Activity Icon -->
+                                <div class="flex-shrink-0">
+                                    <i class="<?= getActivityIcon($activity->activity_type) ?> text-xs <?= getActivityColor($activity->activity_type) ?>"></i>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="text-center py-6">
+                            <i class="fas fa-clock text-gray-300 text-2xl mb-2"></i>
+                            <p class="text-gray-500 text-sm">No recent activity</p>
+                            <p class="text-gray-400 text-xs">Check back later for updates!</p>
                         </div>
-                        <div>
-                            <div class="font-medium">Coffee & Cultural Exchange</div>
-                            <div class="text-sm text-gray-500">15:00 • Kadıköy, Istanbul</div>
-                        </div>
-                    </div>
-                    <div class="flex items-start">
-                        <div class="bg-gray-100 text-center rounded-lg p-2 mr-3 min-w-[48px]">
-                            <div class="text-xs font-bold uppercase text-gray-500">APR</div>
-                            <div class="text-lg font-bold">10</div>
-                        </div>
-                        <div>
-                            <div class="font-medium">Historical Istanbul Tour</div>
-                            <div class="text-sm text-gray-500">10:00 • Sultanahmet, Istanbul</div>
-                        </div>
-                    </div>
-                    <div class="flex items-start">
-                        <div class="bg-gray-100 text-center rounded-lg p-2 mr-3 min-w-[48px]">
-                            <div class="text-xs font-bold uppercase text-gray-500">APR</div>
-                            <div class="text-lg font-bold">15</div>
-                        </div>
-                        <div>
-                            <div class="font-medium">Turkish Cooking Workshop</div>
-                            <div class="text-sm text-gray-500">18:00 • Beşiktaş, Istanbul</div>
-                        </div>
-                    </div>
+                    <?php endif; ?>
                 </div>
-            </div>
-
-            <!-- Trending Topics -->
-            <div class="bg-white rounded-lg shadow-md p-4">
-                <h3 class="font-semibold text-lg mb-3">Trending in Istanbul</h3>
-                <div class="space-y-2">
-                    <div class="flex justify-between items-center hover:bg-gray-50 p-2 rounded cursor-pointer">
-                        <div class="font-medium">Coffee Tasting</div>
-                        <div class="text-sm text-gray-500">24 events</div>
+                
+                <!-- Footer with link to full activity page -->
+                <?php if(!empty($recentActivity)): ?>
+                    <div class="mt-4 pt-3 border-t border-gray-100">
+                        <a href="/activity" 
+                           class="text-orange-500 hover:text-orange-600 text-sm font-medium flex items-center justify-center hover:bg-orange-50 py-2 rounded-lg transition-colors">
+                            <span>View All Activity</span>
+                            <i class="fas fa-arrow-right ml-2 text-xs"></i>
+                        </a>
                     </div>
-                    <div class="flex justify-between items-center hover:bg-gray-50 p-2 rounded cursor-pointer">
-                        <div class="font-medium">Boat Tours</div>
-                        <div class="text-sm text-gray-500">18 events</div>
-                    </div>
-                    <div class="flex justify-between items-center hover:bg-gray-50 p-2 rounded cursor-pointer">
-                        <div class="font-medium">Photography</div>
-                        <div class="text-sm text-gray-500">15 events</div>
-                    </div>
-                    <div class="flex justify-between items-center hover:bg-gray-50 p-2 rounded cursor-pointer">
-                        <div class="font-medium">Language Exchange</div>
-                        <div class="text-sm text-gray-500">12 events</div>
-                    </div>
-                    <div class="flex justify-between items-center hover:bg-gray-50 p-2 rounded cursor-pointer">
-                        <div class="font-medium">Hiking</div>
-                        <div class="text-sm text-gray-500">9 events</div>
-                    </div>
-                </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>

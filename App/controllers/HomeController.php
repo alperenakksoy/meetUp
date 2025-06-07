@@ -6,6 +6,7 @@ use App\Models\Friendship;
 use App\Models\Review;
 use App\Models\EventAttendee;
 use Framework\Session;
+use App\Models\Notification;
 
 class HomeController extends BaseController {
     protected $userModel;
@@ -13,6 +14,7 @@ class HomeController extends BaseController {
     protected $friendshipModel;
     protected $reviewModel;
     protected $eventAttendeeModel;
+    protected $notifyModel;
     
     public function __construct() {
         parent::__construct();
@@ -21,6 +23,7 @@ class HomeController extends BaseController {
         $this->friendshipModel = new Friendship();
         $this->reviewModel = new Review();
         $this->eventAttendeeModel = new EventAttendee();
+        $this->notifyModel = new Notification();
     }
 
     public function index() {
@@ -195,10 +198,98 @@ class HomeController extends BaseController {
             $recEvent->counts = count($recEvent->attendees); // Add this line for consistency
         }
         
+        // NEW: Get recent activity feed
+        $recentActivity = $this->getRecentActivity(6);
+
+        // get unread notification for user
+        $unreadNotify = $this->notifyModel->getUnreadCount($user->user_id);
+        
         loadView('home',[
             'user' => $user,
             'upEvents' => $upcomingEvents,
-            'recommendedEvents' => $recommendedEvents
+            'recommendedEvents' => $recommendedEvents,
+            'recentActivity' => $recentActivity,
+            'unreadNotify'=> $unreadNotify,
         ]);
+    }
+    
+    /**
+     * Get recent activity for the activity feed
+     * @param int $limit Number of activities to return
+     * @return array Recent activities
+     */
+    private function getRecentActivity($limit = 6) {
+        $query = "SELECT 
+            'event_created' as activity_type,
+            e.created_at as activity_time,
+            u.first_name,
+            u.last_name,
+            u.profile_picture,
+            e.title as event_title,
+            e.event_id,
+            e.category,
+            NULL as review_rating
+        FROM events e
+        JOIN users u ON e.host_id = u.user_id
+        WHERE e.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+        AND e.status = 'upcoming'
+        
+        UNION ALL
+        
+        SELECT 
+            'review_posted' as activity_type,
+            r.created_at as activity_time,
+            u.first_name,
+            u.last_name,
+            u.profile_picture,
+            e.title as event_title,
+            e.event_id,
+            e.category,
+            r.rating as review_rating
+        FROM reviews r
+        JOIN users u ON r.reviewer_id = u.user_id
+        JOIN events e ON r.event_id = e.event_id
+        WHERE r.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+        
+        UNION ALL
+        
+        SELECT 
+            'user_joined' as activity_type,
+            u.created_at as activity_time,
+            u.first_name,
+            u.last_name,
+            u.profile_picture,
+            NULL as event_title,
+            NULL as event_id,
+            NULL as category,
+            NULL as review_rating
+        FROM users u
+        WHERE u.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+        AND u.is_active = 1
+        
+        UNION ALL
+        
+        SELECT 
+            'event_joined' as activity_type,
+            ea.joined_at as activity_time,
+            u.first_name,
+            u.last_name,
+            u.profile_picture,
+            e.title as event_title,
+            e.event_id,
+            e.category,
+            NULL as review_rating
+        FROM event_attendees ea
+        JOIN users u ON ea.user_id = u.user_id
+        JOIN events e ON ea.event_id = e.event_id
+        WHERE ea.joined_at >= DATE_SUB(NOW(), INTERVAL 3 DAY)
+        AND ea.status IN ('attending', 'approved')
+        AND e.status = 'upcoming'
+        
+        ORDER BY activity_time DESC
+        LIMIT :limit";
+        
+        $params = ['limit' => $limit];
+        return $this->db->query($query, $params)->fetchAll();
     }
 }

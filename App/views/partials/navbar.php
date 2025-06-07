@@ -25,6 +25,12 @@ function getNavbarProfilePicture($user) {
     // Local file path
     return "/uploads/profiles/" . $user['profile_picture'];
 }
+
+// Get notification count for logged-in users
+$notificationCount = 0;
+if ($isLoggedIn && $userId) {
+    $notificationCount = getNotificationCount();
+}
 ?>
 
 <!-- Navbar -->
@@ -62,12 +68,14 @@ function getNavbarProfilePicture($user) {
                 <div class="flex items-center space-x-4">
                     <!-- Notifications -->
                     <div class="relative">
-                        <button class="text-gray-700 hover:text-orange-600 transition-colors relative">
+                        <a href="/notifications" class="text-gray-700 hover:text-orange-600 transition-colors relative block p-2 rounded-full hover:bg-gray-100">
                             <i class="fas fa-bell text-xl"></i>
-                            <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center notification-badge" style="display: none;">
-                                0
-                            </span>
-                        </button>
+                            <?php if ($notificationCount > 0): ?>
+                                <span class="notification-badge absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold animate-pulse">
+                                    <?= $notificationCount > 99 ? '99+' : $notificationCount ?>
+                                </span>
+                            <?php endif; ?>
+                        </a>
                     </div>
 
                     <!-- User Profile Dropdown -->
@@ -116,10 +124,6 @@ function getNavbarProfilePicture($user) {
                                 <a href="/users/edit" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors">
                                     <i class="fas fa-edit mr-3 text-orange-500"></i>
                                     Edit Profile
-                                </a>
-                                <a href="/events/management" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors">
-                                    <i class="fas fa-calendar-check mr-3 text-orange-500"></i>
-                                    My Events
                                 </a>
                                 <a href="/users/settings" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors">
                                     <i class="fas fa-cog mr-3 text-orange-500"></i>
@@ -195,11 +199,22 @@ function getNavbarProfilePicture($user) {
                     <a href="/events" class="block py-2 text-gray-700 hover:text-orange-600 transition-colors">
                         <i class="fas fa-calendar-alt mr-2"></i> Events
                     </a>
+                    <a href="/hangouts/index" class="block py-2 text-gray-700 hover:text-orange-600 transition-colors">
+                        <i class="fas fa-list-alt mr-2"></i> Hangouts
+                    </a>
                     <a href="/users/friends" class="block py-2 text-gray-700 hover:text-orange-600 transition-colors">
                         <i class="fas fa-users mr-2"></i> Friends
                     </a>
                     <a href="/messages" class="block py-2 text-gray-700 hover:text-orange-600 transition-colors">
                         <i class="fas fa-envelope mr-2"></i> Messages
+                    </a>
+                    <a href="/notifications" class="flex items-center justify-between py-2 text-gray-700 hover:text-orange-600 transition-colors">
+                        <span><i class="fas fa-bell mr-2"></i> Notifications</span>
+                        <?php if ($notificationCount > 0): ?>
+                            <span class="bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
+                                <?= $notificationCount > 99 ? '99+' : $notificationCount ?>
+                            </span>
+                        <?php endif; ?>
                     </a>
                     <a href="/users/profile" class="block py-2 text-gray-700 hover:text-orange-600 transition-colors">
                         <i class="fas fa-user mr-2"></i> Profile
@@ -253,10 +268,28 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Update notification count if function exists
-    if (typeof updateNotificationCount === 'function') {
-        updateNotificationCount();
-        setInterval(updateNotificationCount, 60000); // Update every minute
+    // Notification count update function
+    <?php if ($isLoggedIn): ?>
+    function updateNotificationCount() {
+        fetch('/api/notifications/count')
+            .then(response => response.json())
+            .then(data => {
+                const notificationBadges = document.querySelectorAll('.notification-badge');
+                notificationBadges.forEach(badge => {
+                    if (data.count > 0) {
+                        badge.textContent = data.count > 99 ? '99+' : data.count;
+                        badge.style.display = 'flex';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                });
+            })
+            .catch(error => console.error('Error updating notification count:', error));
     }
+    
+    // Update notification count on load and every minute
+    updateNotificationCount();
+    setInterval(updateNotificationCount, 60000);
+    <?php endif; ?>
 });
 </script>
