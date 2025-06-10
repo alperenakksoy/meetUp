@@ -1,4 +1,4 @@
-<?php
+<a?php
 
 // Set page variables
 $pageTitle = 'Dashboard';
@@ -94,12 +94,27 @@ $isLoggedIn = true;
             <!-- Join Event Card -->
             <div class="bg-white p-5 rounded-lg shadow text-center">
                 <span class="block mb-3">
-                    <strong>7</strong> people going · <strong>5</strong> spots left
+                   
+                    <?php if(count($attendees) == 0):?>
+                    <?php $indicator='No one attending at the moment'?>
+                    <?php elseif(count($attendees)== 1 && $attendees[0]->user_id == $user->user_id):?>
+                    <?php $indicator='Currently only you attending'?>
+                    <?php elseif(count($attendees)== 1 && $attendees[0]->user_id  != $user->user_id):?>
+                        <?php $indicator='1 person attending'?>
+                    <?php else:?>
+                        <?php $indicator=count($attendees).' people are attending.'?>
+                    <?php endif;?>
+                   <?= $indicator ?> · <strong><?= $event->max_attendees - count($attendees);?></strong> spots left
                 </span>
                 <div class="h-2.5 bg-gray-200 rounded-full mb-3 overflow-hidden">
-                    <div class="bg-[#f5a623] h-full w-[60%]"></div>
+                    <div class="bg-[#f5a623] h-full w-[<?=count($attendees)*10?>%]"></div>
                 </div>
-                <button class="w-full bg-[#f5a623] text-white py-3 px-5 rounded font-medium hover:bg-[#e5941d]">Join Event</button>
+                <?php $attendeesID = array_column($attendees,'user_id');?>
+                <?php if(in_array($user->user_id,$attendeesID)):?>
+                    <button class="w-full bg-[#ef4444] text-white py-3 px-5 rounded font-medium hover:bg-[#dc2626] transition-colors">Leave The Event</button>         
+                    <?php else:?>
+                        <button class="w-full bg-[#145314] text-white py-3 px-5 rounded font-medium hover:bg-[#1e6e1e]">Join The Event</button>   
+                        <?php endif;?>
             </div>
 
             <!-- Host Information -->
@@ -122,23 +137,77 @@ $isLoggedIn = true;
                         </div>
                     </div>
                 </div>
-                <a href="/users/profile/<?$host->user_id?>" class="block text-center py-2 border border-[#f5a623] text-[#f5a623] rounded hover:bg-[#f5a623] hover:text-white transition-colors">View Profile</a>
+                <a href="/users/profile/<?=$host->user_id?>" class="block text-center py-2 border border-[#f5a623] text-[#f5a623] rounded hover:bg-[#f5a623] hover:text-white transition-colors">View Profile</a>
             </div>
 
-            <!-- Attendees -->
-            <div class="bg-white p-5 rounded-lg shadow">
-                <h3 class="text-lg font-semibold mb-3 pb-2 border-b border-gray-100">Attendees (7)</h3>
-                <div class="flex flex-wrap mb-4">
-                    <img src="https://randomuser.me/api/portraits/women/63.jpg" alt="Attendee" class="w-11 h-11 rounded-full object-cover border-2 border-white -ml-2 first:ml-0">
-                    <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Attendee" class="w-11 h-11 rounded-full object-cover border-2 border-white -ml-2">
-                    <img src="https://randomuser.me/api/portraits/women/29.jpg" alt="Attendee" class="w-11 h-11 rounded-full object-cover border-2 border-white -ml-2">
-                    <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Attendee" class="w-11 h-11 rounded-full object-cover border-2 border-white -ml-2">
-                    <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Attendee" class="w-11 h-11 rounded-full object-cover border-2 border-white -ml-2">
-                    <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="Attendee" class="w-11 h-11 rounded-full object-cover border-2 border-white -ml-2">
-                    <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="Attendee" class="w-11 h-11 rounded-full object-cover border-2 border-white -ml-2">
+  <!-- Attendees -->
+<div class="bg-white p-5 rounded-lg shadow">
+    <h3 class="text-lg font-semibold mb-3 pb-2 border-b border-gray-100">
+        Attendees (<?= count($attendees) ?>)
+    </h3>
+
+    <!-- Avatar group - Initially show only first 6 -->
+    <div class="flex flex-wrap mb-4" id="attendees-preview">
+        <?php 
+        $displayLimit = 6;
+        $attendeesToShow = array_slice($attendees, 0, $displayLimit);
+        ?>
+        
+        <?php foreach ($attendeesToShow as $attendee): ?>
+            <div class="relative group -ml-2 first:ml-0 attendee-item">
+                <a href="/users/profile/<?=$attendee->user_id?>">
+                    <img src="<?= $attendee->profile_picture ?>" alt="Attendee"
+                         class="w-11 h-11 rounded-full object-cover border-2 border-white transition-all duration-200 group-hover:ring-2 group-hover:ring-blue-400">
+                </a>
+                
+                <!-- Name tooltip -->
+                <div class="absolute z-10 hidden group-hover:block bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded-md shadow-lg whitespace-nowrap">
+                    <?= ucwords(strtolower($attendee->first_name)) ?>
+                    <div class="absolute top-full left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-800 rotate-45"></div>
                 </div>
-                <a href="#" class="block text-center py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200">View All Attendees</a>
             </div>
+        <?php endforeach; ?>
+    </div>
+
+    <!-- Hidden attendees that will be shown when expanded -->
+    <?php if(count($attendees) > $displayLimit): ?>
+        <div class="hidden" id="all-attendees">
+            <div class="grid grid-cols-1 gap-3 mb-4">
+                <?php foreach ($attendees as $attendee): ?>
+                    <div class="flex items-center gap-3 p-2 hover:bg-gray-50 rounded">
+                        <a href="/users/profile/<?=$attendee->user_id?>">
+                            <img src="<?= $attendee->profile_picture ?>" alt="<?= $attendee->first_name ?>"
+                                 class="w-10 h-10 rounded-full object-cover border-2 border-gray-200">
+                        </a>
+                        <div class="flex-1">
+                            <div class="font-medium text-gray-900">
+                                <?= ucwords(strtolower($attendee->first_name . ' ' . $attendee->last_name)) ?>
+                            </div>
+                            <?php if(isset($attendee->city) && isset($attendee->country)): ?>
+                                <div class="text-sm text-gray-500">
+                                    <i class="fas fa-map-marker-alt mr-1"></i>
+                                    <?= $attendee->city ?>, <?= $attendee->country ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                        <?php if($attendee->user_id == $user->user_id): ?>
+                            <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">You</span>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <!-- Toggle Button -->
+    <?php if(count($attendees) > $displayLimit): ?>
+        <button id="toggle-attendees" 
+                class="block w-full text-center py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors">
+            <span id="toggle-text">View All Attendees</span>
+            <i id="toggle-icon" class="fas fa-chevron-down ml-1"></i>
+        </button>
+    <?php endif; ?>
+</div>
 
     <!-- Share & Save -->
 <div class="bg-white p-5 rounded-lg shadow">
@@ -204,6 +273,37 @@ $isLoggedIn = true;
 
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    const toggleButton = document.getElementById('toggle-attendees');
+    const allAttendeesDiv = document.getElementById('all-attendees');
+    const attendeesPreview = document.getElementById('attendees-preview');
+    const toggleText = document.getElementById('toggle-text');
+    const toggleIcon = document.getElementById('toggle-icon');
+    
+    if (toggleButton) {
+        let isExpanded = false;
+        
+        toggleButton.addEventListener('click', function() {
+            if (!isExpanded) {
+                // Show all attendees
+                attendeesPreview.style.display = 'none';
+                allAttendeesDiv.classList.remove('hidden');
+                toggleText.textContent = 'Show Less';
+                toggleIcon.classList.remove('fa-chevron-down');
+                toggleIcon.classList.add('fa-chevron-up');
+                isExpanded = true;
+            } else {
+                // Show preview only
+                attendeesPreview.style.display = 'flex';
+                allAttendeesDiv.classList.add('hidden');
+                toggleText.textContent = 'View All Attendees';
+                toggleIcon.classList.remove('fa-chevron-up');
+                toggleIcon.classList.add('fa-chevron-down');
+                isExpanded = false;
+            }
+        });
+    }
+});
         // Join Event functionality
         document.querySelector('.join-btn').addEventListener('click', function() {
             if (this.textContent === 'Join Event') {

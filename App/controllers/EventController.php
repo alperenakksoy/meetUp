@@ -2,26 +2,33 @@
 namespace App\Controllers;
 
 use Framework\Database;
+use Framework\Session;
 use App\Models\Event;
 use App\Models\EventCategory;
 use App\Models\EventTag;
 use App\Models\EventComment;
 use App\Models\UserActivity;
 use App\Models\BaseModel;
+use App\Models\EventAttendee;
 use App\Models\User;
 use Framework\Validation;
 use Exception; 
+
 
 class EventController extends BaseController {
     protected $eventModel;
     protected $eventCategory;
     protected $eventComment;
+    protected $baseModel;
+    protected $attendeeModel;
     protected $userModel;
 
     public function __construct() {
         $this->eventModel = new Event(); 
         $this->eventCategory = new EventCategory();
         $this->eventComment = new EventComment();
+        $this->baseModel = new BaseModel(); 
+        $this->attendeeModel = new EventAttendee();
         $this->userModel = new User(); 
     }
     
@@ -134,15 +141,23 @@ class EventController extends BaseController {
     }
     
     public function show($params) {
-      $event = $this->eventModel->getEventWithDetails($params['id']);    
+        $userId = Session::get('user_id');
+
+        $user= $this->userModel->usergetById($userId); 
+        $event = $this->eventModel->getEventWithDetails($params['id']);    
       $host= $this->userModel->usergetById($event->host_id); 
       // get events that hosted by host
       $event->hostedEvents=$this->eventModel->getEventsByHost($event->host_id);
       $eventComments = $this->eventComment->getCommentsByEvent($event->event_id);
+      $attendees = $this->attendeeModel->getAttendeesByEvent($event->event_id);
+      //attendee ID
+      
         loadView('events/show',[
             'event' => $event,
             'eventComments'=>$eventComments,
             'host' => $host,
+            'attendees'=>$attendees,
+            'user'=>$user
             
         ]);
     }
