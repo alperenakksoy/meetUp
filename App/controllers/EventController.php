@@ -150,7 +150,8 @@ class EventController extends BaseController {
       $event->hostedEvents=$this->eventModel->getEventsByHost($event->host_id);
       $eventComments = $this->eventComment->getCommentsByEvent($event->event_id);
       $attendees = $this->attendeeModel->getAttendeesByEvent($event->event_id);
-      //attendee ID
+      
+      
       
         loadView('events/show',[
             'event' => $event,
@@ -161,6 +162,8 @@ class EventController extends BaseController {
             
         ]);
     }
+
+    
     
     public function edit($params) {
 

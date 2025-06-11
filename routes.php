@@ -16,16 +16,21 @@ $router->get('/users/profile/{id}', 'UserController@profile');
 $router->get('/users/edit', 'UserController@edit');
 $router->get('/users/{id}', 'UserController@edit');
 $router->put('/users/{id}', 'UserController@update');
+$router->post('/events/{id}/debug', 'EventController@debugEndpoint');
 
 // Friendship Handle
 $router->post('/api/friendship/handle', 'FriendshipController@handleRequest');
 $router->post('/api/friendship/cancel', 'FriendshipController@cancelRequest');
 $router->post('/api/friendship/send', 'FriendshipController@sendRequest');
 
+
+$router->post('/events/{id}/join', 'EventController@joinEvent');
+$router->post('/events/{id}/leave', 'EventController@leaveEvent');
+$router->post('/events', 'EventController@store');
+
 // Event routes
 $router->get('/events', 'EventController@index');
 $router->get('/events/create', 'EventController@create');
-$router->post('/events', 'EventController@store');
 $router->get('/events/past', 'EventController@pastEvents');
 $router->get('/events/management', 'EventController@management');
 $router->get('/events/{id}', 'EventController@show');
