@@ -111,9 +111,9 @@ $isLoggedIn = true;
                 </div>
                 <?php $attendeesID = array_column($attendees,'user_id');?>
                 <?php if(in_array($user->user_id,$attendeesID)):?>
-                    <button class="w-full bg-[#ef4444] text-white py-3 px-5 rounded font-medium hover:bg-[#dc2626] transition-colors">Leave The Event</button>         
+                    <button data-event-id="<?= $event->event_id ?>" data-action="leave" class="w-full bg-[#ef4444] text-white py-3 px-5 rounded font-medium hover:bg-[#dc2626] transition-colors join-btn">Leave The Event</button>         
                     <?php else:?>
-                        <button class="w-full bg-[#145314] text-white py-3 px-5 rounded font-medium hover:bg-[#1e6e1e]">Join The Event</button>   
+                        <button data-event-id="<?= $event->event_id ?>" data-action="join" class="w-full bg-[#145314] text-white py-3 px-5 rounded font-medium hover:bg-[#1e6e1e] join-btn">Join The Event</button>   
                         <?php endif;?>
             </div>
 

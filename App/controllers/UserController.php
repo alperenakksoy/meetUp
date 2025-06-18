@@ -8,6 +8,7 @@ use App\Models\Review;
 use App\Models\EventAttendee;
 use Framework\Session;
 use Exception;
+use Framework\Validation;
 
 class UserController extends BaseController {
     protected $userModel;
@@ -184,13 +185,95 @@ class UserController extends BaseController {
         
         // Handle form submission
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Process the update
-            // Implementation would go here
-            $_SESSION['success_message'] = 'Profile updated successfully';
-            redirect('/users/profile');
+            try {
+                // Validate and sanitize input data
+                $updateData = [
+                    'first_name' => trim($_POST['first_name'] ?? ''),
+                    'last_name' => trim($_POST['last_name'] ?? ''),
+                    'email' => trim($_POST['email'] ?? ''),
+                    'phone' => trim($_POST['phone'] ?? ''),
+                    'city' => trim($_POST['city'] ?? ''),
+                    'country' => trim($_POST['country'] ?? ''),
+                    'occupation' => trim($_POST['occupation'] ?? ''),
+                    'bio' => trim($_POST['bio'] ?? ''),
+                    'date_of_birth' => $_POST['date_of_birth'] ?? null,
+                    'gender' => $_POST['gender'] ?? '',
+                    'languages' => $_POST['languages'] ?? '',
+                    'interests' => $_POST['interests'] ?? '',
+                    'instagram' => trim($_POST['instagram'] ?? ''),
+                    'linkedin' => trim($_POST['linkedin'] ?? ''),
+                    'facebook' => trim($_POST['facebook'] ?? '')
+                ];
+                
+                // Basic validation
+                $errors = [];
+                
+                if (empty($updateData['first_name'])) {
+                    $errors[] = 'First name is required';
+                }
+                
+                if (empty($updateData['last_name'])) {
+                    $errors[] = 'Last name is required';
+                }
+                
+                if (empty($updateData['email']) || !filter_var($updateData['email'], FILTER_VALIDATE_EMAIL)) {
+                    $errors[] = 'Valid email is required';
+                } else {
+                    // Check if email is already taken by another user
+                    $existingUser = $this->userModel->findByEmail($updateData['email']);
+                    if ($existingUser && $existingUser->user_id != $targetUserId) {
+                        $errors[] = 'Email is already taken by another user';
+                    }
+                }
+                
+                if (!empty($errors)) {
+                    $_SESSION['error_message'] = implode(', ', $errors);
+                    redirect('/users/edit');
+                    return;
+                }
+                
+                // Handle profile picture upload
+                if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
+                    $uploadResult = $this->handleProfilePictureUpload($_FILES['profile_picture'], $targetUserId);
+                    if ($uploadResult['success']) {
+                        $updateData['profile_picture'] = $uploadResult['filename'];
+                    } else {
+                        $_SESSION['error_message'] = $uploadResult['error'];
+                        redirect('/users/edit');
+                        return;
+                    }
+                }
+                
+                // Update user in database
+                $success = $this->userModel->update($targetUserId, $updateData);
+                
+                if ($success) {
+                    // Update session data if current user updated their own profile
+                    if ($currentUserId == $targetUserId) {
+                        $updatedUser = $this->userModel->usergetById($targetUserId);
+                        Session::set('user', [
+                            'user_id' => $updatedUser->user_id,
+                            'email' => $updatedUser->email,
+                            'first_name' => $updatedUser->first_name,
+                            'last_name' => $updatedUser->last_name
+                        ]);
+                    }
+                    
+                    $_SESSION['success_message'] = 'Profile updated successfully';
+                    redirect('/users/profile');
+                } else {
+                    $_SESSION['error_message'] = 'Failed to update profile';
+                    redirect('/users/edit');
+                }
+                
+            } catch (Exception $e) {
+                error_log("Error updating profile: " . $e->getMessage());
+                $_SESSION['error_message'] = 'An error occurred while updating profile';
+                redirect('/users/edit');
+            }
         }
     }
-
+    
     /**
      * Show edit profile form
      */

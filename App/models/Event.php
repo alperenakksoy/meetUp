@@ -347,13 +347,15 @@ public function getPastEventsUserAttended($userId) {
     }
     
     // Get events a user is attending
-    public function getEventsUserAttending($userId,$limit=5) {
+    public function getEventsUserAttending($userId, $limit = 5) {
         $query = "SELECT e.*, u.first_name, u.last_name 
                 FROM {$this->table} e
                 JOIN users u ON e.host_id = u.user_id
                 JOIN event_attendees ea ON e.event_id = ea.event_id
                 WHERE ea.user_id = :user_id
                 AND ea.status IN ('attending', 'approved')
+                AND e.event_date >= CURDATE()  -- Only future events
+                AND e.status = 'upcoming'      -- Only upcoming status
                 ORDER BY e.event_date ASC
                 LIMIT {$limit}";
         $params = ['user_id' => $userId];

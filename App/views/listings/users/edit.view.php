@@ -206,18 +206,19 @@ $predefinedInterests = [
                 </p>
             </div>
         </div>
+        <?=loadPartial('errors')?>
 
         <!-- Form Card -->
         <div class="bg-white rounded-lg shadow-sm overflow-hidden">
             <form method="POST" action="/users/<?= $user->user_id ?>" enctype="multipart/form-data" class="space-y-8">
-                <input type="hidden" name="method" value="PUT">
+                <input type="hidden" name="_method" value="PUT">
                 
                 <!-- Profile Picture Section -->
                 <div class="p-6 border-b border-gray-100">
                     <h2 class="text-xl font-semibold text-gray-800 mb-4">Profile Picture</h2>
                     <div class="flex items-center space-x-6">
                         <div class="relative">
-                            <img id="profilePreview" src="/uploads/profiles/<?= $user->profile_picture ?>" 
+                            <img id="profilePreview" src="<?= $user->profile_picture ?>" 
                                  alt="Profile Picture" class="w-24 h-24 rounded-full border-4 border-gray-100 object-cover">
                             <button type="button" id="changePhotoBtn" 
                                     class="absolute -bottom-1 -right-1 bg-orange-500 hover:bg-orange-600 text-white rounded-full p-2 shadow-md transition-colors">
@@ -243,7 +244,7 @@ $predefinedInterests = [
                             <label for="first_name" class="block text-sm font-medium text-gray-700 mb-2">First Name *</label>
                             <input type="text" id="first_name" name="first_name" value="<?= $user->first_name ?>" 
                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                                   required>
+                                   >
                         </div>
                         
                         <div>

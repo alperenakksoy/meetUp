@@ -218,7 +218,6 @@ function timeSince(string $createdAt): string {
     }
 }
 
-// Add this function to your existing helpers.php file
 
 /**
  * Get user profile picture with fallback

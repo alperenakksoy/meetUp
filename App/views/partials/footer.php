@@ -7,24 +7,24 @@
         <div class="footer-section">
             <h3>Company</h3>
             <ul>
-                <li><a href="#">About Us</a></li>
-                <li><a href="#">Careers</a></li>
+                <li><a href="/about">About Us</a></li>
+                <li><a href="/howitworks">How It Works</a></li>
                 <li><a href="#">Support Us</a></li>
             </ul>
         </div>
         <div class="footer-section">
             <h3>Contact</h3>
             <ul>
-                <li><a href="#">Help/FAQ</a></li>
-                <li><a href="#">Emergency</a></li>
-                <li><a href="#">Safety</a></li>
+                <li><a href="/faq">Help/FAQ</a></li>
+                <li><a href="/contact">Contact</a></li>
+                <li><a href="/safety">Safety</a></li>
             </ul>
         </div>
         <div class="footer-section">
             <h3>More</h3>
             <ul>
-                <li><a href="#">Report</a></li>
-                <li><a href="#">Tips for Socializing</a></li>
+                <li><a href="/report">Report</a></li>
+                <li><a href="/features">Features</a></li>
                 <li><a href="#">Advices for Improve</a></li>
             </ul>
         </div>

@@ -67,7 +67,8 @@ function getProfilePictureUrl($attendee) {
                     <i class="fas fa-cog mr-3"></i> Account Settings
                 </a>
             </div>
-        </div>
+        </div>  
+
 
         <!-- Middle Column - Feed -->
         <div class="md:col-span-6 space-y-6">
@@ -75,7 +76,7 @@ function getProfilePictureUrl($attendee) {
             <div class="bg-white rounded-lg shadow-md p-4">
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between">
                     <div class="text-gray-700 mb-2 md:mb-0">
-                        Welcome back, <strong class="font-semibold"><?=$user->first_name?></strong>! What's your plan for today?
+                        Welcome back, <strong class="font-semibold"><?=htmlspecialchars(mb_convert_case(mb_strtolower($user->first_name, 'UTF-8'), MB_CASE_TITLE, 'UTF-8')) ?></strong>! What's your plan for today?
                     </div>
                     <div class="flex space-x-2">
                         <div class="bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 px-3 rounded-lg cursor-pointer transition duration-200">
@@ -92,7 +93,6 @@ function getProfilePictureUrl($attendee) {
 <div class="bg-white rounded-lg shadow-md overflow-hidden">
     <div class="flex justify-between items-center p-4 border-b border-gray-200">
         <h2 class="text-lg font-semibold">Your Upcoming Events</h2>
-        <a href="events.php" class="text-orange-600 hover:text-orange-800 text-sm">View All</a>
     </div>
     
     <?php
