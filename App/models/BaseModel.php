@@ -42,7 +42,7 @@ class BaseModel {
         $this->db->query($query, $data);
         return $this->db->conn->lastInsertId();
     }
-    
+    // update an event
     public function update($id, $data) {
         // Build update statement dynamically
         $fields = array_keys($data);
@@ -56,8 +56,9 @@ class BaseModel {
         
         return $this->db->query($query, $data);
     }
-    // Add this to your Event model
-public function delete($id) {
+
+    
+    public function delete($id) {
     $query = "DELETE FROM {$this->table} WHERE event_id = :id";
     $params = ['id' => $id];
     return $this->db->query($query, $params);

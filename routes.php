@@ -2,20 +2,14 @@
 // Home routes
 $router->get('/', 'HomeController@index');
 
-// User routes - FIXED ORDER AND STRUCTURE
-// Current user's profile (no ID needed)
 $router->get('/users/profile', 'UserController@profile');
 
-// Specific user's profile (with ID)
 $router->get('/users/profile/{id}', 'UserController@profile');
 
-// Edit current user's profile
 $router->get('/users/edit', 'UserController@edit');
 
-// Update current user's profile - FIXED: uses current user ID from session
 $router->put('/users/update', 'UserController@update');
 
-// Alternative update route with ID parameter (for consistency)
 $router->put('/users/{id}', 'UserController@update');
 
 // Other user pages

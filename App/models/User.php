@@ -73,4 +73,19 @@ class User extends BaseModel {
         $params = ['user_id' => $userId];
         return $this->db->query($query, $params)->fetch();
     }
+
+      // update User's profile
+      public function updateUser($id, $data) {
+        // Build update statement dynamically
+        $fields = array_keys($data);
+        $fieldSet = array_map(fn($field) => "$field = :$field", $fields);
+        $fieldSetString = implode(', ', $fieldSet);
+        
+        $query = "UPDATE {$this->table} SET $fieldSetString WHERE user_id = :id";
+        
+        // Add id to parameters
+        $data['id'] = $id;
+        
+        return $this->db->query($query, $data);
+    }
 }

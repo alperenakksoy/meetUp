@@ -252,7 +252,7 @@ class UserController extends BaseController {
                 }
                 
                 // Update user in database
-                $success = $this->userModel->update($targetUserId, $updateData);
+                $success = $this->userModel->updateUser($targetUserId, $updateData);
                 
                 if ($success) {
                     // Update session data if current user updated their own profile
