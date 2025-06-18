@@ -185,25 +185,32 @@ class UserController extends BaseController {
         
         // Handle form submission
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            try {
-                // Validate and sanitize input data
-                $updateData = [
-                    'first_name' => trim($_POST['first_name'] ?? ''),
-                    'last_name' => trim($_POST['last_name'] ?? ''),
-                    'email' => trim($_POST['email'] ?? ''),
-                    'phone' => trim($_POST['phone'] ?? ''),
-                    'city' => trim($_POST['city'] ?? ''),
-                    'country' => trim($_POST['country'] ?? ''),
-                    'occupation' => trim($_POST['occupation'] ?? ''),
-                    'bio' => trim($_POST['bio'] ?? ''),
-                    'date_of_birth' => $_POST['date_of_birth'] ?? null,
-                    'gender' => $_POST['gender'] ?? '',
-                    'languages' => $_POST['languages'] ?? '',
-                    'interests' => $_POST['interests'] ?? '',
-                    'instagram' => trim($_POST['instagram'] ?? ''),
-                    'linkedin' => trim($_POST['linkedin'] ?? ''),
-                    'facebook' => trim($_POST['facebook'] ?? '')
-                ];
+
+                try {
+                    $fieldsToSanitize = [
+                        'first_name', 'last_name', 'email', 'phone', 'city',
+                        'country', 'occupation', 'bio', 'instagram', 'linkedin', 'facebook'
+                    ];
+            
+                    $fieldsRaw = [
+                        'date_of_birth' => null,
+                        'gender' => '',
+                        'languages' => '',
+                        'interests' => ''
+                    ];
+            
+                    $updateData = [];
+            
+                    // Sanitize string fields
+                    foreach ($fieldsToSanitize as $field) {
+                        $updateData[$field] = sanitize($_POST[$field] ?? '');
+                    }
+            
+                    // Use raw (non-sanitized) or validated input for certain fields
+                    foreach ($fieldsRaw as $field => $default) {
+                        $updateData[$field] = $_POST[$field] ?? $default;
+                    }
+            
                 
                 // Basic validation
                 $errors = [];
