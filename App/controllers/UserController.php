@@ -31,14 +31,22 @@ class UserController extends BaseController {
         
     }
     
+    
     /**
      * Display user profile - can be current user or specified user
      * @param array $params - contains 'id' if viewing another user's profile
      */
     public function profile($params = []) {
-        // Determine which user's profile to show
+        // Get current user ID from session
+        $currentUserId = Session::get('user_id');
+        if (!$currentUserId) {
+            redirect('/login');
+            return;
+        }
+    
+        // Always get fresh user data from database
         if (isset($params['id']) && !empty($params['id'])) {
-            // Show specific user's profile
+            // Viewing someone else's profile
             $userId = $params['id'];
             $user = $this->userModel->usergetById($userId);
             
@@ -48,20 +56,12 @@ class UserController extends BaseController {
                 return;
             }
             
-            $isOwnProfile = false;
-            $currentUserId = Session::get('user_id');
-            if ($currentUserId == $userId) {
-                $isOwnProfile = true;
-            }
+            $isOwnProfile = ($currentUserId == $userId);
         } else {
-            // Show current user's profile
-            $email = Session::get('user')['email'] ?? null;   
-            if (!$email) {
-                redirect('/login');
-                return;
-            }
+            // Viewing own profile - get fresh data from database
+            $userId = $currentUserId;
+            $user = $this->userModel->usergetById($userId);
             
-            $user = $this->userModel->findByEmail($email);
             if (!$user) {
                 $_SESSION['error_message'] = 'User session expired';
                 redirect('/login');
@@ -69,9 +69,8 @@ class UserController extends BaseController {
             }
             
             $isOwnProfile = true;
-            $userId = $user->user_id;
         }
-
+    
         try {
             // Get past events where user attended
             $pastEvents = $this->eventModel->getPastEventsUserAttended($userId);
@@ -127,7 +126,7 @@ class UserController extends BaseController {
                     }
                 }
             }
-
+    
             // Get user's friends
             $friends = $this->friendshipModel->getFriends($userId);
             
@@ -141,10 +140,10 @@ class UserController extends BaseController {
                     $friend->profile_picture = '/uploads/profiles/' . $friend->profile_picture;
                 }
             }
-
-            // Load the view with all data
+    
+            // Load the view with all data (using fresh database data)
             loadView('users/profile', [
-                'user' => $user,
+                'user' => $user,  // This is fresh from the database
                 'friendsCount' => $friendsCount,
                 'avgRating' => $avgRating,
                 'pastEvents' => $pastEvents,
@@ -163,10 +162,6 @@ class UserController extends BaseController {
         }
     }
     
-    /**
-     * Update user profile
-     * @param array $params - contains user ID
-     */
     public function update($params) {
         // Check if user is logged in
         $currentUserId = Session::get('user_id');
@@ -185,33 +180,48 @@ class UserController extends BaseController {
         
         // Handle form submission
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-                try {
-                    $fieldsToSanitize = [
-                        'first_name', 'last_name', 'email', 'phone', 'city',
-                        'country', 'occupation', 'bio', 'instagram', 'linkedin', 'facebook'
-                    ];
-            
-                    $fieldsRaw = [
-                        'date_of_birth' => null,
-                        'gender' => '',
-                        'languages' => '',
-                        'interests' => ''
-                    ];
-            
-                    $updateData = [];
-            
-                    // Sanitize string fields
-                    foreach ($fieldsToSanitize as $field) {
-                        $updateData[$field] = sanitize($_POST[$field] ?? '');
+            try {
+                // Only include fields that actually exist in your users table
+                $fieldsToSanitize = [
+                    'first_name', 'last_name', 'email', 'phone', 'city',
+                    'country', 'occupation', 'bio', 'instagram', 'linkedin',
+                    'website', 'twitter' 
+                ];
+        
+                // Fields that need special handling (JSON or raw)
+                $specialFields = [
+                    'date_of_birth' => null,
+                    'gender' => '',
+                    'languages' => '',  // This will be converted to JSON
+                    'interests' => ''   // This will be converted to JSON
+                ];
+        
+                $updateData = [];
+        
+                // Sanitize string fields
+                foreach ($fieldsToSanitize as $field) {
+                    $updateData[$field] = sanitize($_POST[$field] ?? '');
+                }
+        
+                // Handle special fields
+                foreach ($specialFields as $field => $default) {
+                    $value = $_POST[$field] ?? $default;
+                    
+                    // Convert comma-separated strings to JSON arrays for languages and interests
+                    if (($field === 'languages' || $field === 'interests') && !empty($value)) {
+                        // Split by comma and clean up
+                        $items = array_map('trim', explode(',', $value));
+                        // Remove empty items
+                        $items = array_filter($items, function($item) {
+                            return !empty($item);
+                        });
+                        // Convert to JSON
+                        $updateData[$field] = json_encode(array_values($items));
+                    } else {
+                        $updateData[$field] = $value;
                     }
-            
-                    // Use raw (non-sanitized) or validated input for certain fields
-                    foreach ($fieldsRaw as $field => $default) {
-                        $updateData[$field] = $_POST[$field] ?? $default;
-                    }
-            
-                
+                }
+        
                 // Basic validation
                 $errors = [];
                 
@@ -239,6 +249,9 @@ class UserController extends BaseController {
                     return;
                 }
                 
+                // Debug: Show the data being sent to database
+                error_log("UPDATE DATA: " . print_r($updateData, true));
+                
                 // Handle profile picture upload
                 if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
                     $uploadResult = $this->handleProfilePictureUpload($_FILES['profile_picture'], $targetUserId);
@@ -257,13 +270,32 @@ class UserController extends BaseController {
                 if ($success) {
                     // Update session data if current user updated their own profile
                     if ($currentUserId == $targetUserId) {
+                        // Get the updated user data from database
                         $updatedUser = $this->userModel->usergetById($targetUserId);
+                        
+                        // Update the session with ALL user data
                         Session::set('user', [
                             'user_id' => $updatedUser->user_id,
-                            'email' => $updatedUser->email,
                             'first_name' => $updatedUser->first_name,
-                            'last_name' => $updatedUser->last_name
+                            'last_name' => $updatedUser->last_name,
+                            'email' => $updatedUser->email,
+                            'profile_picture' => $updatedUser->profile_picture,
+                            'bio' => $updatedUser->bio,
+                            'city' => $updatedUser->city,
+                            'country' => $updatedUser->country,
+                            'phone' => $updatedUser->phone,
+                            'occupation' => $updatedUser->occupation,
+                            'date_of_birth' => $updatedUser->date_of_birth,
+                            'gender' => $updatedUser->gender,
+                            'languages' => $updatedUser->languages,
+                            'interests' => $updatedUser->interests,
+                            'instagram' => $updatedUser->instagram,
+                            'linkedin' => $updatedUser->linkedin,
+                            'is_admin' => $updatedUser->is_admin ?? false
                         ]);
+                        
+                        // Also update the separate user_id session (for consistency)
+                        Session::set('user_id', $updatedUser->user_id);
                     }
                     
                     $_SESSION['success_message'] = 'Profile updated successfully';
@@ -275,7 +307,8 @@ class UserController extends BaseController {
                 
             } catch (Exception $e) {
                 error_log("Error updating profile: " . $e->getMessage());
-                $_SESSION['error_message'] = 'An error occurred while updating profile';
+                error_log("Update data was: " . print_r($updateData ?? [], true));
+                $_SESSION['error_message'] = 'An error occurred while updating profile: ' . $e->getMessage();
                 redirect('/users/edit');
             }
         }
@@ -285,15 +318,16 @@ class UserController extends BaseController {
      * Show edit profile form
      */
     public function edit() {
-        $email = Session::get('user')['email'] ?? null;   
-        if (!$email) {
+        // Get user ID from session
+        $currentUserId = Session::get('user_id');
+        if (!$currentUserId) {
             redirect('/login');
             return;
         }
         
         try {
-            // Find the user's data with email
-            $user = $this->userModel->findByEmail($email);
+            // Get the user data by ID (more reliable than email)
+            $user = $this->userModel->usergetById($currentUserId);
             if (!$user) {
                 $_SESSION['error_message'] = 'User not found';
                 redirect('/login');
@@ -310,7 +344,6 @@ class UserController extends BaseController {
             redirect('/users/profile');
         }
     }
-    
     /**
      * Show friends page
      */

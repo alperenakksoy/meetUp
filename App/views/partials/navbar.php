@@ -7,25 +7,25 @@ $isLoggedIn = Session::get('is_logged_in', false);
 $userId = Session::get('user_id');
 
 // Function to get profile picture URL
-function getNavbarProfilePicture($user) {
-    if (!$user || empty($user['profile_picture']) || $user['profile_picture'] === 'default_profile.jpg') {
-        // Generate placeholder with user initials
-        $firstName = $user['first_name'] ?? 'U';
-        $lastName = $user['last_name'] ?? 'ser';
-       
-        $initials = strtoupper(substr($firstName, 0, 1) . substr($lastName, 0, 1));
-        return "https://ui-avatars.com/api/?name=" . urlencode($firstName . '+' . $lastName) . "&size=40&background=f97316&color=fff&rounded=true";
+if (!function_exists('getNavbarProfilePicture')) {
+    function getNavbarProfilePicture($user) {
+        // Add array check for extra safety
+        if (!$user || !is_array($user) || empty($user['profile_picture']) || $user['profile_picture'] === 'default_profile.jpg') {
+            $firstName = $user['first_name'] ?? 'U';
+            $lastName = $user['last_name'] ?? 'ser';
+           
+            return "https://ui-avatars.com/api/?name=" . urlencode($firstName . '+' . $lastName) . "&size=40&background=f97316&color=fff&rounded=true";
+        }
+        
+        // Check if it's already a full URL
+        if (strpos($user['profile_picture'], 'http') === 0) {
+            return $user['profile_picture'];
+        }
+        
+        // Local file path
+        return "/uploads/profiles/" . $user['profile_picture'];
     }
-    
-    // Check if it's already a full URL
-    if (strpos($user['profile_picture'], 'http') === 0) {
-        return $user['profile_picture'];
     }
-    
-    // Local file path
-    return "/uploads/profiles/" . $user['profile_picture'];
-}
-
 // Get notification count for logged-in users
 $notificationCount = 0;
 if ($isLoggedIn && $userId) {
