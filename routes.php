@@ -1,15 +1,10 @@
 <?php
 // Home routes
 $router->get('/', 'HomeController@index');
-
 $router->get('/users/profile', 'UserController@profile');
-
 $router->get('/users/profile/{id}', 'UserController@profile');
-
 $router->get('/users/edit', 'UserController@edit');
-
 $router->put('/users/update', 'UserController@update');
-
 $router->put('/users/{id}', 'UserController@update');
 
 // Other user pages
@@ -24,7 +19,7 @@ $router->post('/api/friendship/send', 'FriendshipController@sendRequest');
 
 // Event routes
 $router->get('/events', 'EventController@index');
-$router->get('/events/create', 'EventController@create');
+$router->get('/events/create', 'EventController@create',['auth']);
 $router->post('/events', 'EventController@store');
 $router->get('/events/past', 'EventController@pastEvents');
 $router->get('/events/management', 'EventController@management');

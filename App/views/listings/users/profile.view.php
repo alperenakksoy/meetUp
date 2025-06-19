@@ -17,34 +17,50 @@ loadPartial('head') ?>
             <div class="lg:col-span-1 bg-white rounded-lg shadow-sm p-6 lg:sticky lg:top-24 self-start">
                 <div class="text-center pb-6 border-b border-gray-100">
                     <div class="mx-auto mb-4">
-                        <img src="<?=$user->profile_picture?>" alt="Profile Picture" class="w-36 h-36 rounded-full border-4 border-gray-100 mx-auto">
+                        <!-- FIXED: Use helper function for profile picture -->
+                        <img src="<?= getUserProfilePicture($user, 150) ?>" 
+                             alt="Profile Picture" 
+                             class="w-36 h-36 rounded-full border-4 border-gray-100 mx-auto object-cover"
+                             onerror="this.src='https://ui-avatars.com/api/?name=<?= urlencode(($user->first_name ?? 'U') . '+' . ($user->last_name ?? 'ser')) ?>&size=150&background=f97316&color=fff&rounded=true';">
                     </div>
-                    <h1 class="text-xl font-bold font-volkhov text-gray-800 mb-1"> <?= htmlspecialchars(mb_convert_case(mb_strtolower($user->first_name . ' ' . $user->last_name, 'UTF-8'), MB_CASE_TITLE, 'UTF-8')) ?>
+                    <h1 class="text-xl font-bold font-volkhov text-gray-800 mb-1"> 
+                        <?= htmlspecialchars(mb_convert_case(mb_strtolower($user->first_name . ' ' . $user->last_name, 'UTF-8'), MB_CASE_TITLE, 'UTF-8')) ?>
                     </h1>
                     <div class="flex items-center justify-center text-gray-600 mb-4">
                         <i class="fas fa-map-marker-alt text-orange-500 mr-1"></i>
                         <span><?= $user->city .', '.$user->country ?></span>
                     </div>
                     <div class="flex justify-between mb-4">
-                   
-                   <a href="/events/past">  <div class="text-center hover:scale-110 transition-transform duration-200 cursor-pointer">
-                            <div class="text-xl font-bold text-orange-500"><?=count($pastEvents) ?? 0?></div>
-                            <div class="text-xs text-gray-500">Events</div>
-                        </div></a>
+                       
+                       <a href="/events/past">  
+                            <div class="text-center hover:scale-110 transition-transform duration-200 cursor-pointer">
+                                <div class="text-xl font-bold text-orange-500"><?=count($pastEvents) ?? 0?></div>
+                                <div class="text-xs text-gray-500">Events</div>
+                            </div>
+                        </a>
+                            
+                        <a href="/users/friends"> 
+                            <div class="text-center hover:scale-110 transition-transform duration-200 cursor-pointer">
+                                <div class="text-xl font-bold text-orange-500"><?=$friendsCount ?? 0?></div>
+                                <div class="text-xs text-gray-500">Friends</div>
+                            </div>
+                        </a>
                         
-                    <a href="/users/friends"> <div class="text-center hover:scale-110 transition-transform duration-200 cursor-pointer">
-                            <div class="text-xl font-bold text-orange-500"><?=$friendsCount ?? 0?></div>
-                            <div class="text-xs text-gray-500">Friends</div>
-                        </div></a>
-                    <a href="/users/references"> <div class="text-center hover:scale-110 transition-transform duration-200 cursor-pointer">
-                            <div class="text-xl font-bold text-orange-500"><?=count($reviews)?? 0?></div>
-                            <div class="text-xs text-gray-500">References</div>
-                        </div></a>
+                        <a href="/users/references"> 
+                            <div class="text-center hover:scale-110 transition-transform duration-200 cursor-pointer">
+                                <div class="text-xl font-bold text-orange-500"><?=count($reviews)?? 0?></div>
+                                <div class="text-xs text-gray-500">References</div>
+                            </div>
+                        </a>
                     </div>
-                    <a href="/users/edit" class="block w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-md text-center transition-colors">
-                        <i class="fas fa-edit mr-1"></i> Edit Profile
-                    </a>
+                    
+                    <?php if ($isOwnProfile): ?>
+                        <a href="/users/edit" class="block w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-md text-center transition-colors">
+                            <i class="fas fa-edit mr-1"></i> Edit Profile
+                        </a>
+                    <?php endif; ?>
                 </div>
+                
                 <!-- User Details -->
                 <div class="mt-6">
                     <div class="mb-4">
@@ -81,33 +97,33 @@ loadPartial('head') ?>
                     </div>
 
                     <?php if($user->linkedin || $user->twitter || $user->instagram || $user->website): ?>
-    <div class="mb-4">
-        <h3 class="text-gray-800 font-medium border-b border-gray-100 pb-2 mb-3 font-volkhov">Connect with Me</h3>
-        <div class="flex flex-wrap gap-3">
-            <?php if($user->linkedin): ?>
-                <a href="<?= htmlspecialchars($user->linkedin) ?>" target="_blank" class="flex items-center text-sm text-blue-700 hover:underline">
-                    <i class="fab fa-linkedin mr-1"></i> LinkedIn
-                </a>
-            <?php endif; ?>
-            
-            <?php if($user->twitter): ?>
-                <a href="<?= htmlspecialchars($user->twitter) ?>" target="_blank" class="flex items-center text-sm text-blue-500 hover:underline">
-                    <i class="fab fa-twitter mr-1"></i> Twitter
-                </a>
-            <?php endif; ?>
-            <?php if($user->instagram): ?>
-                <a href="<?= htmlspecialchars($user->instagram) ?>" target="_blank" class="flex items-center text-sm text-pink-600 hover:underline">
-                    <i class="fab fa-instagram mr-1"></i> Instagram
-                </a>
-            <?php endif; ?>
-            <?php if($user->website): ?>
-                <a href="<?= htmlspecialchars($user->website) ?>" target="_blank" class="flex items-center text-sm text-orange-500 hover:underline">
-                    <i class="fas fa-globe mr-1"></i> Website
-                </a>
-            <?php endif; ?>
-        </div>
-    </div>
-<?php endif; ?>
+                        <div class="mb-4">
+                            <h3 class="text-gray-800 font-medium border-b border-gray-100 pb-2 mb-3 font-volkhov">Connect with Me</h3>
+                            <div class="flex flex-wrap gap-3">
+                                <?php if($user->linkedin): ?>
+                                    <a href="<?= htmlspecialchars($user->linkedin) ?>" target="_blank" class="flex items-center text-sm text-blue-700 hover:underline">
+                                        <i class="fab fa-linkedin mr-1"></i> LinkedIn
+                                    </a>
+                                <?php endif; ?>
+                                
+                                <?php if($user->twitter): ?>
+                                    <a href="<?= htmlspecialchars($user->twitter) ?>" target="_blank" class="flex items-center text-sm text-blue-500 hover:underline">
+                                        <i class="fab fa-twitter mr-1"></i> Twitter
+                                    </a>
+                                <?php endif; ?>
+                                <?php if($user->instagram): ?>
+                                    <a href="<?= htmlspecialchars($user->instagram) ?>" target="_blank" class="flex items-center text-sm text-pink-600 hover:underline">
+                                        <i class="fab fa-instagram mr-1"></i> Instagram
+                                    </a>
+                                <?php endif; ?>
+                                <?php if($user->website): ?>
+                                    <a href="<?= htmlspecialchars($user->website) ?>" target="_blank" class="flex items-center text-sm text-orange-500 hover:underline">
+                                        <i class="fas fa-globe mr-1"></i> Website
+                                    </a>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    <?php endif; ?>
 
                      <!-- Interests -->
                     <div>

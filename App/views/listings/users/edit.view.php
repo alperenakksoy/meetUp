@@ -207,88 +207,82 @@ $predefinedInterests = [
             </div>
         </div>
         <?=loadPartial('errors', ['errors' => $errors ?? []])?>
-
-        <!-- Form Card -->
-        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+   <!-- Form Card -->
+   <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+            <!-- FIXED: Single form with correct action -->
             <form method="POST" action="/users/<?= $user->user_id ?>" enctype="multipart/form-data" class="space-y-8">
                 <input type="hidden" name="_method" value="PUT">
                 
                 <!-- Profile Picture Section -->
-                <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile Photo Upload</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
-<body class="bg-gray-50 p-8">
-    
-    <!-- Profile Edit Form -->
-    <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-sm">
-        <form method="POST" action="/users/update" enctype="multipart/form-data" id="profileForm">
-            <input type="hidden" name="_method" value="PUT">
-            
-            <!-- Profile Picture Section -->
-            <div class="p-6 border-b border-gray-100">
-                <h2 class="text-xl font-semibold text-gray-800 mb-4">Profile Picture</h2>
-                <div class="flex items-center space-x-6">
-                    <div class="relative">
-                        <!-- Profile Image Preview -->
-                     <img id="profilePreview" src="<?= !empty($user->profile_picture) && $user->profile_picture !== 'default_profile.jpg' ? 
-                      $user->profile_picture : '/uploads/profiles/default_profile.jpg' ?>"
-                             alt="Profile Picture" 
-                             class="w-24 h-24 rounded-full border-4 border-gray-100 object-cover transition-all duration-300">
-                        
-                        <!-- Camera Button Overlay -->
-                        <button type="button" 
-                                id="changePhotoBtn" 
-                                onclick="document.getElementById('profileImageInput').click()"
-                                class="absolute -bottom-1 -right-1 bg-orange-500 hover:bg-orange-600 text-white rounded-full p-2 shadow-md transition-colors">
-                            <i class="fas fa-camera text-sm"></i>
-                        </button>
-                    </div>
-                    
-                    <div class="flex-1">
-                        <!-- Hidden File Input -->
-                        <input type="file" 
-                               id="profileImageInput" 
-                               name="profile_picture" 
-                               class="hidden" 
-                               accept="image/jpeg,image/jpg,image/png,image/gif,image/webp">
-                        
-                        <!-- Upload Button -->
-                        <button type="button" 
-                                onclick="document.getElementById('profileImageInput').click()" 
-                                class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm transition-colors mb-2">
-                            <i class="fas fa-upload mr-2"></i>Change Photo
-                        </button>
-                        
-                        <!-- File Info -->
-                        <p class="text-sm text-gray-500 mb-2">JPG, PNG, GIF or WebP. Max size 5MB. Recommended: 400x400px</p>
-                        
-                        <!-- File Status -->
-                        <div id="fileStatus" class="hidden">
-                            <p id="fileName" class="text-sm text-green-600"></p>
-                            <p id="fileSize" class="text-xs text-gray-500"></p>
+                <div class="p-6 border-b border-gray-100">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Profile Picture</h2>
+                    <div class="flex items-center space-x-6">
+                        <div class="relative">
+                            <!-- Profile Image Preview -->
+                            <img id="profilePreview" 
+                                 src="<?= !empty($user->profile_picture) && $user->profile_picture !== 'default_profile.jpg' ? 
+                                       $user->profile_picture : '/uploads/profiles/default_profile.jpg' ?>"
+                                 alt="Profile Picture" 
+                                 class="w-24 h-24 rounded-full border-4 border-gray-100 object-cover transition-all duration-300">
+                            
+                            <!-- Camera Button Overlay -->
+                            <button type="button" 
+                                    id="changePhotoBtn" 
+                                    onclick="document.getElementById('profileImageInput').click()"
+                                    class="absolute -bottom-1 -right-1 bg-orange-500 hover:bg-orange-600 text-white rounded-full p-2 shadow-md transition-colors">
+                                <i class="fas fa-camera text-sm"></i>
+                            </button>
                         </div>
                         
-                        <!-- Error Messages -->
-                        <div id="uploadError" class="hidden">
-                            <p class="text-sm text-red-600"></p>
+                        <div class="flex-1">
+                            <!-- Hidden File Input -->
+                            <input type="file" 
+                                   id="profileImageInput" 
+                                   name="profile_picture" 
+                                   class="hidden" 
+                                   accept="image/jpeg,image/jpg,image/png,image/gif,image/webp">
+                            
+                            <!-- Upload Button -->
+                            <button type="button" 
+                                    onclick="document.getElementById('profileImageInput').click()" 
+                                    class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm transition-colors mb-2">
+                                <i class="fas fa-upload mr-2"></i>Change Photo
+                            </button>
+                            
+                            <!-- File Info -->
+                            <p class="text-sm text-gray-500 mb-2">JPG, PNG, GIF or WebP. Max size 5MB. Recommended: 400x400px</p>
+                            
+                            <!-- File Status -->
+                            <div id="fileStatus" class="hidden">
+                                <p id="fileName" class="text-sm text-green-600"></p>
+                                <p id="fileSize" class="text-xs text-gray-500"></p>
+                            </div>
+                            
+                            <!-- Error Messages -->
+                            <div id="uploadError" class="hidden">
+                                <p class="text-sm text-red-600"></p>
+                            </div>
+                            
+                            <!-- Remove Photo Button (only show if custom photo exists) -->
+                            <?php if (!empty($user->profile_picture) && $user->profile_picture !== 'default_profile.jpg'): ?>
+                            <button type="button" 
+                                    id="removePhotoBtn" 
+                                    onclick="removeProfilePhoto()"
+                                    class="text-sm text-red-600 hover:text-red-800 transition-colors">
+                                <i class="fas fa-trash mr-1"></i>Remove Photo
+                            </button>
+                            <?php else: ?>
+                            <button type="button" 
+                                    id="removePhotoBtn" 
+                                    onclick="removeProfilePhoto()"
+                                    class="hidden text-sm text-red-600 hover:text-red-800 transition-colors">
+                                <i class="fas fa-trash mr-1"></i>Remove Photo
+                            </button>
+                            <?php endif; ?>
                         </div>
-                        
-                        <!-- Remove Photo Button (only show if custom photo exists) -->
-                        <button type="button" 
-                                id="removePhotoBtn" 
-                                onclick="removeProfilePhoto()"
-                                class="hidden text-sm text-red-600 hover:text-red-800 transition-colors">
-                            <i class="fas fa-trash mr-1"></i>Remove Photo
-                        </button>
                     </div>
                 </div>
-            </div>
+
 
                 <!-- Personal Information Section -->
                 <div class="p-6 border-b border-gray-100">
@@ -298,7 +292,7 @@ $predefinedInterests = [
                             <label for="first_name" class="block text-sm font-medium text-gray-700 mb-2">First Name *</label>
                             <input type="text" id="first_name" name="first_name" value="<?= $user->first_name ?>" 
                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                                   >
+                                   required>
                         </div>
                         
                         <div>
@@ -548,8 +542,8 @@ $predefinedInterests = [
                     </div>
                 </div>
 
-                <!-- Form Actions -->
-                <div class="flex justify-between items-center p-6 bg-gray-50 border-t border-gray-200">
+         <!-- Form Actions -->
+         <div class="flex justify-between items-center p-6 bg-gray-50 border-t border-gray-200">
                     <a href="/users/profile/<?= $user->user_id ?>" class="bg-gray-200 hover:bg-gray-300 text-gray-700 py-3 px-6 rounded-lg transition-colors">
                         <i class="fas fa-times mr-2"></i>Cancel
                     </a>
@@ -564,7 +558,8 @@ $predefinedInterests = [
     </div>
 
     <?php loadPartial('footer') ?>
-<script>
+
+    <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Profile completion tracking
     const completionPercentage = document.getElementById('completionPercentage');
@@ -678,7 +673,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             uploadError.classList.remove('hidden');
         } else {
-            // Fallback to alert if no error container
             alert(message);
         }
     }
@@ -690,7 +684,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function resetPreview() {
-        // Don't reset to original if we don't have the original stored
         preview.classList.remove('ring-2', 'ring-orange-500');
         hideFileInfo();
         hideError();

@@ -29,88 +29,7 @@ class UserController extends BaseController {
         $this->notificationModel = new Notification();
 
         
-    }
-    /**
- * Handle profile picture upload
- */
-private function handleProfilePictureUpload($file, $userId = null) {
-    // Define allowed file types
-    $allowedTypes = [
-        'image/jpeg',
-        'image/jpg', 
-        'image/png', 
-        'image/gif',
-        'image/webp'
-    ];
-    
-    // Validate file type
-    if (!in_array($file['type'], $allowedTypes)) {
-        return [
-            'success' => false, 
-            'error' => 'Only JPEG, PNG, GIF, and WebP images are allowed.'
-        ];
-    }
-    
-    // Validate file size (5MB max)
-    $maxSize = 5 * 1024 * 1024; // 5MB in bytes
-    if ($file['size'] > $maxSize) {
-        return [
-            'success' => false, 
-            'error' => 'Image size must be less than 5MB.'
-        ];
-    }
-    
-    // Create upload directory if it doesn't exist
-    $uploadDir = basePath('public/uploads/profiles/');
-    if (!is_dir($uploadDir)) {
-        if (!mkdir($uploadDir, 0755, true)) {
-            return [
-                'success' => false, 
-                'error' => 'Failed to create upload directory.'
-            ];
-        }
-    }
-    
-    // Generate unique filename
-    $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-    $filename = 'profile_' . uniqid() . '_' . time() . '.' . $extension;
-    $uploadPath = $uploadDir . $filename;
-    
-    // Move uploaded file
-    if (move_uploaded_file($file['tmp_name'], $uploadPath)) {
-        return [
-            'success' => true, 
-            'filename' => $filename
-        ];
-    } else {
-        return [
-            'success' => false, 
-            'error' => 'Failed to save uploaded image.'
-        ];
-    }
-    // Add this right after the upload handling
-if (isset($_FILES['profile_picture'])) {
-    error_log("FILE UPLOAD DEBUG: " . print_r($_FILES['profile_picture'], true));
-    
-    if ($_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
-        $uploadResult = $this->handleProfilePictureUpload($_FILES['profile_picture'], $targetUserId);
-        error_log("UPLOAD RESULT: " . print_r($uploadResult, true));
-        
-        if ($uploadResult['success']) {
-            $updateData['profile_picture'] = $uploadResult['filename'];
-            error_log("SUCCESS: Profile picture filename set to: " . $uploadResult['filename']);
-        } else {
-            error_log("ERROR: " . $uploadResult['error']);
-            $_SESSION['error_message'] = $uploadResult['error'];
-            redirect('/users/edit');
-            return;
-        }
-    } else {
-        error_log("FILE UPLOAD ERROR CODE: " . $_FILES['profile_picture']['error']);
-    }
-}
-}
-    
+    } 
     
     /**
      * Display user profile - can be current user or specified user
@@ -242,6 +161,65 @@ if (isset($_FILES['profile_picture'])) {
         }
     }
     
+        // Fixed handleProfilePictureUpload method
+    private function handleProfilePictureUpload($file, $userId = null) {
+        // Define allowed file types
+        $allowedTypes = [
+            'image/jpeg',
+            'image/jpg', 
+            'image/png', 
+            'image/gif',
+            'image/webp'
+        ];
+        
+        // Validate file type
+        if (!in_array($file['type'], $allowedTypes)) {
+            return [
+                'success' => false, 
+                'error' => 'Only JPEG, PNG, GIF, and WebP images are allowed.'
+            ];
+        }
+        
+        // Validate file size (5MB max)
+        $maxSize = 5 * 1024 * 1024; // 5MB in bytes
+        if ($file['size'] > $maxSize) {
+            return [
+                'success' => false, 
+                'error' => 'Image size must be less than 5MB.'
+            ];
+        }
+        
+        // Create upload directory if it doesn't exist
+        $uploadDir = basePath('public/uploads/profiles/');
+        if (!is_dir($uploadDir)) {
+            if (!mkdir($uploadDir, 0755, true)) {
+                return [
+                    'success' => false, 
+                    'error' => 'Failed to create upload directory.'
+                ];
+            }
+        }
+        
+        // Generate unique filename
+        $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        $filename = 'profile_' . uniqid() . '_' . time() . '.' . $extension;
+        $uploadPath = $uploadDir . $filename;
+        
+        // Move uploaded file
+        if (move_uploaded_file($file['tmp_name'], $uploadPath)) {
+            return [
+                'success' => true, 
+                'filename' => $filename
+            ];
+        } else {
+            return [
+                'success' => false, 
+                'error' => 'Failed to save uploaded image.'
+            ];
+        }
+    }
+    
+    // Fixed update method with proper file upload handling
     public function update($params) {
         // Check if user is logged in
         $currentUserId = Session::get('user_id');
@@ -332,20 +310,34 @@ if (isset($_FILES['profile_picture'])) {
                     ]);
                     return;
                 }
-                // Debug: Show the data being sent to database
-                error_log("UPDATE DATA: " . print_r($updateData, true));
                 
-                // Handle profile picture upload
+                // Handle profile picture upload BEFORE updating database
                 if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
+                    error_log("FILE UPLOAD DEBUG: " . print_r($_FILES['profile_picture'], true));
+                    
                     $uploadResult = $this->handleProfilePictureUpload($_FILES['profile_picture'], $targetUserId);
+                    error_log("UPLOAD RESULT: " . print_r($uploadResult, true));
+                    
                     if ($uploadResult['success']) {
                         $updateData['profile_picture'] = $uploadResult['filename'];
+                        error_log("SUCCESS: Profile picture filename set to: " . $uploadResult['filename']);
                     } else {
+                        error_log("ERROR: " . $uploadResult['error']);
                         $_SESSION['error_message'] = $uploadResult['error'];
                         redirect('/users/edit');
                         return;
                     }
+                } else if (isset($_FILES['profile_picture'])) {
+                    error_log("FILE UPLOAD ERROR CODE: " . $_FILES['profile_picture']['error']);
                 }
+                
+                // Handle profile picture removal
+                if (isset($_POST['remove_profile_picture']) && $_POST['remove_profile_picture'] == '1') {
+                    $updateData['profile_picture'] = 'default_profile.jpg';
+                }
+                
+                // Debug: Show the data being sent to database
+                error_log("UPDATE DATA: " . print_r($updateData, true));
                 
                 // Update user in database
                 $success = $this->userModel->updateUser($targetUserId, $updateData);

@@ -218,36 +218,51 @@ function timeSince(string $createdAt): string {
     }
 }
 
-
 /**
- * Get user profile picture with fallback
- * @param object $user User object with profile_picture, first_name, last_name
+ * UPDATED: Get user profile picture URL with proper fallback handling
+ * @param object|array $user User object or array with profile_picture, first_name, last_name
+ * @param int $size Size for placeholder image (default: 150)
  * @return string Profile picture URL
  */
-function getProfilePicture($user) {
+function getUserProfilePicture($user, $size = 150) {
+    // Handle both object and array inputs
+    $profilePicture = is_object($user) ? ($user->profile_picture ?? '') : ($user['profile_picture'] ?? '');
+    $firstName = is_object($user) ? ($user->first_name ?? 'U') : ($user['first_name'] ?? 'U');
+    $lastName = is_object($user) ? ($user->last_name ?? 'ser') : ($user['last_name'] ?? 'ser');
+    
     // Check if user has a custom profile picture
-    if (!empty($user->profile_picture) && $user->profile_picture !== 'default_profile.jpg') {
+    if (!empty($profilePicture) && $profilePicture !== 'default_profile.jpg') {
         // If it's already a full URL, return as is
-        if (str_starts_with($user->profile_picture, 'http')) {
-            return $user->profile_picture;
+        if (str_starts_with($profilePicture, 'http')) {
+            return $profilePicture;
         }
         // Otherwise, prepend the uploads path
-        return '/uploads/profiles/' . $user->profile_picture;
+        return '/uploads/profiles/' . $profilePicture;
     }
     
-    // Generate a nice avatar with user's initials
-    $firstName = $user->first_name ?? 'U';
-    $lastName = $user->last_name ?? 'U';
+    // Generate fallback avatar using UI Avatars
     $name = urlencode($firstName . '+' . $lastName);
-    
-    // Array of nice colors for avatars
-    $colors = ['667eea', 'f093fb', '4facfe', '43e97b', 'fa709a', 'ffecd2', 'a8edea', 'ffd89b', 
-               '764ba2', 'f76b1c', '6be585', 'a8e6cf', 'ff8a80', 'ffc947', '54a0ff', 'ff6b6b'];
-    
-    // Use name to consistently pick a color
-    $colorIndex = abs(crc32($firstName . $lastName)) % count($colors);
-    
-    return "https://ui-avatars.com/api/?name={$name}&size=150&background={$colors[$colorIndex]}&color=fff&rounded=true";
+    return "https://ui-avatars.com/api/?name={$name}&size={$size}&background=f97316&color=fff&rounded=true";
+}
+
+/**
+ * UPDATED: Legacy function for backward compatibility
+ * @param object|array $user User object or array
+ * @param int $size Size for the image
+ * @return string Profile picture URL
+ */
+function getProfilePicture($user, $size = 150) {
+    return getUserProfilePicture($user, $size);
+}
+
+/**
+ * Get profile picture for attendees (specific function for events)
+ * @param object $attendee Attendee object
+ * @param int $size Size for the image
+ * @return string Profile picture URL
+ */
+function getProfilePictureUrl($attendee, $size = 150) {
+    return getUserProfilePicture($attendee, $size);
 }
 
 /**
@@ -283,6 +298,7 @@ function getActivityColor($activityType) {
     
     return $colors[$activityType] ?? 'text-gray-500';
 }
+
 /**
  * Create a notification for a user
  * @param int $userId The user to notify
