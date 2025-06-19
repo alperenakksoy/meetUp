@@ -206,7 +206,7 @@ $predefinedInterests = [
                 </p>
             </div>
         </div>
-        <?=loadPartial('errors')?>
+        <?=loadPartial('errors', ['errors' => $errors ?? []])?>
 
         <!-- Form Card -->
         <div class="bg-white rounded-lg shadow-sm overflow-hidden">
@@ -214,27 +214,81 @@ $predefinedInterests = [
                 <input type="hidden" name="_method" value="PUT">
                 
                 <!-- Profile Picture Section -->
-                <div class="p-6 border-b border-gray-100">
-                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Profile Picture</h2>
-                    <div class="flex items-center space-x-6">
-                        <div class="relative">
-                            <img id="profilePreview" src="<?= $user->profile_picture ?>" 
-                                 alt="Profile Picture" class="w-24 h-24 rounded-full border-4 border-gray-100 object-cover">
-                            <button type="button" id="changePhotoBtn" 
-                                    class="absolute -bottom-1 -right-1 bg-orange-500 hover:bg-orange-600 text-white rounded-full p-2 shadow-md transition-colors">
-                                <i class="fas fa-camera text-sm"></i>
-                            </button>
+                <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Photo Upload</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 p-8">
+    
+    <!-- Profile Edit Form -->
+    <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-sm">
+        <form method="POST" action="/users/update" enctype="multipart/form-data" id="profileForm">
+            <input type="hidden" name="_method" value="PUT">
+            
+            <!-- Profile Picture Section -->
+            <div class="p-6 border-b border-gray-100">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Profile Picture</h2>
+                <div class="flex items-center space-x-6">
+                    <div class="relative">
+                        <!-- Profile Image Preview -->
+                     <img id="profilePreview" src="<?= !empty($user->profile_picture) && $user->profile_picture !== 'default_profile.jpg' ? 
+                      $user->profile_picture : '/uploads/profiles/default_profile.jpg' ?>"
+                             alt="Profile Picture" 
+                             class="w-24 h-24 rounded-full border-4 border-gray-100 object-cover transition-all duration-300">
+                        
+                        <!-- Camera Button Overlay -->
+                        <button type="button" 
+                                id="changePhotoBtn" 
+                                onclick="document.getElementById('profileImageInput').click()"
+                                class="absolute -bottom-1 -right-1 bg-orange-500 hover:bg-orange-600 text-white rounded-full p-2 shadow-md transition-colors">
+                            <i class="fas fa-camera text-sm"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="flex-1">
+                        <!-- Hidden File Input -->
+                        <input type="file" 
+                               id="profileImageInput" 
+                               name="profile_picture" 
+                               class="hidden" 
+                               accept="image/jpeg,image/jpg,image/png,image/gif,image/webp">
+                        
+                        <!-- Upload Button -->
+                        <button type="button" 
+                                onclick="document.getElementById('profileImageInput').click()" 
+                                class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm transition-colors mb-2">
+                            <i class="fas fa-upload mr-2"></i>Change Photo
+                        </button>
+                        
+                        <!-- File Info -->
+                        <p class="text-sm text-gray-500 mb-2">JPG, PNG, GIF or WebP. Max size 5MB. Recommended: 400x400px</p>
+                        
+                        <!-- File Status -->
+                        <div id="fileStatus" class="hidden">
+                            <p id="fileName" class="text-sm text-green-600"></p>
+                            <p id="fileSize" class="text-xs text-gray-500"></p>
                         </div>
-                        <div class="flex-1">
-                            <input type="file" id="profileImageInput" name="profile_picture" class="hidden" accept="image/*">
-                            <button type="button" onclick="document.getElementById('profileImageInput').click()" 
-                                    class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm transition-colors mb-2">
-                                <i class="fas fa-upload mr-2"></i>Change Photo
-                            </button>
-                            <p class="text-sm text-gray-500">JPG, PNG or GIF. Max size 5MB. Recommended: 400x400px</p>
+                        
+                        <!-- Error Messages -->
+                        <div id="uploadError" class="hidden">
+                            <p class="text-sm text-red-600"></p>
                         </div>
+                        
+                        <!-- Remove Photo Button (only show if custom photo exists) -->
+                        <button type="button" 
+                                id="removePhotoBtn" 
+                                onclick="removeProfilePhoto()"
+                                class="hidden text-sm text-red-600 hover:text-red-800 transition-colors">
+                            <i class="fas fa-trash mr-1"></i>Remove Photo
+                        </button>
                     </div>
                 </div>
+            </div>
 
                 <!-- Personal Information Section -->
                 <div class="p-6 border-b border-gray-100">
@@ -510,8 +564,7 @@ $predefinedInterests = [
     </div>
 
     <?php loadPartial('footer') ?>
-
-    <script>
+<script>
 document.addEventListener('DOMContentLoaded', function() {
     // Profile completion tracking
     const completionPercentage = document.getElementById('completionPercentage');
@@ -521,6 +574,135 @@ document.addEventListener('DOMContentLoaded', function() {
     const interestsIndicator = document.getElementById('interests-indicator');
     const socialIndicator = document.getElementById('social-indicator');
     const tipText = document.getElementById('tipText');
+
+    // Profile image upload functionality
+    const fileInput = document.getElementById('profileImageInput');
+    const preview = document.getElementById('profilePreview');
+    const fileStatus = document.getElementById('fileStatus');
+    const fileName = document.getElementById('fileName');
+    const fileSize = document.getElementById('fileSize');
+    const uploadError = document.getElementById('uploadError');
+    const removeBtn = document.getElementById('removePhotoBtn');
+
+    // Profile image preview and validation
+    if (fileInput && preview) {
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            
+            // Clear previous errors
+            hideError();
+            
+            if (!file) {
+                resetPreview();
+                return;
+            }
+            
+            // Validate file
+            const validation = validateFile(file);
+            if (!validation.valid) {
+                showError(validation.error);
+                fileInput.value = '';
+                return;
+            }
+            
+            // Show file info
+            showFileInfo(file);
+            
+            // Show preview
+            showPreview(file);
+            
+            // Show remove button if it exists
+            if (removeBtn) {
+                removeBtn.classList.remove('hidden');
+            }
+        });
+    }
+
+    function validateFile(file) {
+        // Check file type
+        const allowedTypes = [
+            'image/jpeg', 
+            'image/jpg', 
+            'image/png', 
+            'image/gif', 
+            'image/webp'
+        ];
+        
+        if (!allowedTypes.includes(file.type)) {
+            return {
+                valid: false,
+                error: 'Please select a valid image file (JPG, PNG, GIF, or WebP)'
+            };
+        }
+        
+        // Check file size (5MB = 5 * 1024 * 1024 bytes)
+        const maxSize = 5 * 1024 * 1024;
+        if (file.size > maxSize) {
+            return {
+                valid: false,
+                error: 'File size must be less than 5MB'
+            };
+        }
+        
+        return { valid: true };
+    }
+    
+    function showPreview(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            preview.classList.add('ring-2', 'ring-orange-500');
+        };
+        reader.readAsDataURL(file);
+    }
+    
+    function showFileInfo(file) {
+        if (fileName && fileSize && fileStatus) {
+            fileName.textContent = `Selected: ${file.name}`;
+            fileSize.textContent = `Size: ${formatFileSize(file.size)}`;
+            fileStatus.classList.remove('hidden');
+        }
+    }
+    
+    function hideFileInfo() {
+        if (fileStatus) {
+            fileStatus.classList.add('hidden');
+        }
+    }
+    
+    function showError(message) {
+        if (uploadError) {
+            const errorText = uploadError.querySelector('p');
+            if (errorText) {
+                errorText.textContent = message;
+            }
+            uploadError.classList.remove('hidden');
+        } else {
+            // Fallback to alert if no error container
+            alert(message);
+        }
+    }
+    
+    function hideError() {
+        if (uploadError) {
+            uploadError.classList.add('hidden');
+        }
+    }
+    
+    function resetPreview() {
+        // Don't reset to original if we don't have the original stored
+        preview.classList.remove('ring-2', 'ring-orange-500');
+        hideFileInfo();
+        hideError();
+    }
+    
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
 
     // Define completion criteria
     const completionCriteria = {
@@ -566,6 +748,8 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     function calculateCompletion() {
+        if (!completionPercentage || !progressBar) return;
+
         let totalScore = 0;
         let availableScore = 0;
         let incompleteSections = [];
@@ -584,10 +768,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     let isComplete = false;
 
                     if (fieldName === 'languages') {
-                        const languagesValue = document.getElementById('languagesInput').value;
+                        const languagesValue = document.getElementById('languagesInput')?.value || '';
                         isComplete = languagesValue.split(',').filter(l => l.trim()).length >= 2;
                     } else if (fieldName === 'interests') {
-                        const interestsValue = document.getElementById('interestsInput').value;
+                        const interestsValue = document.getElementById('interestsInput')?.value || '';
                         isComplete = interestsValue.split(',').filter(i => i.trim()).length >= 3;
                     } else if (field.type === 'checkbox') {
                         isComplete = field.checked;
@@ -608,13 +792,15 @@ document.addEventListener('DOMContentLoaded', function() {
             availableScore += criteria.weight;
 
             // Update section indicator
-            if (sectionPercentage >= 0.8) {
-                criteria.indicator.className = 'w-3 h-3 rounded-full mr-2 bg-green-500';
-            } else if (sectionPercentage >= 0.5) {
-                criteria.indicator.className = 'w-3 h-3 rounded-full mr-2 bg-yellow-500';
-            } else {
-                criteria.indicator.className = 'w-3 h-3 rounded-full mr-2 bg-gray-300';
-                incompleteSections.push({section, criteria, percentage: sectionPercentage});
+            if (criteria.indicator) {
+                if (sectionPercentage >= 0.8) {
+                    criteria.indicator.className = 'w-3 h-3 rounded-full mr-2 bg-green-500';
+                } else if (sectionPercentage >= 0.5) {
+                    criteria.indicator.className = 'w-3 h-3 rounded-full mr-2 bg-yellow-500';
+                } else {
+                    criteria.indicator.className = 'w-3 h-3 rounded-full mr-2 bg-gray-300';
+                    incompleteSections.push({section, criteria, percentage: sectionPercentage});
+                }
             }
         });
 
@@ -640,6 +826,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updateCompletionTips(percentage, incompleteSections) {
+        if (!tipText) return;
+
         let tip = '';
 
         if (percentage === 100) {
@@ -672,52 +860,24 @@ document.addEventListener('DOMContentLoaded', function() {
     // Track form changes and update completion
     function trackFormChanges() {
         const form = document.querySelector('form');
-        const inputs = form.querySelectorAll('input, textarea, select');
-        
-        inputs.forEach(input => {
-            input.addEventListener('input', calculateCompletion);
-            input.addEventListener('change', calculateCompletion);
-        });
+        if (form) {
+            const inputs = form.querySelectorAll('input, textarea, select');
+            
+            inputs.forEach(input => {
+                input.addEventListener('input', calculateCompletion);
+                input.addEventListener('change', calculateCompletion);
+            });
 
-        // Special handling for languages and interests
-        const languagesContainer = document.getElementById('languagesContainer');
-        const interestsContainer = document.getElementById('interestsContainer');
-        
-        const observer = new MutationObserver(calculateCompletion);
-        observer.observe(languagesContainer, { childList: true });
-        observer.observe(interestsContainer, { childList: true });
-    }
-
-    // Initialize tracking
-    trackFormChanges();
-    calculateCompletion(); // Initial calculation
-
-    // Profile image preview
-    const profileImageInput = document.getElementById('profileImageInput');
-    const profilePreview = document.getElementById('profilePreview');
-    const changePhotoBtn = document.getElementById('changePhotoBtn');
-
-    if (changePhotoBtn && profileImageInput) {
-        changePhotoBtn.addEventListener('click', function() {
-            profileImageInput.click();
-        });
-
-        profileImageInput.addEventListener('change', function() {
-            if (this.files && this.files[0]) {
-                // File size validation (5MB)
-                if (this.files[0].size > 5 * 1024 * 1024) {
-                    alert('File size must be less than 5MB');
-                    this.value = '';
-                    return;
-                }
-
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    profilePreview.src = e.target.result;
-                };
-                reader.readAsDataURL(this.files[0]);
+            // Special handling for languages and interests
+            const languagesContainer = document.getElementById('languagesContainer');
+            const interestsContainer = document.getElementById('interestsContainer');
+            
+            if (languagesContainer && interestsContainer) {
+                const observer = new MutationObserver(calculateCompletion);
+                observer.observe(languagesContainer, { childList: true });
+                observer.observe(interestsContainer, { childList: true });
             }
-        });
+        }
     }
 
     // Bio character counter
@@ -743,9 +903,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const languageDropdown = document.getElementById('languageDropdown');
 
     function updateLanguagesInput() {
+        if (!languagesContainer || !languagesInput) return;
+        
         const languages = [];
         languagesContainer.querySelectorAll('span').forEach(span => {
-            // Get only the text content, excluding the button
             const textContent = span.childNodes[0];
             if (textContent && textContent.nodeType === Node.TEXT_NODE) {
                 const text = textContent.textContent.trim();
@@ -759,14 +920,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function filterLanguageOptions(searchTerm) {
+        if (!languageDropdown) return;
+        
         const options = languageDropdown.querySelectorAll('.language-option');
         let hasVisibleOptions = false;
 
         options.forEach(option => {
             const language = option.getAttribute('data-language').toLowerCase();
             const isMatch = language.includes(searchTerm.toLowerCase());
-            
-            // Check if this language is already added
             const isAlreadyAdded = isDuplicate(option.getAttribute('data-language'), languagesContainer);
             
             if (isMatch && !isAlreadyAdded) {
@@ -777,7 +938,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Show/hide dropdown based on whether there are matches and input has focus
         if (searchTerm.length > 0 && hasVisibleOptions && document.activeElement === newLanguageInput) {
             languageDropdown.classList.remove('hidden');
         } else {
@@ -786,32 +946,30 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (languagesContainer && newLanguageInput && addLanguageBtn && languagesInput) {
-        // Input event for filtering
         newLanguageInput.addEventListener('input', function() {
             filterLanguageOptions(this.value);
         });
 
-        // Focus event to show dropdown
         newLanguageInput.addEventListener('focus', function() {
             filterLanguageOptions(this.value);
         });
 
-        // Click outside to hide dropdown
         document.addEventListener('click', function(e) {
-            if (!newLanguageInput.contains(e.target) && !languageDropdown.contains(e.target)) {
-                languageDropdown.classList.add('hidden');
+            if (!newLanguageInput.contains(e.target) && !languageDropdown?.contains(e.target)) {
+                languageDropdown?.classList.add('hidden');
             }
         });
 
-        // Dropdown option click
-        languageDropdown.addEventListener('click', function(e) {
-            if (e.target.classList.contains('language-option')) {
-                const language = e.target.getAttribute('data-language');
-                newLanguageInput.value = language;
-                languageDropdown.classList.add('hidden');
-                addLanguageBtn.click();
-            }
-        });
+        if (languageDropdown) {
+            languageDropdown.addEventListener('click', function(e) {
+                if (e.target.classList.contains('language-option')) {
+                    const language = e.target.getAttribute('data-language');
+                    newLanguageInput.value = language;
+                    languageDropdown.classList.add('hidden');
+                    addLanguageBtn.click();
+                }
+            });
+        }
 
         addLanguageBtn.addEventListener('click', function() {
             const language = newLanguageInput.value.trim();
@@ -826,20 +984,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
                 languagesContainer.appendChild(languageSpan);
                 newLanguageInput.value = '';
-                languageDropdown.classList.add('hidden');
+                languageDropdown?.classList.add('hidden');
                 updateLanguagesInput();
             }
         });
 
         languagesContainer.addEventListener('click', function(e) {
             if (e.target.classList.contains('remove-language') || 
-                e.target.parentElement.classList.contains('remove-language') ||
+                e.target.parentElement?.classList.contains('remove-language') ||
                 e.target.closest('.remove-language')) {
                 const span = e.target.closest('span');
                 if (span) {
                     span.remove();
                     updateLanguagesInput();
-                    // Refresh dropdown in case the removed language should now appear
                     filterLanguageOptions(newLanguageInput.value);
                 }
             }
@@ -852,7 +1009,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Initial update for existing languages
         updateLanguagesInput();
     }
 
@@ -864,9 +1020,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const interestDropdown = document.getElementById('interestDropdown');
 
     function updateInterestsInput() {
+        if (!interestsContainer || !interestsInput) return;
+        
         const interests = [];
         interestsContainer.querySelectorAll('span').forEach(span => {
-            // Get only the text content, excluding the button
             const textContent = span.childNodes[0];
             if (textContent && textContent.nodeType === Node.TEXT_NODE) {
                 const text = textContent.textContent.trim();
@@ -880,14 +1037,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function filterInterestOptions(searchTerm) {
+        if (!interestDropdown) return;
+        
         const options = interestDropdown.querySelectorAll('.interest-option');
         let hasVisibleOptions = false;
 
         options.forEach(option => {
             const interest = option.getAttribute('data-interest').toLowerCase();
             const isMatch = interest.includes(searchTerm.toLowerCase());
-            
-            // Check if this interest is already added
             const isAlreadyAdded = isDuplicate(option.getAttribute('data-interest'), interestsContainer);
             
             if (isMatch && !isAlreadyAdded) {
@@ -898,7 +1055,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Show/hide dropdown based on whether there are matches and input has focus
         if (searchTerm.length > 0 && hasVisibleOptions && document.activeElement === newInterestInput) {
             interestDropdown.classList.remove('hidden');
         } else {
@@ -907,32 +1063,30 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (interestsContainer && newInterestInput && addInterestBtn && interestsInput) {
-        // Input event for filtering
         newInterestInput.addEventListener('input', function() {
             filterInterestOptions(this.value);
         });
 
-        // Focus event to show dropdown
         newInterestInput.addEventListener('focus', function() {
             filterInterestOptions(this.value);
         });
 
-        // Click outside to hide dropdown
         document.addEventListener('click', function(e) {
-            if (!newInterestInput.contains(e.target) && !interestDropdown.contains(e.target)) {
-                interestDropdown.classList.add('hidden');
+            if (!newInterestInput.contains(e.target) && !interestDropdown?.contains(e.target)) {
+                interestDropdown?.classList.add('hidden');
             }
         });
 
-        // Dropdown option click
-        interestDropdown.addEventListener('click', function(e) {
-            if (e.target.classList.contains('interest-option')) {
-                const interest = e.target.getAttribute('data-interest');
-                newInterestInput.value = interest;
-                interestDropdown.classList.add('hidden');
-                addInterestBtn.click();
-            }
-        });
+        if (interestDropdown) {
+            interestDropdown.addEventListener('click', function(e) {
+                if (e.target.classList.contains('interest-option')) {
+                    const interest = e.target.getAttribute('data-interest');
+                    newInterestInput.value = interest;
+                    interestDropdown.classList.add('hidden');
+                    addInterestBtn.click();
+                }
+            });
+        }
 
         addInterestBtn.addEventListener('click', function() {
             const interest = newInterestInput.value.trim();
@@ -947,20 +1101,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
                 interestsContainer.appendChild(interestSpan);
                 newInterestInput.value = '';
-                interestDropdown.classList.add('hidden');
+                interestDropdown?.classList.add('hidden');
                 updateInterestsInput();
             }
         });
 
         interestsContainer.addEventListener('click', function(e) {
             if (e.target.classList.contains('remove-interest') || 
-                e.target.parentElement.classList.contains('remove-interest') ||
+                e.target.parentElement?.classList.contains('remove-interest') ||
                 e.target.closest('.remove-interest')) {
                 const span = e.target.closest('span');
                 if (span) {
                     span.remove();
                     updateInterestsInput();
-                    // Refresh dropdown in case the removed interest should now appear
                     filterInterestOptions(newInterestInput.value);
                 }
             }
@@ -973,12 +1126,13 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Initial update for existing interests
         updateInterestsInput();
     }
 
     // Helper function to check for duplicates
     function isDuplicate(value, container) {
+        if (!container) return false;
+        
         const existingValues = Array.from(container.querySelectorAll('span')).map(span => {
             const textContent = span.childNodes[0];
             if (textContent && textContent.nodeType === Node.TEXT_NODE) {
@@ -994,11 +1148,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.querySelector('form');
     if (form) {
         form.addEventListener('submit', function(e) {
-            // Update hidden inputs before submission
             updateLanguagesInput();
             updateInterestsInput();
 
-            // Basic validation
             const requiredFields = ['first_name', 'last_name', 'email'];
             let isValid = true;
 
@@ -1018,22 +1170,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            // Show loading state
             const submitBtn = form.querySelector('button[type="submit"]');
             if (submitBtn) {
                 const originalText = submitBtn.innerHTML;
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Saving...';
                 submitBtn.disabled = true;
 
-                // In a real application, you would submit the form here
-                // For demo purposes, we'll simulate it
-                setTimeout(() => {
-                    showNotification('Profile updated successfully!', 'success');
-                    submitBtn.innerHTML = originalText;
-                    submitBtn.disabled = false;
-                }, 2000);
-
-                e.preventDefault(); // Remove this in production
+                // Allow form to submit normally - remove preventDefault for production
+                // Uncomment the next line for production use:
+                // return true;
             }
         });
     }
@@ -1051,15 +1196,13 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     });
+
+    // Initialize tracking and calculations
+    trackFormChanges();
+    calculateCompletion();
 });
 
 // Utility functions
-function resetForm() {
-    if (confirm('Are you sure you want to reset all changes? This will revert all fields to their original values.')) {
-        location.reload();
-    }
-}
-
 function showNotification(message, type = 'info') {
     const notification = document.createElement('div');
     notification.className = `fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg text-white ${
@@ -1085,7 +1228,42 @@ function showNotification(message, type = 'info') {
         }
     }, 5000);
 }
-    </script>
+
+// Global function for remove profile photo (if needed)
+function removeProfilePhoto() {
+    const preview = document.getElementById('profilePreview');
+    const fileInput = document.getElementById('profileImageInput');
+    const removeBtn = document.getElementById('removePhotoBtn');
+    const form = document.querySelector('form');
+    
+    if (preview && fileInput) {
+        // Reset to default image
+        preview.src = '/uploads/profiles/default_profile.jpg';
+        preview.classList.remove('ring-2', 'ring-orange-500');
+        
+        // Clear file input
+        fileInput.value = '';
+        
+        // Hide remove button
+        if (removeBtn) {
+            removeBtn.classList.add('hidden');
+        }
+        
+        // Add hidden input to indicate photo removal
+        if (form) {
+            let removeInput = document.getElementById('removeProfilePicture');
+            if (!removeInput) {
+                removeInput = document.createElement('input');
+                removeInput.type = 'hidden';
+                removeInput.name = 'remove_profile_picture';
+                removeInput.id = 'removeProfilePicture';
+                form.appendChild(removeInput);
+            }
+            removeInput.value = '1';
+        }
+    }
+}
+</script>
 
     <style>
         /* Profile completion progress animations */

@@ -83,7 +83,7 @@ $isLoggedIn = true;
                 </div>
                 <div class="p-4">
                     <div class="flex items-center mb-3">
-                        <img src="/uploads/profiles/<?= $event->profile_picture ?? 'default_profile.jpg' ?>" 
+                        <img src="<?= $event->profile_picture ?? 'default_profile.jpg' ?>" 
                              alt="Host" 
                              class="w-8 h-8 rounded-full mr-2">
                         <span class="text-sm font-medium"><?= htmlspecialchars($event->first_name . ' ' . $event->last_name) ?></span>
