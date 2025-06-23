@@ -1,5 +1,6 @@
 <?php
 namespace App\Models;
+use Exception;
 
 class Message extends BaseModel {
     protected $table = 'messages';
@@ -60,41 +61,148 @@ class Message extends BaseModel {
         return false;
     }
     
-    /**
-     * Get all conversations for a user
-     */
     public function getUserConversations($userId) {
-        $query = "SELECT DISTINCT
-                    CASE 
-                        WHEN m.sender_id = :user_id THEN m.receiver_id
-                        ELSE m.sender_id
-                    END as friend_id,
-                    u.first_name,
-                    u.last_name,
-                    u.profile_picture,
-                    MAX(m.created_at) as last_message_time,
-                    (SELECT message_content 
-                     FROM {$this->table} m2 
-                     WHERE ((m2.sender_id = :user_id AND m2.receiver_id = friend_id) 
-                           OR (m2.receiver_id = :user_id AND m2.sender_id = friend_id))
-                     ORDER BY m2.created_at DESC 
-                     LIMIT 1) as last_message,
-                    (SELECT COUNT(*) 
-                     FROM {$this->table} m3 
-                     WHERE m3.sender_id = friend_id 
-                           AND m3.receiver_id = :user_id 
-                           AND m3.is_read = FALSE) as unread_count
-                  FROM {$this->table} m
-                  JOIN users u ON (
-                    (m.sender_id = u.user_id AND m.receiver_id = :user_id) OR
-                    (m.receiver_id = u.user_id AND m.sender_id = :user_id)
-                  )
-                  WHERE m.sender_id = :user_id OR m.receiver_id = :user_id
-                  GROUP BY friend_id, u.first_name, u.last_name, u.profile_picture
-                  ORDER BY last_message_time DESC";
+        $query = "
+            SELECT DISTINCT
+                CASE 
+                    WHEN m.sender_id = :user_id THEN m.receiver_id 
+                    ELSE m.sender_id 
+                END as friend_id,
+                u.first_name,
+                u.last_name,
+                u.profile_picture,
+                u.email,
+                (SELECT message_content 
+                 FROM messages m2 
+                 WHERE (m2.sender_id = :user_id2 AND m2.receiver_id = friend_id) 
+                    OR (m2.sender_id = friend_id AND m2.receiver_id = :user_id3)
+                 ORDER BY m2.created_at DESC 
+                 LIMIT 1) as last_message,
+                (SELECT created_at 
+                 FROM messages m3 
+                 WHERE (m3.sender_id = :user_id4 AND m3.receiver_id = friend_id) 
+                    OR (m3.sender_id = friend_id AND m3.receiver_id = :user_id5)
+                 ORDER BY m3.created_at DESC 
+                 LIMIT 1) as last_message_time,
+                (SELECT COUNT(*) 
+                 FROM messages m4 
+                 WHERE m4.sender_id = friend_id 
+                   AND m4.receiver_id = :user_id6 
+                   AND m4.is_read = 0) as unread_count
+            FROM messages m
+            JOIN users u ON u.user_id = CASE 
+                WHEN m.sender_id = :user_id7 THEN m.receiver_id 
+                ELSE m.sender_id 
+            END
+            WHERE m.sender_id = :user_id8 OR m.receiver_id = :user_id9
+            ORDER BY last_message_time DESC
+        ";
         
-        $params = ['user_id' => $userId];
-        return $this->db->query($query, $params)->fetchAll();
+        $params = [
+            'user_id' => $userId,
+            'user_id2' => $userId,
+            'user_id3' => $userId,
+            'user_id4' => $userId,
+            'user_id5' => $userId,
+            'user_id6' => $userId,
+            'user_id7' => $userId,
+            'user_id8' => $userId,
+            'user_id9' => $userId
+        ];
+        
+        try {
+            $result = $this->db->query($query, $params)->fetchAll();
+            
+            // Debug log
+            error_log("getUserConversations query result: " . print_r($result, true));
+            
+            return $result;
+        } catch (Exception $e) {
+            error_log("Error in getUserConversations: " . $e->getMessage());
+            return [];
+        }
+    }
+    
+    /**
+     * Alternative simpler method if the above is too complex
+     */
+    public function getUserConversationsSimple($userId) {
+        // Get all unique conversation partners
+        $query = "
+            SELECT DISTINCT
+                CASE 
+                    WHEN sender_id = :user_id THEN receiver_id 
+                    ELSE sender_id 
+                END as friend_id
+            FROM messages 
+            WHERE sender_id = :user_id2 OR receiver_id = :user_id3
+        ";
+        
+        $conversationPartners = $this->db->query($query, [
+            'user_id' => $userId,
+            'user_id2' => $userId,
+            'user_id3' => $userId
+        ])->fetchAll();
+        
+        $conversations = [];
+        
+        foreach ($conversationPartners as $partner) {
+            $friendId = $partner->friend_id;
+            
+            // Get friend info
+            $friendQuery = "SELECT user_id, first_name, last_name, profile_picture, email FROM users WHERE user_id = :friend_id";
+            $friend = $this->db->query($friendQuery, ['friend_id' => $friendId])->fetch();
+            
+            if ($friend) {
+                // Get last message
+                $lastMessageQuery = "
+                    SELECT message_content, created_at 
+                    FROM messages 
+                    WHERE (sender_id = :user_id AND receiver_id = :friend_id) 
+                       OR (sender_id = :friend_id AND receiver_id = :user_id)
+                    ORDER BY created_at DESC 
+                    LIMIT 1
+                ";
+                $lastMessage = $this->db->query($lastMessageQuery, [
+                    'user_id' => $userId,
+                    'friend_id' => $friendId
+                ])->fetch();
+                
+                // Get unread count
+                $unreadQuery = "
+                    SELECT COUNT(*) as count 
+                    FROM messages 
+                    WHERE sender_id = :friend_id 
+                      AND receiver_id = :user_id 
+                      AND is_read = 0
+                ";
+                $unreadResult = $this->db->query($unreadQuery, [
+                    'friend_id' => $friendId,
+                    'user_id' => $userId
+                ])->fetch();
+                
+                // Combine data
+                $conversation = (object) [
+                    'friend_id' => $friend->user_id,
+                    'first_name' => $friend->first_name,
+                    'last_name' => $friend->last_name,
+                    'profile_picture' => $friend->profile_picture,
+                    'email' => $friend->email,
+                    'last_message' => $lastMessage ? $lastMessage->message_content : null,
+                    'last_message_time' => $lastMessage ? $lastMessage->created_at : null,
+                    'unread_count' => $unreadResult ? $unreadResult->count : 0
+                ];
+                
+                $conversations[] = $conversation;
+            }
+        }
+        
+        // Sort by last message time
+        usort($conversations, function($a, $b) {
+            return strtotime($b->last_message_time) - strtotime($a->last_message_time);
+        });
+        
+        return $conversations;
     }
     
     /**

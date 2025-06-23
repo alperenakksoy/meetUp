@@ -24,6 +24,7 @@ class MessageController {
      */
     // Add this temporary debug version to your MessageController index method
     
+    
     public function index() {
         if (!Session::has('user')) {
             redirect('/auth/login');
@@ -33,63 +34,119 @@ class MessageController {
         
         // Debug: Check user ID
         error_log("Debug: User ID is " . $userId);
+        error_log("Debug: Session data: " . print_r($_SESSION, true));
         
-        $conversations = $this->messageModel->getUserConversations($userId);
-        $unreadCount = $this->messageModel->getUnreadCount($userId);
-        
-        // Debug: Check conversations data
-        error_log("Debug: Conversations count: " . count($conversations));
-        error_log("Debug: Conversations data: " . print_r($conversations, true));
-        
-        // Debug: Check unread count
-        error_log("Debug: Unread count: " . $unreadCount);
-        
-        loadView('messages/index', [
-            'conversations' => $conversations,
-            'unreadCount' => $unreadCount
-        ]);
+        try {
+            // Get conversations
+            $conversations = $this->messageModel->getUserConversations($userId);
+            
+            // If the main method fails, try the simple method
+            if (empty($conversations)) {
+                error_log("Debug: Primary getUserConversations returned empty, trying simple method");
+                $conversations = $this->messageModel->getUserConversationsSimple($userId);
+            }
+            
+            $unreadCount = $this->messageModel->getUnreadCount($userId);
+            
+            // Debug: Check conversations data
+            error_log("Debug: Conversations count: " . count($conversations));
+            error_log("Debug: First conversation data: " . print_r($conversations[0] ?? 'none', true));
+            error_log("Debug: Unread count: " . $unreadCount);
+            
+            // Validate conversation data structure
+            foreach ($conversations as $index => $conversation) {
+                if (!isset($conversation->friend_id)) {
+                    error_log("Warning: Conversation $index missing friend_id");
+                }
+                if (!isset($conversation->first_name)) {
+                    error_log("Warning: Conversation $index missing first_name");
+                }
+            }
+            
+            loadView('messages/index', [
+                'conversations' => $conversations,
+                'unreadCount' => $unreadCount
+            ]);
+            
+        } catch (Exception $e) {
+            error_log("Error in MessageController::index: " . $e->getMessage());
+            error_log("Stack trace: " . $e->getTraceAsString());
+            
+            // Load view with empty data to prevent fatal errors
+            loadView('messages/index', [
+                'conversations' => [],
+                'unreadCount' => 0,
+                'error' => 'Failed to load conversations: ' . $e->getMessage()
+            ]);
+        }
     }
     
     /**
-     * Show conversation with specific user
+     * Enhanced conversation method with better error handling
      */
     public function conversation($friendId) {
         if (!Session::has('user')) {
             redirect('/auth/login');
         }
         
-        $userId =Session::get('user_id');
+        $userId = Session::get('user_id');
         
-        // Check if users are friends
-        if (!$this->friendshipModel->areFriends($userId, $friendId)) {
-            $_SESSION['error_message'] = 'You can only message friends.';
+        // Debug logs
+        error_log("Debug: Opening conversation - User ID: $userId, Friend ID: $friendId");
+        
+        // Validate friend ID
+        if (!$friendId || !is_numeric($friendId)) {
+            error_log("Error: Invalid friend ID: $friendId");
+            $_SESSION['error_message'] = 'Invalid conversation ID.';
             redirect('/messages');
+            return;
         }
         
-        // Get friend info
-        $friend = $this->userModel->usergetById($friendId);
-        if (!$friend) {
-            $_SESSION['error_message'] = 'User not found.';
+        try {
+            // Check if users are friends
+            if (!$this->friendshipModel->areFriends($userId, $friendId)) {
+                error_log("Error: Users are not friends - User: $userId, Friend: $friendId");
+                $_SESSION['error_message'] = 'You can only message friends.';
+                redirect('/messages');
+                return;
+            }
+            
+            // Get friend info
+            $friend = $this->userModel->usergetById($friendId);
+            if (!$friend) {
+                error_log("Error: Friend not found - ID: $friendId");
+                $_SESSION['error_message'] = 'User not found.';
+                redirect('/messages');
+                return;
+            }
+            
+            // Get conversation messages
+            $messages = $this->messageModel->getConversation($userId, $friendId);
+            
+            // Mark messages as read
+            $this->messageModel->markAsRead($friendId, $userId);
+            
+            // Get all conversations for sidebar
+            $conversations = $this->messageModel->getUserConversations($userId);
+            
+            // Debug
+            error_log("Debug: Loaded conversation - Messages: " . count($messages) . ", Conversations: " . count($conversations));
+            
+            loadView('messages/conversation', [
+                'friend' => $friend,
+                'messages' => $messages,
+                'conversations' => $conversations,
+                'currentFriendId' => $friendId,
+                'userId' => $userId
+            ]);
+            
+        } catch (Exception $e) {
+            error_log("Error in MessageController::conversation: " . $e->getMessage());
+            error_log("Stack trace: " . $e->getTraceAsString());
+            $_SESSION['error_message'] = 'Error loading conversation.';
             redirect('/messages');
         }
-        
-        // Get conversation messages
-        $messages = $this->messageModel->getConversation($userId, $friendId);
-        
-        // Mark messages as read
-        $this->messageModel->markAsRead($friendId, $userId);
-        
-        // Get all conversations for sidebar
-        $conversations = $this->messageModel->getUserConversations($userId);
-        
-        loadView('messages/conversation', [
-            'friend' => $friend,
-            'messages' => $messages,
-            'conversations' => $conversations,
-            'currentFriendId' => $friendId
-        ]);
-    }
-    
+    } 
 /**
      * Send a message via AJAX
      */
