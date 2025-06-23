@@ -415,4 +415,151 @@ private function handleImageUpload() {
     $_SESSION['error_message'] = 'Failed to upload image.';
     return null;
 }
+/**
+ * Join an event
+ */
+public function joinEvent($params) {
+    // Set proper headers for JSON response
+    header('Content-Type: application/json');
+    header('Cache-Control: no-cache, must-revalidate');
+    
+    $userId = Session::get('user_id');
+    if (!$userId) {
+        http_response_code(401);
+        echo json_encode(['success' => false, 'message' => 'Please log in to join events']);
+        exit;
+    }
+    
+    $eventId = $params['id'] ?? null;
+    if (!$eventId) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => 'Invalid event ID']);
+        exit;
+    }
+    
+    try {
+        // Check if event exists
+        $event = $this->eventModel->getById($eventId);
+        if (!$event) {
+            http_response_code(404);
+            echo json_encode(['success' => false, 'message' => 'Event not found']);
+            exit;
+        }
+        
+        // Check if user is already attending
+        if ($this->attendeeModel->isUserAttending($eventId, $userId)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'You are already attending this event']);
+            exit;
+        }
+        
+        // Check if event is full
+        $currentAttendees = $this->attendeeModel->getAttendeesCount($eventId);
+        if ($event->max_attendees && $currentAttendees >= $event->max_attendees) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Event is full']);
+            exit;
+        }
+        
+        // Check if user is the host
+        if ($event->host_id == $userId) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'You cannot join your own event']);
+            exit;
+        }
+        
+        // Join the event
+        $result = $this->attendeeModel->create([
+            'event_id' => $eventId,
+            'user_id' => $userId,
+            'status' => 'attending'
+        ]);
+        
+        if ($result) {
+            $newAttendeeCount = $this->attendeeModel->getAttendeesCount($eventId);
+            echo json_encode([
+                'success' => true, 
+                'message' => 'Successfully joined the event! 🎉',
+                'attendee_count' => $newAttendeeCount
+            ]);
+        } else {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Failed to join event']);
+        }
+        
+    } catch (Exception $e) {
+        error_log("Error in joinEvent: " . $e->getMessage());
+        http_response_code(500);
+        echo json_encode(['success' => false, 'message' => 'An error occurred while joining']);
+    }
+    exit;
+}
+
+/**
+ * Leave an event
+ */
+public function leaveEvent($params) {
+    // Set proper headers for JSON response
+    header('Content-Type: application/json');
+    header('Cache-Control: no-cache, must-revalidate');
+    
+    $userId = Session::get('user_id');
+    if (!$userId) {
+        http_response_code(401);
+        echo json_encode(['success' => false, 'message' => 'Please log in']);
+        exit;
+    }
+    
+    $eventId = $params['id'] ?? null;
+    if (!$eventId) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => 'Invalid event ID']);
+        exit;
+    }
+    
+    try {
+        // Check if event exists
+        $event = $this->eventModel->getById($eventId);
+        if (!$event) {
+            http_response_code(404);
+            echo json_encode(['success' => false, 'message' => 'Event not found']);
+            exit;
+        }
+        
+        // Check if user is attending
+        if (!$this->attendeeModel->isUserAttending($eventId, $userId)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'You are not attending this event']);
+            exit;
+        }
+        
+        // Check if user is the host
+        if ($event->host_id == $userId) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'You cannot leave your own event. Cancel it instead.']);
+            exit;
+        }
+        
+        // Leave the event
+        $result = $this->attendeeModel->removeAttendee($eventId, $userId);
+        
+        if ($result) {
+            $newAttendeeCount = $this->attendeeModel->getAttendeesCount($eventId);
+            echo json_encode([
+                'success' => true, 
+                'message' => 'You have left the event',
+                'attendee_count' => $newAttendeeCount
+            ]);
+        } else {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Failed to leave event']);
+        }
+        
+    } catch (Exception $e) {
+        error_log("Error in leaveEvent: " . $e->getMessage());
+        http_response_code(500);
+        echo json_encode(['success' => false, 'message' => 'An error occurred while leaving']);
+    }
+    exit;
+}
 }

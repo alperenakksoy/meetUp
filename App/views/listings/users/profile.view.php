@@ -58,6 +58,14 @@ loadPartial('head') ?>
                         <a href="/users/edit" class="block w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-md text-center transition-colors">
                             <i class="fas fa-edit mr-1"></i> Edit Profile
                         </a>
+                        <?php elseif($areFriends):?>
+                            <button class="block w-full bg-green-500 hover:bg-green-700 text-white py-2 px-4 rounded-md text-center transition-colors">
+                            <i class="fas fa-plus mr-1"></i> Add Friend
+                        </button>
+                        <?php else:?>
+                            <a href="/messages/start/{friendId}" class="block w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-md text-center transition-colors">
+                            <i class="fas fa-text mr-1"></i> Send Message
+                        </a>
                     <?php endif; ?>
                 </div>
                 

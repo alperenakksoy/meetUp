@@ -287,10 +287,11 @@ $isLoggedIn = true;
         </div>
     </div>
 </div>
-
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Event show page script starting...');
+    
+    // Attendees toggle functionality
     const toggleButton = document.getElementById('toggle-attendees');
     const allAttendeesDiv = document.getElementById('all-attendees');
     const attendeesPreview = document.getElementById('attendees-preview');
@@ -320,99 +321,197 @@ $isLoggedIn = true;
             }
         });
     }
-});
-        // Join Event functionality
-        document.querySelector('.join-btn').addEventListener('click', function() {
-            if (this.textContent === 'Join Event') {
-                this.textContent = 'Leave Event';
-                this.style.backgroundColor = '#e74c3c';
-                
-                // Update attendees count
-                const countElement = document.querySelector('.attendees-count');
-                const currentCount = parseInt(countElement.querySelector('strong').textContent);
-                countElement.innerHTML = `<strong>${currentCount + 1}</strong> people going · <strong>${12 - (currentCount + 1)}</strong> spots left`;
-                
-                // Update progress bar
-                const progressBar = document.querySelector('.progress-bar');
-                const newWidth = ((currentCount + 1) / 12) * 100;
-                progressBar.style.width = `${newWidth}%`;
-                
-                // Add user to attendees (this would typically be an AJAX call)
-                const attendeesPreview = document.querySelector('.attendees-preview');
-                const currentUserAvatar = document.querySelector('.user-menu img').src;
-                
-                // Create a new image element for the current user
-                const newAttendee = document.createElement('img');
-                newAttendee.src = currentUserAvatar;
-                newAttendee.alt = 'You';
-                newAttendee.className = 'attendee-avatar';
-                
-                // Add it to the attendees preview
-                attendeesPreview.appendChild(newAttendee);
-            } else {
-                this.textContent = 'Join Event';
-                this.style.backgroundColor = '#f5a623';
-                
-                // Update attendees count
-                const countElement = document.querySelector('.attendees-count');
-                const currentCount = parseInt(countElement.querySelector('strong').textContent);
-                countElement.innerHTML = `<strong>${currentCount - 1}</strong> people going · <strong>${12 - (currentCount - 1)}</strong> spots left`;
-                
-                // Update progress bar
-                const progressBar = document.querySelector('.progress-bar');
-                const newWidth = ((currentCount - 1) / 12) * 100;
-                progressBar.style.width = `${newWidth}%`;
-                
-                // Remove the last added attendee
-                const attendeesPreview = document.querySelector('.attendees-preview');
-                attendeesPreview.removeChild(attendeesPreview.lastChild);
-            }
-        });
 
-        // Comment form submission
-        document.querySelector('.comment-form').addEventListener('submit', function(e) {
+    // Join/Leave Event functionality
+    const joinBtn = document.querySelector('.join-btn');
+    if (joinBtn) {
+        joinBtn.addEventListener('click', function(e) {
             e.preventDefault();
             
-            const commentInput = this.querySelector('.comment-input');
-            const commentText = commentInput.value.trim();
+            const eventId = this.dataset.eventId;
+            const action = this.dataset.action;
             
-            if (commentText) {
-                // Create a new comment element
-                const commentList = document.querySelector('.comment-list');
-                const currentUserAvatar = document.querySelector('.user-menu img').src;
-                
-                const newComment = document.createElement('div');
-                newComment.className = 'comment-item';
-                newComment.innerHTML = `
-                    <img src="${currentUserAvatar}" alt="You" class="comment-avatar">
-                    <div class="comment-content">
-                        <div class="comment-author">You</div>
-                        <div class="comment-text">
-                            ${commentText}
-                        </div>
-                        <div class="comment-meta">
-                            <span>Just now</span>
-                            <div class="comment-actions">
-                                <a href="#" class="comment-action">Delete</a>
-                                <a href="#" class="comment-action">Edit</a>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                
-                // Add the new comment to the top of the list
-                commentList.insertBefore(newComment, commentList.firstChild);
-                
-                // Clear the input
-                commentInput.value = '';
-                
-                // Update the comment count
-                const commentsHeader = document.querySelector('.comments-header h3');
-                const currentCount = parseInt(commentsHeader.textContent.match(/\d+/)[0]);
-                commentsHeader.textContent = `Comments and Questions (${currentCount + 1})`;
+            if (!eventId) {
+                showMessage('Error: No event ID found', 'error');
+                return;
+            }
+            
+            if (action === 'join') {
+                handleJoinEvent(eventId, this);
+            } else if (action === 'leave') {
+                if (confirm('Are you sure you want to leave this event?')) {
+                    handleLeaveEvent(eventId, this);
+                }
             }
         });
-    </script>
+    }
+});
+
+async function handleJoinEvent(eventId, button) {
+    console.log(`Starting join process for event ${eventId}`);
+    
+    const originalHTML = button.innerHTML;
+    
+    try {
+        // Show loading state
+        button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Joining...';
+        button.disabled = true;
+        
+        console.log('Making fetch request...');
+        
+        const response = await fetch(`/events/${eventId}/join`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            credentials: 'same-origin'
+        });
+        
+        console.log('Response received:', response.status, response.statusText);
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('HTTP Error:', response.status, errorText);
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const contentType = response.headers.get('content-type');
+        console.log('Content-Type:', contentType);
+        
+        if (!contentType || !contentType.includes('application/json')) {
+            const textResponse = await response.text();
+            console.error('Non-JSON response received:', textResponse);
+            throw new Error('Server returned non-JSON response');
+        }
+        
+        const data = await response.json();
+        console.log('Join response data:', data);
+        
+        if (data.success) {
+            showMessage(data.message || 'Successfully joined!', 'success');
+            
+            // Update button to leave state
+            button.innerHTML = '<i class="fas fa-times mr-2"></i> Leave The Event';
+            button.className = 'w-full bg-[#ef4444] text-white py-3 px-5 rounded font-medium hover:bg-[#dc2626] transition-colors join-btn';
+            button.dataset.action = 'leave';
+            button.disabled = false;
+            
+            // Update attendee count
+            updateAttendeeCount(data.attendee_count);
+            
+        } else {
+            showMessage(data.message || 'Failed to join event', 'error');
+            button.innerHTML = originalHTML;
+            button.disabled = false;
+        }
+        
+    } catch (error) {
+        console.error('Join error:', error);
+        showMessage(`Error: ${error.message}`, 'error');
+        button.innerHTML = originalHTML;
+        button.disabled = false;
+    }
+}
+
+async function handleLeaveEvent(eventId, button) {
+    console.log(`Starting leave process for event ${eventId}`);
+    
+    const originalHTML = button.innerHTML;
+    
+    try {
+        // Show loading state
+        button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Leaving...';
+        button.disabled = true;
+        
+        console.log('Making leave request...');
+        
+        const response = await fetch(`/events/${eventId}/leave`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            credentials: 'same-origin'
+        });
+        
+        console.log('Response received:', response.status, response.statusText);
+        
+        const data = await response.json();
+        console.log('Leave response data:', data);
+        
+        if (data.success) {
+            showMessage(data.message || 'Successfully left the event', 'success');
+            
+            // Update button to join state
+            button.innerHTML = '<i class="fas fa-plus mr-2"></i> Join The Event';
+            button.className = 'w-full bg-[#145314] text-white py-3 px-5 rounded font-medium hover:bg-[#1e6e1e] join-btn';
+            button.dataset.action = 'join';
+            button.disabled = false;
+            
+            // Update attendee count
+            updateAttendeeCount(data.attendee_count);
+            
+        } else {
+            showMessage(data.message || 'Failed to leave event', 'error');
+            button.innerHTML = originalHTML;
+            button.disabled = false;
+        }
+        
+    } catch (error) {
+        console.error('Leave error:', error);
+        showMessage(`Error: ${error.message}`, 'error');
+        button.innerHTML = originalHTML;
+        button.disabled = false;
+    }
+}
+
+function updateAttendeeCount(newCount) {
+    // Update the spots left display
+    const spotsElement = document.querySelector('.attendees-count strong');
+    const maxAttendees = parseInt(spotsElement.dataset.maxAttendees || '0');
+    
+    if (spotsElement && maxAttendees > 0) {
+        const spotsLeft = maxAttendees - newCount;
+        spotsElement.textContent = spotsLeft;
+    }
+    
+    // Update the progress bar
+    const progressBar = document.querySelector('.bg-[#f5a623]');
+    if (progressBar && maxAttendees > 0) {
+        const percentage = Math.min((newCount / maxAttendees) * 100, 100);
+        progressBar.style.width = percentage + '%';
+    }
+}
+
+function showMessage(message, type = 'info') {
+    // Create message container if it doesn't exist
+    let messageContainer = document.getElementById('messageContainer');
+    if (!messageContainer) {
+        messageContainer = document.createElement('div');
+        messageContainer.id = 'messageContainer';
+        messageContainer.className = 'fixed top-20 right-4 z-50';
+        document.body.appendChild(messageContainer);
+    }
+    
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `px-6 py-3 rounded-lg shadow-lg text-white max-w-sm mb-2 ${
+        type === 'success' ? 'bg-green-500' : 
+        type === 'error' ? 'bg-red-500' : 
+        'bg-blue-500'
+    }`;
+    messageDiv.textContent = message;
+    
+    messageContainer.appendChild(messageDiv);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        if (messageDiv.parentNode) {
+            messageDiv.parentNode.removeChild(messageDiv);
+        }
+    }, 5000);
+}
+</script>
       <?=loadPartial('scripts'); ?>
     <?=loadPartial(name: 'footer'); ?>
 </body>

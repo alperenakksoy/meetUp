@@ -48,6 +48,7 @@ class UserController extends BaseController {
             // Viewing someone else's profile
             $userId = $params['id'];
             $user = $this->userModel->usergetById($userId);
+            $areFriends = $this->friendshipModel->areFriends($userId,$currentUserId);
             
             if (!$user) {
                 $_SESSION['error_message'] = 'User not found';
@@ -139,7 +140,7 @@ class UserController extends BaseController {
                     $friend->profile_picture = '/uploads/profiles/' . $friend->profile_picture;
                 }
             }
-    
+
             // Load the view with all data (using fresh database data)
             loadView('users/profile', [
                 'user' => $user,  // This is fresh from the database
@@ -152,7 +153,8 @@ class UserController extends BaseController {
                 'unreviewedEvents' => $unreviewedEvents,
                 'friends' => $friends,
                 'isOwnProfile' => $isOwnProfile,
-                'userId' => $userId
+                'userId' => $userId,
+                'areFriends' => $areFriends
             ]);
             
         } catch (Exception $e) {

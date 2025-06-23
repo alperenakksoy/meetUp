@@ -40,7 +40,7 @@ class HomeController extends BaseController {
             $upEvent->counts = count($upEvent->attendees);
         }
 
-        $isOwner = $upEvent->host_id == $currentUser;
+        $isOwner = $upEvent->host_id ?? '' == $currentUser;
         
         // GET RECOMMENDED EVENTS BASED ON USER INTERESTS
         $recommendedEvents = [];
