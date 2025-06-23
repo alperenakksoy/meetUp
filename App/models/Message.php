@@ -52,7 +52,7 @@ class Message extends BaseModel {
         $result = $this->db->query($query, $params);
         
         if ($result) {
-            $messageId = $this->db->lastInsertId();
+            $messageId = $this->db->conn->lastInsertId();
             $this->updateConversation($senderId, $receiverId, $messageId);
             return $messageId;
         }

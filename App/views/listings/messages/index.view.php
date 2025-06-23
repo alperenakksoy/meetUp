@@ -1,7 +1,7 @@
 <?php
 
 // Set page variables
-$pageTitle = 'Dashboard';
+$pageTitle = 'Messages';
 $activePage = 'message';
 $isLoggedIn = true;
 ?>
@@ -34,27 +34,28 @@ $isLoggedIn = true;
                         <?php if(!empty($conversations)): ?>
                             <?php foreach($conversations as $conversation): ?>
                                 <a href="/messages/conversation/<?= $conversation->friend_id ?>" 
-                                   class="block hover:bg-gray-50 transition-colors">
+                                   class="conversation-link block hover:bg-gray-50 transition-colors"
+                                   data-friend-id="<?= $conversation->friend_id ?>">
                                     <div class="p-4 border-b border-gray-100 flex items-center">
                                         <div class="relative">
                                             <img src="<?= $conversation->profile_picture ?? '/uploads/profiles/default_profile.png' ?>" 
                                                  alt="<?= $conversation->first_name ?>" 
                                                  class="w-12 h-12 rounded-full object-cover">
                                             <?php if($conversation->unread_count > 0): ?>
-                                                <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                                                <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center unread-badge">
                                                     <?= $conversation->unread_count ?>
                                                 </span>
                                             <?php endif; ?>
                                         </div>
                                         <div class="ml-3 flex-1 min-w-0">
                                             <div class="font-semibold text-gray-800 truncate">
-                                                <?= $conversation->first_name . ' ' . $conversation->last_name ?>
+                                                <?= htmlspecialchars($conversation->first_name . ' ' . $conversation->last_name) ?>
                                             </div>
                                             <div class="text-sm text-gray-600 truncate">
-                                                <?= $conversation->last_message ?>
+                                                <?= htmlspecialchars($conversation->last_message ?? 'No messages yet') ?>
                                             </div>
                                             <div class="text-xs text-gray-500">
-                                                <?= timeSince($conversation->last_message_time) ?>
+                                                <?= isset($conversation->last_message_time) ? timeSince($conversation->last_message_time) : '' ?>
                                             </div>
                                         </div>
                                     </div>
@@ -86,29 +87,53 @@ $isLoggedIn = true;
     </div>
 </div>
 
-    <script>
-        // Conversation item selection
-        document.addEventListener('DOMContentLoaded', function() {
-            const conversationItems = document.querySelectorAll('.conversation-item');
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Messages page loaded');
+    
+    // Get all conversation links
+    const conversationLinks = document.querySelectorAll('.conversation-link');
+    console.log('Found conversation links:', conversationLinks.length);
+    
+    // Add click handlers for visual feedback
+    conversationLinks.forEach((link, index) => {
+        console.log(`Link ${index} href:`, link.href);
+        
+        // Add click event for debugging and visual feedback
+        link.addEventListener('click', function(e) {
+            console.log('Conversation link clicked:', this.href);
+            console.log('Friend ID:', this.dataset.friendId);
             
-            conversationItems.forEach(item => {
-                item.addEventListener('click', function() {
-                    // Remove active class from all items
-                    conversationItems.forEach(i => i.classList.remove('active'));
-                    // Add active class to clicked item
-                    item.classList.add('active');
-                    // Remove unread badge if present
-                    const badge = item.querySelector('.unread-badge');
-                    if (badge) {
-                        badge.style.display = 'none';
-                    }
-                    // Remove unread styling
-                    item.classList.remove('unread');
-                });
-            });
+            // Remove active class from all links
+            conversationLinks.forEach(l => l.classList.remove('bg-orange-50', 'border-r-4', 'border-orange-500'));
+            
+            // Add active class to clicked link
+            this.classList.add('bg-orange-50', 'border-r-4', 'border-orange-500');
+            
+            // Optional: Show loading state
+            const messageArea = document.querySelector('.flex-1.flex.items-center.justify-center');
+            if (messageArea) {
+                messageArea.innerHTML = `
+                    <div class="text-center text-gray-500">
+                        <i class="fas fa-spinner fa-spin fa-3x mb-4"></i>
+                        <h3 class="text-xl font-semibold mb-2">Loading conversation...</h3>
+                    </div>
+                `;
+            }
+            
+            // Don't prevent default - let the link navigate naturally
+            // The page will redirect to the conversation
         });
-    </script>
-    <?=loadPartial('scripts'); ?>
-    <?=loadPartial(name: 'footer'); ?>
+    });
+    
+    // Debug: Check if any links exist
+    if (conversationLinks.length === 0) {
+        console.log('No conversation links found. Check if conversations data is being passed correctly.');
+    }
+});
+</script>
+
+<?=loadPartial('scripts'); ?>
+<?=loadPartial(name: 'footer'); ?>
 </body>
 </html>

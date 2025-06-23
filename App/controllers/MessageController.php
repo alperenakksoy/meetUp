@@ -22,14 +22,27 @@ class MessageController {
     /**
      * Show messages page with conversations list
      */
+    // Add this temporary debug version to your MessageController index method
+    
     public function index() {
         if (!Session::has('user')) {
             redirect('/auth/login');
         }
         
-        $userId =Session::get('user_id');
+        $userId = Session::get('user_id');
+        
+        // Debug: Check user ID
+        error_log("Debug: User ID is " . $userId);
+        
         $conversations = $this->messageModel->getUserConversations($userId);
         $unreadCount = $this->messageModel->getUnreadCount($userId);
+        
+        // Debug: Check conversations data
+        error_log("Debug: Conversations count: " . count($conversations));
+        error_log("Debug: Conversations data: " . print_r($conversations, true));
+        
+        // Debug: Check unread count
+        error_log("Debug: Unread count: " . $unreadCount);
         
         loadView('messages/index', [
             'conversations' => $conversations,
@@ -54,7 +67,7 @@ class MessageController {
         }
         
         // Get friend info
-        $friend = $this->userModel->getById($friendId);
+        $friend = $this->userModel->usergetById($friendId);
         if (!$friend) {
             $_SESSION['error_message'] = 'User not found.';
             redirect('/messages');
