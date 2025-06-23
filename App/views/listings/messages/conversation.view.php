@@ -1,6 +1,9 @@
 <?php
 
 // Set page variables
+
+use Framework\Session;
+
 $pageTitle = 'Dashboard';
 $activePage = 'message';
 $isLoggedIn = true;
@@ -10,9 +13,9 @@ $isLoggedIn = true;
 <body>
 <?php loadPartial('navbar') ?>
 
-<div class="container mx-auto px-4 py-8">
+<div class="container mx-auto px-4 py-8" style="margin-top: 80px;">
     <div class="max-w-6xl mx-auto">
-        <div class="bg-white rounded-lg shadow-md overflow-hidden" style="height: 600px;">
+        <div class="bg-white rounded-lg shadow-md overflow-hidden" style="height: calc(100vh - 160px); min-height: 500px;">
             <div class="flex h-full">
                 <!-- Conversations Sidebar -->
                 <div class="w-1/3 border-r border-gray-200">
@@ -85,10 +88,10 @@ $isLoggedIn = true;
                     <div id="messagesContainer" class="flex-1 overflow-y-auto p-4 space-y-4">
                         <?php if(!empty($messages)): ?>
                             <?php foreach($messages as $message): ?>
-                                <div class="message flex <?= $message->sender_id == $_SESSION['user']['user_id'] ? 'justify-end' : 'justify-start' ?>" 
+                                <div class="message flex <?= $message->sender_id == Session::get('user_id') ? 'justify-end' : 'justify-start' ?>" 
                                      data-message-id="<?= $message->message_id ?>">
                                     <div class="max-w-xs lg:max-w-md">
-                                        <?php if($message->sender_id != $_SESSION['user']['user_id']): ?>
+                                        <?php if($message->sender_id != Session::get('user_id')): ?>
                                             <div class="flex items-start">
                                                 <img src="<?= $message->sender_picture ?? '/uploads/profiles/default_profile.png' ?>" 
                                                      alt="<?= $message->sender_name ?>" 
@@ -198,7 +201,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Add message to UI immediately
                 addMessageToUI({
                     message_id: data.message_id,
-                    sender_id: <?= $_SESSION['user']['user_id'] ?>,
+                    sender_id: <?= Session::get('user_id') ?>,
                     message_content: message,
                     created_at: data.timestamp
                 });
@@ -223,7 +226,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Add message to UI
     function addMessageToUI(message) {
-        const isOwn = message.sender_id == <?= $_SESSION['user']['user_id'] ?>;
+        const isOwn = message.sender_id == <?= Session::get('user_id') ?>;
         const messageDiv = document.createElement('div');
         messageDiv.className = `message flex ${isOwn ? 'justify-end' : 'justify-start'}`;
         messageDiv.dataset.messageId = message.message_id;
@@ -294,4 +297,5 @@ document.addEventListener('DOMContentLoaded', function() {
 <?=loadPartial('scripts'); ?>
     <?=loadPartial(name: 'footer'); ?>
 </body>
+
 </html>

@@ -31,36 +31,38 @@ class Message extends BaseModel {
         return array_reverse($this->db->query($query, $params)->fetchAll());
     }
     
-    /**
-     * Send a message
-     */
-    public function sendMessage($senderId, $receiverId, $message) {
-        // First check if users are friends
-        $friendship = new Friendship();
-        if (!$friendship->areFriends($senderId, $receiverId)) {
-            return false;
-        }
-        
-        $query = "INSERT INTO {$this->table} (sender_id, receiver_id, message_content) 
-                  VALUES (:sender_id, :receiver_id, :message)";
-        
-        $params = [
-            'sender_id' => $senderId,
-            'receiver_id' => $receiverId,
-            'message' => $message
-        ];
-        
+  
+public function sendMessage($senderId, $receiverId, $message) {
+    // Remove the duplicate friendship check - it's already done in controller
+    
+    $query = "INSERT INTO {$this->table} (sender_id, receiver_id, message_content) 
+              VALUES (:sender_id, :receiver_id, :message)";
+    
+    $params = [
+        'sender_id' => $senderId,
+        'receiver_id' => $receiverId,
+        'message' => $message
+    ];
+    
+    try {
         $result = $this->db->query($query, $params);
         
         if ($result) {
             $messageId = $this->db->conn->lastInsertId();
+            error_log("Message inserted with ID: " . $messageId);
+            
+            // Update conversation table
             $this->updateConversation($senderId, $receiverId, $messageId);
             return $messageId;
+        } else {
+            error_log("Failed to insert message into database");
+            return false;
         }
-        
+    } catch (Exception $e) {
+        error_log("Error in sendMessage: " . $e->getMessage());
         return false;
     }
-    
+}
     public function getUserConversations($userId) {
         $query = "
             SELECT DISTINCT

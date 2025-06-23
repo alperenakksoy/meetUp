@@ -11,9 +11,9 @@ $isLoggedIn = true;
 <body>
 <?php loadPartial('navbar') ?>
 
-<div class="container mx-auto px-4 py-8">
+<div class="container mx-auto px-4 py-8" style="margin-top: 80px;">
     <div class="max-w-6xl mx-auto">
-        <div class="bg-white rounded-lg shadow-md overflow-hidden" style="height: 600px;">
+        <div class="bg-white rounded-lg shadow-md overflow-hidden" style="height: calc(100vh - 160px); min-height: 500px;">
             <div class="flex h-full">
                 <!-- Conversations Sidebar -->
                 <div class="w-1/3 border-r border-gray-200">
