@@ -6,16 +6,6 @@ $isLoggedIn = true;
 ?>
 <?php loadPartial('head') ?>
 
-<?php if(!isset($user->profile_picture) && $user->gender == 'Male'):?>
-                            <?php $profiePic='https://images.unsplash.com/vector-1742828264271-3ebf9c62a2b6?q=80&w=2180&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';?>
-                            <?php elseif(!isset($user->profile_picture) && $user->gender=='Female'):?>
-                                <?php $profiePic='https://images.unsplash.com/vector-1743527707496-20efb8b8b79f?q=80&w=2232&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';?>
-                            <?php else:?>
-                                <?php $profiePic=$user->profile_picture; ?>
-                            <?php endif;
-                            ?>
-<?php $ppholder = 'https://images.unsplash.com/vector-1743527707496-20efb8b8b79f?q=80&w=2232&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'?>
-
 <body class="bg-gray-50 pt-20">
     <?=loadPartial('navbar')?>
     <!-- Main Content -->
@@ -45,7 +35,7 @@ $isLoggedIn = true;
                     <div class="bg-gradient-to-r from-orange-500 to-orange-600 h-24"></div>
                     <div class="p-4 text-center relative">
                        
-                        <img src="<?=$profiePic?>" alt="User Profile" class="w-24 h-24 rounded-full border-4 border-white mx-auto absolute -top-12 left-1/2 transform -translate-x-1/2">
+                        <img src="<?=getUserProfilePicture($user)?>" alt="User Profile" class="w-24 h-24 rounded-full border-4 border-white mx-auto absolute -top-12 left-1/2 transform -translate-x-1/2">
                         <div class="mt-14">
                         <h1 class="text-xl font-bold font-volkhov text-gray-800 mb-1"> <?= htmlspecialchars(mb_convert_case(mb_strtolower($user->first_name . ' ' . $user->last_name, 'UTF-8'), MB_CASE_TITLE, 'UTF-8')) ?> 
                         </div>

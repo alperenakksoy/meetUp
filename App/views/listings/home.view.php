@@ -168,9 +168,11 @@ $isLoggedIn = true;
                                 
                                 <!-- Right side: Action buttons -->
                                 <div class="flex space-x-2">
+                                    <?php if($isOwner):?>
                                     <a href="event_management.php?id=<?= $upEvent->id ?>" class="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-3 rounded-lg transition duration-200">
                                         <i class="fas fa-cog mr-1"></i> Manage
                                     </a>
+                                    <?php endif;?>
                                     <a href="/events/<?= $upEvent->event_id ?>" class="bg-orange-600 hover:bg-orange-700 text-white py-2 px-3 rounded-lg transition duration-200">
                                         <i class="fas fa-eye mr-1"></i> View
                                     </a>

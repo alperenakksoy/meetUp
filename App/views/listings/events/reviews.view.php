@@ -90,7 +90,7 @@ $isLoggedIn = true;
                     <!-- Review 1 -->
                     <div class="p-5">
                         <div class="flex gap-4 mb-4">
-                            <img src="https://randomuser.me/api/portraits/women/63.jpg" alt="Reviewer" class="w-12 h-12 rounded-full object-cover">
+                            <img src="<?=getUserProfilePictureReviewer($review)?>" alt="Reviewer" class="w-12 h-12 rounded-full object-cover">
                             <div>
                                 <div class="font-semibold"><?=$review->reviewer_first_name?> <?=$review->reviewer_last_name?></div>
                                 <div class="flex justify-between items-center">

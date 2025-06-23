@@ -151,7 +151,8 @@ class UserController extends BaseController {
                 'upevents' => $attendeeUpcomingEvents,
                 'unreviewedEvents' => $unreviewedEvents,
                 'friends' => $friends,
-                'isOwnProfile' => $isOwnProfile
+                'isOwnProfile' => $isOwnProfile,
+                'userId' => $userId
             ]);
             
         } catch (Exception $e) {
@@ -423,8 +424,9 @@ class UserController extends BaseController {
     /**
      * Show friends page
      */
-    public function friends() {
-        $userId = Session::get('user_id');
+    public function friends($params) {
+        $loggedUser = Session::get('user_id');
+        $userId = $params['id'];
         if (!$userId) {
             redirect('/login');
         }
@@ -438,8 +440,10 @@ class UserController extends BaseController {
         
         // Add mutual friends data to each friend
         foreach($friends as $friend) {
-            $friend->mutualFriends = $this->friendshipModel->getMutualFriendsCount($userId, $friend->user_id);
-            $friend->mutualFriendsDetails = $this->friendshipModel->getMutualFriendsSimple($userId, $friend->user_id, 3);
+        $friend->mutualFriends = $this->friendshipModel->getMutualFriendsCount($userId, $friend->user_id);
+        $friend->mutualFriendsDetails = $this->friendshipModel->getMutualFriendsSimple($userId, $friend->user_id, 3);
+         // User who is logged in are friends with someone profile's friend
+        $friend->areFriends = $this->friendshipModel->areFriends($loggedUser,$friend->user_id);
         }
         
         // Get pending requests received
@@ -472,16 +476,17 @@ class UserController extends BaseController {
             'friendsCount' => $friendsCount,
             'pendingRequests' => $pendingRequests,
             'sentRequests' => $sentRequests,
-            'friendSuggestions' => $friendSuggestions // NEW: Pass suggestions to view
+            'friendSuggestions' => $friendSuggestions, //Pass suggestions to view
+            'loggedUser' =>$loggedUser
         ]);
     }
     
     /**
      * Show user references/reviews
      */
-    public function references() {
-        $userId = Session::get('user_id') ?? null; 
-        
+    public function references($params) {
+        $userId = $params['id'];
+     
         // If user ID doesn't exist, redirect to login page
         if (!$userId) {
             redirect('/login');

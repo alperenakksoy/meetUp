@@ -39,14 +39,14 @@ loadPartial('head') ?>
                             </div>
                         </a>
                             
-                        <a href="/users/friends"> 
+                        <a href="/users/friends/<?=$user->user_id?>"> 
                             <div class="text-center hover:scale-110 transition-transform duration-200 cursor-pointer">
                                 <div class="text-xl font-bold text-orange-500"><?=$friendsCount ?? 0?></div>
                                 <div class="text-xs text-gray-500">Friends</div>
                             </div>
                         </a>
                         
-                        <a href="/users/references"> 
+                        <a href="/users/references/<?=$user->user_id?>"> 
                             <div class="text-center hover:scale-110 transition-transform duration-200 cursor-pointer">
                                 <div class="text-xl font-bold text-orange-500"><?=count($reviews)?? 0?></div>
                                 <div class="text-xs text-gray-500">References</div>
@@ -159,6 +159,7 @@ loadPartial('head') ?>
             <div class="lg:col-span-3 space-y-6">
                 <!-- Events Section -->
                 <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+<?php if($isOwnProfile):?>              
     <div class="flex justify-between items-center p-4 border-b border-gray-100">
         <h2 class="text-lg font-semibold text-gray-800 font-volkhov">
             <i class="fas fa-calendar-alt text-orange-500 mr-2"></i> Unreviwed Events
@@ -201,12 +202,16 @@ loadPartial('head') ?>
             <?php endforeach; ?>
         <?php endif; ?>
     </div>
+    <?php endif;?>
 </div>
 
 <div class="bg-white rounded-lg shadow-sm overflow-hidden">
     <div class="flex justify-between items-center p-4 border-b border-gray-100">
         <h2 class="text-lg font-semibold text-gray-800 font-volkhov">
-            <i class="fas fa-calendar-alt text-orange-500 mr-2"></i> My Past Events
+          <?php if($user->gender == 'Male'){$whose = 'His';}
+          elseif($user->gender == 'Female'){$whose = 'Her';}
+          else{$whose = 'Their';}?>  
+            <i class="fas fa-calendar-alt text-orange-500 mr-2"></i> <?=$whose?> Past Events
         </h2>
         <a href="events.php" class="text-orange-500 hover:text-orange-600 text-sm hover:underline">View All</a>
     </div>

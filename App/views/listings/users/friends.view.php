@@ -52,7 +52,7 @@ $isLoggedIn = true;
                     <div class="bg-gray-50 rounded-lg shadow-sm overflow-hidden hover:shadow-lg transition-shadow">
                         <div class="h-24 bg-gradient-to-r from-orange-200 to-purple-200"></div>
                         <div class="relative">
-                            <img src="<?= $friend->profile_picture ?>" alt="Friend" class="w-20 h-20 rounded-full border-4 border-white absolute -top-10 left-1/2 transform -translate-x-1/2 object-cover">
+                            <img src="<?= getProfilePicture($friend)?>" alt="Friend" class="w-20 h-20 rounded-full border-4 border-white absolute -top-10 left-1/2 transform -translate-x-1/2 object-cover">
                         </div>
                         <div class="p-4 pt-12 text-center">
                             <h3 class="font-semibold text-gray-800"><?= $friend->first_name ?> <?= $friend->last_name ?></h3>
@@ -67,7 +67,7 @@ $isLoggedIn = true;
                                 <?php if(!empty($friend->mutualFriendsDetails) && count($friend->mutualFriendsDetails) > 0): ?>
                                     <div class="flex -space-x-2">
                                         <?php foreach($friend->mutualFriendsDetails as $mutualFriend): ?>
-                                            <img src="<?= $mutualFriend->profile_picture ?? 'https://ui-avatars.com/api/?name=' . urlencode($mutualFriend->first_name . '+' . $mutualFriend->last_name) . '&size=24&background=667eea&color=fff&rounded=true' ?>" 
+                                            <img src="<?= getProfilePicture($mutualFriend) ?? 'https://ui-avatars.com/api/?name=' . urlencode($mutualFriend->first_name . '+' . $mutualFriend->last_name) . '&size=24&background=667eea&color=fff&rounded=true' ?>" 
                                                  alt="<?= $mutualFriend->first_name ?> <?= $mutualFriend->last_name ?>" 
                                                  class="w-6 h-6 rounded-full border-2 border-white object-cover"
                                                  title="<?= $mutualFriend->first_name ?> <?= $mutualFriend->last_name ?>">
@@ -88,9 +88,12 @@ $isLoggedIn = true;
                                     <span class="text-sm text-gray-500">No mutual friends</span>
                                 <?php endif; ?>
                             </div>
-                            
                             <div class="mt-4 flex justify-center gap-2">
+                                <?php if($friend->areFriends && $friend->user_id != $loggedUser):?>
                                 <button class="border border-gray-300 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Message</button>
+                                <?php elseif(!$friend->areFriends && $friend->user_id != $loggedUser):?>
+                                 <button class="border border-gray-300 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Add Friend</button>
+                                    <?php endif;?>
                                 <a href="/users/profile/<?= $friend->user_id ?>">
                                     <button class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors">View</button>
                                 </a>

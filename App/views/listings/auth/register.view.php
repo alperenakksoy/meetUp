@@ -98,8 +98,7 @@
                                 id="country" 
                                 name="country" 
                                 required 
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                            >
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-700 bg-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
                                 <option value="" disabled selected>Select Country</option>
                                 <!-- Countries will be populated via JS -->
                             </select>
@@ -112,7 +111,7 @@
                                     id="city" 
                                     name="city" 
                                     required 
-                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" 
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-700 bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                                     disabled
                                 >
                                     <option value="" disabled selected>Select City</option>
@@ -238,4 +237,23 @@
         });
     </script>
 </body>
+
+<style>
+  /* Style for all select elements */
+  select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1em;
+  }
+
+  /* Focus state for all selects */
+  select:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.5);
+  }
+</style>
 </html>

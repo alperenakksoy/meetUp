@@ -27,6 +27,7 @@ class HomeController extends BaseController {
     }
 
     public function index() {
+        $currentUser = Session::get('user');
         $email = Session::get('user')['email'] ?? null;
         $user = $this->userModel->findByEmail($email);
         
@@ -38,6 +39,8 @@ class HomeController extends BaseController {
             $upEvent->attendees = $this->eventAttendeeModel->getAttendeesByEvent($upEvent->event_id);
             $upEvent->counts = count($upEvent->attendees);
         }
+
+        $isOwner = $upEvent->host_id == $currentUser;
         
         // GET RECOMMENDED EVENTS BASED ON USER INTERESTS
         $recommendedEvents = [];
@@ -210,6 +213,8 @@ class HomeController extends BaseController {
             'recommendedEvents' => $recommendedEvents,
             'recentActivity' => $recentActivity,
             'unreadNotify'=> $unreadNotify,
+            'isOwner' => $isOwner
+            
         ]);
     }
     

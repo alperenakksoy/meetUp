@@ -20,7 +20,7 @@ public function isAuthenticated(){
  */
     public function handle($role){
     if($role == 'guest' && $this->isAuthenticated()){
-        return redirect('/about');
+        return redirect('/');
     }elseif($role == 'auth' && !$this->isAuthenticated()){
         return redirect('/login');
     }

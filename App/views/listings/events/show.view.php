@@ -156,7 +156,7 @@ $isLoggedIn = true;
         <?php foreach ($attendeesToShow as $attendee): ?>
             <div class="relative group -ml-2 first:ml-0 attendee-item">
                 <a href="/users/profile/<?=$attendee->user_id?>">
-                    <img src="<?= $attendee->profile_picture ?>" alt="Attendee"
+                    <img src="<?= getUserProfilePicture($attendee) ?>" alt="Attendee"
                          class="w-11 h-11 rounded-full object-cover border-2 border-white transition-all duration-200 group-hover:ring-2 group-hover:ring-blue-400">
                 </a>
                 
@@ -176,7 +176,7 @@ $isLoggedIn = true;
                 <?php foreach ($attendees as $attendee): ?>
                     <div class="flex items-center gap-3 p-2 hover:bg-gray-50 rounded">
                         <a href="/users/profile/<?=$attendee->user_id?>">
-                            <img src="<?= $attendee->profile_picture ?>" alt="<?= $attendee->first_name ?>"
+                            <img src="<?= getUserProfilePicture($attendee) ?>" alt="<?= $attendee->first_name ?>"
                                  class="w-10 h-10 rounded-full object-cover border-2 border-gray-200">
                         </a>
                         <div class="flex-1">
@@ -220,7 +220,7 @@ $isLoggedIn = true;
             <i class="far fa-bookmark"></i> Save
         </a>
     </div>
-    
+    <?php if($isOwner):?>
     <!-- Delete Form -->
     <form method="POST" class="mb-4">
         <input type="hidden" name="_method" value="DELETE">
@@ -228,12 +228,14 @@ $isLoggedIn = true;
             <i class="fas fa-trash-alt"></i> Delete Event
         </button>
     </form>
+
     <!-- End Delete Form -->
 
      <!-- Edit Form -->
      <a href="/events/edit/<?=$event->event_id?>" class="block text-center bg-blue-500 border text-white py-2 px-4 mb-4 rounded hover:bg-blue-600 hover:text-white transition-colors">
      Edit Event </a>
     <!-- End Edit Form -->
+     <?php endif;?>
     
     <a href="#" class="block text-center border border-[#f5a623] text-[#f5a623] py-2 px-4 rounded hover:bg-[#f5a623] hover:text-white transition-colors">
         <i class="fas fa-exclamation-circle mr-1"></i> Report Event
@@ -244,27 +246,42 @@ $isLoggedIn = true;
             <div class="bg-white p-5 rounded-lg shadow">
                 <h3 class="text-lg font-semibold mb-3 pb-2 border-b border-gray-100">Similar Events</h3>
                 <div class="space-y-4">
-                    <div class="flex gap-2.5">
-                        <img src="/api/placeholder/60/60" alt="Event" class="w-15 h-15 object-cover rounded">
-                        <div>
-                            <div class="font-semibold mb-1">Language Exchange Meetup</div>
-                            <div class="text-sm text-gray-600">Apr 15, 2025 • Şişli</div>
-                        </div>
-                    </div>
-                    <div class="flex gap-2.5">
-                        <img src="/api/placeholder/60/60" alt="Event" class="w-15 h-15 object-cover rounded">
-                        <div>
-                            <div class="font-semibold mb-1">Discover Turkish Coffee</div>
-                            <div class="text-sm text-gray-600">Apr 10, 2025 • Beşiktaş</div>
-                        </div>
-                    </div>
-                    <div class="flex gap-2.5">
-                        <img src="/api/placeholder/60/60" alt="Event" class="w-15 h-15 object-cover rounded">
-                        <div>
-                            <div class="font-semibold mb-1">Expat Networking Brunch</div>
-                            <div class="text-sm text-gray-600">Apr 18, 2025 • Taksim</div>
-                        </div>
-                    </div>
+
+                <div class="flex gap-2.5">
+    <img 
+        src="https://www.santuon.com/content/images/2022/06/1656313913219.png" 
+        alt="Event" 
+        class="w-16 h-16 object-cover rounded"
+    >
+    <div>
+        <div class="font-semibold mb-1">Language Exchange Meetup</div>
+        <div class="text-sm text-gray-600">Apr 15, 2025 • Şişli</div>
+    </div>
+</div>
+
+<div class="flex gap-2.5 items-center">  <!-- Added items-center for better vertical alignment -->
+    <img 
+        src="https://www.yourcoffeebreak.co.uk/wp-content/uploads/Turkish-coffee-cezve-600x600.webp" 
+        alt="Event" 
+        class="w-16 h-16 object-cover rounded"  
+    >
+    <div>
+        <div class="font-semibold mb-1">Discover Turkish Coffee</div>
+        <div class="text-sm text-gray-600">Apr 10, 2025 • Beşiktaş</div>
+    </div>
+</div>
+
+<div class="flex gap-2.5 items-center">  <!-- Added items-center for better vertical alignment -->
+    <img 
+        src="https://ikmagazin.com/wp-content/uploads/2024/12/expat-nedir.png" 
+        alt="Event" 
+        class="w-16 h-16 object-cover rounded"  
+    >
+    <div>
+        <div class="font-semibold mb-1">Expat Networking Brunch</div>
+        <div class="text-sm text-gray-600">Apr 18, 2025 • Taksim</div>
+    </div>
+</div>
                 </div>
             </div>
         </div>

@@ -142,23 +142,25 @@ class EventController extends BaseController {
     
     public function show($params) {
         $userId = Session::get('user_id');
-
         $user= $this->userModel->usergetById($userId); 
         $event = $this->eventModel->getEventWithDetails($params['id']);    
       $host= $this->userModel->usergetById($event->host_id); 
+      // check if the host of event same as the current user who is logged in
+      $isOwner = $host->user_id == $userId;
       // get events that hosted by host
       $event->hostedEvents=$this->eventModel->getEventsByHost($event->host_id);
       $eventComments = $this->eventComment->getCommentsByEvent($event->event_id);
       $attendees = $this->attendeeModel->getAttendeesByEvent($event->event_id);
-      
-      
+    
+
       
         loadView('events/show',[
             'event' => $event,
             'eventComments'=>$eventComments,
             'host' => $host,
             'attendees'=>$attendees,
-            'user'=>$user
+            'user'=>$user,
+            'isOwner'=>$isOwner
             
         ]);
     }

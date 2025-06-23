@@ -1,48 +1,48 @@
 <?php
 // Home routes
-$router->get('/', 'HomeController@index');
-$router->get('/users/profile', 'UserController@profile');
-$router->get('/users/profile/{id}', 'UserController@profile');
-$router->get('/users/edit', 'UserController@edit');
-$router->put('/users/update', 'UserController@update');
-$router->put('/users/{id}', 'UserController@update');
+$router->get('/', 'HomeController@index', ['auth']);
+$router->get('/users/profile', 'UserController@profile', ['auth']);
+$router->get('/users/profile/{id}', 'UserController@profile', ['auth']);
+$router->get('/users/edit', 'UserController@edit', ['auth']);
+$router->put('/users/update', 'UserController@update', ['auth']);
+$router->put('/users/{id}', 'UserController@update', ['auth']);
 
 // Other user pages
-$router->get('/users/references', 'UserController@references');
-$router->get('/users/friends', 'UserController@friends');
-$router->get('/users/settings', 'UserController@settings');
+$router->get('/users/references/{id}', 'UserController@references');
+$router->get('/users/friends/{id}', 'UserController@friends');
+$router->get('/users/settings', 'UserController@settings', ['auth']);
 
 // Friendship Handle
-$router->post('/api/friendship/handle', 'FriendshipController@handleRequest');
-$router->post('/api/friendship/cancel', 'FriendshipController@cancelRequest');
-$router->post('/api/friendship/send', 'FriendshipController@sendRequest');
+$router->post('/api/friendship/handle', 'FriendshipController@handleRequest', ['auth']);
+$router->post('/api/friendship/cancel', 'FriendshipController@cancelRequest', ['auth']);
+$router->post('/api/friendship/send', 'FriendshipController@sendRequest', ['auth']);
 
 // Event routes
-$router->get('/events', 'EventController@index');
-$router->get('/events/create', 'EventController@create',['auth']);
-$router->post('/events', 'EventController@store');
-$router->get('/events/past', 'EventController@pastEvents');
-$router->get('/events/management', 'EventController@management');
-$router->get('/events/{id}', 'EventController@show');
-$router->get('/events/edit/{id}', 'EventController@edit');
-$router->put('/events/{id}', 'EventController@update');
-$router->delete('/events/{id}', 'EventController@destroy');
-$router->get('/events/reviews/{id}', 'EventController@reviews');
+$router->get('/events', 'EventController@index', ['auth']);
+$router->get('/events/create', 'EventController@create', ['auth']);
+$router->post('/events', 'EventController@store', ['auth']);
+$router->get('/events/past', 'EventController@pastEvents', ['auth']);
+$router->get('/events/management', 'EventController@management', ['auth']);
+$router->get('/events/{id}', 'EventController@show', ['auth']);
+$router->get('/events/edit/{id}', 'EventController@edit', ['auth']);
+$router->put('/events/{id}', 'EventController@update', ['auth']);
+$router->delete('/events/{id}', 'EventController@destroy', ['auth']);
+$router->get('/events/reviews/{id}', 'EventController@reviews', ['auth']);
 
 // Event actions
-$router->post('/events/{id}/join', 'EventController@joinEvent');
-$router->post('/events/{id}/leave', 'EventController@leaveEvent');
-$router->post('/events/{id}/debug', 'EventController@debugEndpoint');
+$router->post('/events/{id}/join', 'EventController@joinEvent', ['auth']);
+$router->post('/events/{id}/leave', 'EventController@leaveEvent', ['auth']);
+$router->post('/events/{id}/debug', 'EventController@debugEndpoint', ['auth']);
 
 // HANGOUT ROUTES
-$router->get('/hangouts', 'HangoutController@index');
-$router->get('/hangouts/index', 'HangoutController@index');
-$router->get('/hangouts/create', 'HangoutController@create');
-$router->post('/hangouts', 'HangoutController@store');
-$router->get('/hangouts/{id}', 'HangoutController@show');
-$router->post('/hangouts/{id}/join', 'HangoutController@join');
-$router->post('/hangouts/{id}/leave', 'HangoutController@leave');
-$router->delete('/hangouts/{id}', 'HangoutController@destroy');
+$router->get('/hangouts', 'HangoutController@index', ['auth']);
+$router->get('/hangouts/index', 'HangoutController@index', ['auth']);
+$router->get('/hangouts/create', 'HangoutController@create', ['auth']);
+$router->post('/hangouts', 'HangoutController@store', ['auth']);
+$router->get('/hangouts/{id}', 'HangoutController@show', ['auth']);
+$router->post('/hangouts/{id}/join', 'HangoutController@join', ['auth']);
+$router->post('/hangouts/{id}/leave', 'HangoutController@leave', ['auth']);
+$router->delete('/hangouts/{id}', 'HangoutController@destroy', ['auth']);
 
 // API routes for hangouts
 $router->get('/api/hangouts/filter', 'HangoutController@filter');
@@ -51,35 +51,35 @@ $router->get('/api/hangouts/nearby', 'HangoutController@nearby');
 $router->get('/api/hangouts/starting-soon', 'HangoutController@startingSoon');
 
 // Message routes
-$router->get('/messages', 'MessageController@index');
-$router->post('/messages/send', 'MessageController@send');
-$router->get('/messages/{id}', 'MessageController@conversation');
+$router->get('/messages', 'MessageController@index', ['auth']);
+$router->post('/messages/send', 'MessageController@send', ['auth']);
+$router->get('/messages/{id}', 'MessageController@conversation', ['auth']);
 
 // Notification routes
-$router->get('/notifications', 'NotificationController@index');
-$router->post('/api/notifications/{id}/read', 'NotificationController@markAsRead');
-$router->post('/api/notifications/mark-all-read', 'NotificationController@markAllAsRead');
-$router->get('/api/notifications/count', 'NotificationController@getCount');
+$router->get('/notifications', 'NotificationController@index', ['auth']);
+$router->post('/api/notifications/{id}/read', 'NotificationController@markAsRead', ['auth']);
+$router->post('/api/notifications/mark-all-read', 'NotificationController@markAllAsRead', ['auth']);
+$router->get('/api/notifications/count', 'NotificationController@getCount', ['auth']);
 
-// Authentication routes
-$router->get('/login', 'AuthController@loginForm');
-$router->post('/login', 'AuthController@login');
-$router->get('/register', 'AuthController@registerForm');
-$router->post('/register', 'AuthController@register');
-$router->post('/logout', 'AuthController@logout');
-$router->get('/forgot-password', 'AuthController@forgotForm');
-$router->post('/forgot-password', 'AuthController@forgotPassword');
+// Authentication routes (guest middleware - only accessible when NOT logged in)
+$router->get('/login', 'AuthController@loginForm', ['guest']);
+$router->post('/login', 'AuthController@login', ['guest']);
+$router->get('/register', 'AuthController@registerForm', ['guest']);
+$router->post('/register', 'AuthController@register', ['guest']);
+$router->post('/logout', 'AuthController@logout', ['auth']);
+$router->get('/forgot-password', 'AuthController@forgotForm', ['guest']);
+$router->post('/forgot-password', 'AuthController@forgotPassword', ['guest']);
 
-// Admin routes
-$router->get('/admin/dashboard', 'AdminController@dashboard');
-$router->get('/admin/users', 'AdminController@users');
-$router->get('/admin/events', 'AdminController@events');
-$router->get('/admin/reports', 'AdminController@reports');
+// Admin routes (you may want to create an 'admin' middleware instead of 'auth')
+$router->get('/admin/dashboard', 'AdminController@dashboard', ['auth']);
+$router->get('/admin/users', 'AdminController@users', ['auth']);
+$router->get('/admin/events', 'AdminController@events', ['auth']);
+$router->get('/admin/reports', 'AdminController@reports', ['auth']);
 
 // API routes for AJAX calls
-$router->get('/api/notifications/count', 'MessageController@getCount');
+$router->get('/api/notifications/count', 'MessageController@getCount', ['auth']);
 
-// Static pages routes
+// Static pages routes (public access)
 $router->get('/about', 'PageController@about');
 $router->get('/howitworks', 'PageController@howitworks');
 $router->get('/faq', 'PageController@faq');

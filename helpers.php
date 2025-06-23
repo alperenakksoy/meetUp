@@ -265,6 +265,27 @@ function getProfilePictureUrl($attendee, $size = 150) {
     return getUserProfilePicture($attendee, $size);
 }
 
+// Retrieve profile pictures fro review object in events/ reviews
+function getUserProfilePictureReviewer($review, $size = 150) {
+    // Handle both object and array inputs
+    $profilePicture = is_object($review) ? ($review->reviewer_profile_picture ?? '') : ($review['profile_picture'] ?? '');
+    $firstName = is_object($review) ? ($review->reviwer_first_name ?? 'U') : ($review['first_name'] ?? 'U');
+    $lastName = is_object($review) ? ($review->reviwer_last_name ?? 'ser') : ($review['last_name'] ?? 'ser');
+    
+    // Check if user has a custom profile picture
+    if (!empty($profilePicture) && $profilePicture !== 'default_profile.jpg') {
+        // If it's already a full URL, return as is
+        if (str_starts_with($profilePicture, 'http')) {
+            return $profilePicture;
+        }
+        // Otherwise, prepend the uploads path
+        return '/uploads/profiles/' . $profilePicture;
+    }
+    
+    // Generate fallback avatar using UI Avatars
+    $name = urlencode($firstName . '+' . $lastName);
+    return "https://ui-avatars.com/api/?name={$name}&size={$size}&background=f97316&color=fff&rounded=true";
+}
 /**
  * Get activity icon based on activity type
  * @param string $activityType Type of activity

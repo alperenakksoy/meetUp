@@ -112,7 +112,7 @@ class Router {
                 
                 if ($match) {
                     foreach($route['middleware'] as $middleware){
-                        (new Authorize())->handle($$middleware);
+                        (new Authorize())->handle($middleware);
                     }
                     // Found a matching route - instantiate controller and call method
                     $controller = 'App\\controllers\\' . $route['controller'];
