@@ -50,11 +50,16 @@ $router->get('/api/hangouts/search', 'HangoutController@search');
 $router->get('/api/hangouts/nearby', 'HangoutController@nearby');
 $router->get('/api/hangouts/starting-soon', 'HangoutController@startingSoon');
 
-// Message routes
-$router->get('/messages', 'MessageController@index', ['auth']);
-$router->post('/messages/send', 'MessageController@send', ['auth']);
-$router->get('/messages/{id}', 'MessageController@conversation', ['auth']);
+// Messages routes
+$router->get('/messages', 'MessageController@index');
+$router->get('/messages/conversation/{id}', 'MessageController@conversation');
+$router->post('/messages/send', 'MessageController@send');
+$router->get('/messages/get-new/{friendId}/{lastMessageId}', 'MessageController@getNewMessages');
+$router->delete('/messages/{id}', 'MessageController@delete');
+$router->get('/messages/start/{friendId}', 'MessageController@startConversation');
 
+// Add unread count endpoint
+$router->get('/messages/unread-count', 'MessageController@getUnreadCount');
 // Notification routes
 $router->get('/notifications', 'NotificationController@index', ['auth']);
 $router->post('/api/notifications/{id}/read', 'NotificationController@markAsRead', ['auth']);

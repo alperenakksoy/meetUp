@@ -89,15 +89,26 @@ $isLoggedIn = true;
                                 <?php endif; ?>
                             </div>
                             <div class="mt-4 flex justify-center gap-2">
-                                <?php if($friend->areFriends && $friend->user_id != $loggedUser):?>
-                                <button class="border border-gray-300 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Message</button>
-                                <?php elseif(!$friend->areFriends && $friend->user_id != $loggedUser):?>
-                                 <button class="border border-gray-300 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">Add Friend</button>
-                                    <?php endif;?>
-                                <a href="/users/profile/<?= $friend->user_id ?>">
-                                    <button class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors">View</button>
-                                </a>
-                            </div>
+    <?php if($friend->areFriends && $friend->user_id != $loggedUser): ?>
+        <!-- Message Button - Links to conversation -->
+        <a href="/messages/conversation/<?= $friend->user_id ?>">
+            <button class="border border-gray-300 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors flex items-center">
+                <i class="fas fa-comment mr-2"></i> Message
+            </button>
+        </a>
+    <?php elseif(!$friend->areFriends && $friend->user_id != $loggedUser): ?>
+        <button class="border border-gray-300 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors send-friend-request" 
+                data-user-id="<?= $friend->user_id ?>">
+            <i class="fas fa-user-plus mr-2"></i> Add Friend
+        </button>
+    <?php endif; ?>
+    
+    <a href="/users/profile/<?= $friend->user_id ?>">
+        <button class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors">
+            <i class="fas fa-eye mr-2"></i> View
+        </button>
+    </a>
+</div>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -788,6 +799,20 @@ async function handleSendFriendRequest(userId, button) {
         button.innerHTML = originalHTML;
     }
 }
+document.addEventListener('DOMContentLoaded', function() {
+    // Update navbar with unread message count
+    fetch('/messages/unread-count')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.count > 0) {
+                const messagesLink = document.querySelector('a[href="/messages"]');
+                if (messagesLink) {
+                    messagesLink.innerHTML += `<span class="ml-1 bg-red-500 text-white text-xs px-2 py-1 rounded-full">${data.count}</span>`;
+                }
+            }
+        })
+        .catch(error => console.error('Error fetching unread count:', error));
+});
 </script>
 
     <?= loadPartial('scripts'); ?>

@@ -202,12 +202,17 @@ if ($isLoggedIn && $userId) {
                     <a href="/hangouts/index" class="block py-2 text-gray-700 hover:text-orange-600 transition-colors">
                         <i class="fas fa-list-alt mr-2"></i> Hangouts
                     </a>
-                    <a href="/users/friends" class="block py-2 text-gray-700 hover:text-orange-600 transition-colors">
+                    <a href="/users/friends/<?=$userId?>" class="block py-2 text-gray-700 hover:text-orange-600 transition-colors">
                         <i class="fas fa-users mr-2"></i> Friends
                     </a>
-                    <a href="/messages" class="block py-2 text-gray-700 hover:text-orange-600 transition-colors">
-                        <i class="fas fa-envelope mr-2"></i> Messages
-                    </a>
+                    <?php if(isset($user)): ?>
+    <a href="/messages" 
+       class="text-gray-700 hover:text-orange-600 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center">
+        <i class="fas fa-comments mr-2"></i>
+        Messages
+        <span id="unreadBadge" class="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full hidden"></span>
+    </a>
+<?php endif; ?>
                     <a href="/notifications" class="flex items-center justify-between py-2 text-gray-700 hover:text-orange-600 transition-colors">
                         <span><i class="fas fa-bell mr-2"></i> Notifications</span>
                         <?php if ($notificationCount > 0): ?>
@@ -290,6 +295,31 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update notification count on load and every minute
     updateNotificationCount();
     setInterval(updateNotificationCount, 60000);
+    <?php endif; ?>
+});
+document.addEventListener('DOMContentLoaded', function() {
+    <?php if(isset($user)): ?>
+    // Update unread message count
+    function updateUnreadCount() {
+        fetch('/messages/unread-count')
+            .then(response => response.json())
+            .then(data => {
+                const badge = document.getElementById('unreadBadge');
+                if (data.success && data.count > 0) {
+                    badge.textContent = data.count;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            })
+            .catch(error => console.error('Error fetching unread count:', error));
+    }
+    
+    // Update on page load
+    updateUnreadCount();
+    
+    // Update every 30 seconds
+    setInterval(updateUnreadCount, 30000);
     <?php endif; ?>
 });
 </script>

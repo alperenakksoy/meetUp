@@ -12,6 +12,17 @@ class BaseModel {
         $this->db = new Database($config['database']);
     }
     
+
+/**
+ * Execute a custom query
+ * @param string $sql
+ * @param array $params
+ * @return mixed
+ */
+public function query($sql, $params = []) {
+    return $this->db->query($sql, $params);
+}
+
     // Basic CRUD operations
     public function getAll() {
         $query = "SELECT * FROM {$this->table}";

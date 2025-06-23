@@ -116,18 +116,28 @@ public function declineRequest($friendshipId) {
 }
 
     
-    // Check if users are friends
-    public function areFriends($userId1, $userId2) {
-        $query = "SELECT * FROM {$this->table}
-                WHERE ((user_id_1 = :user_id_1 AND user_id_2 = :user_id_2)
-                OR (user_id_1 = :user_id_2 AND user_id_2 = :user_id_1))
-                AND status = 'accepted'";
-        $params = [
-            'user_id_1' => $userId1,
-            'user_id_2' => $userId2
-        ];
-        return $this->db->query($query, $params)->fetch() ? true : false;
-    }
+
+/**
+ * Check if two users are friends
+ * @param int $userId1
+ * @param int $userId2
+ * @return bool
+ */
+public function areFriends($userId1, $userId2) {
+    $query = "SELECT COUNT(*) as count 
+              FROM {$this->table} 
+              WHERE ((user_id_1 = :user1 AND user_id_2 = :user2) 
+                    OR (user_id_1 = :user2 AND user_id_2 = :user1))
+              AND status = 'accepted'";
+    
+    $params = [
+        'user1' => $userId1,
+        'user2' => $userId2
+    ];
+    
+    $result = $this->db->query($query, $params)->fetch();
+    return $result->count > 0;
+}
     
     /**
  * Check friendship status between two users - FIXED VERSION
