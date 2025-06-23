@@ -4,7 +4,9 @@ namespace App\Controllers;
 use App\Models\Message;
 use App\Models\Friendship;
 use App\Models\User;
+use Framework\Database;
 use Framework\Session;
+use Exception;
 
 class MessageController {
     private $messageModel;
@@ -75,153 +77,240 @@ class MessageController {
         ]);
     }
     
-    /**
+/**
      * Send a message via AJAX
      */
     public function send() {
-        if (!Session::has('user')) {
-            http_response_code(401);
-            echo json_encode(['success' => false, 'message' => 'Not authenticated']);
-            return;
+        // Set proper headers
+        header('Content-Type: application/json');
+        header('Cache-Control: no-cache, must-revalidate');
+        
+        try {
+            if (!Session::has('user')) {
+                http_response_code(401);
+                echo json_encode(['success' => false, 'message' => 'Not authenticated']);
+                return;
+            }
+            
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                http_response_code(405);
+                echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+                return;
+            }
+            
+            $data = json_decode(file_get_contents('php://input'), true);
+            
+            // Validate JSON input
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'message' => 'Invalid JSON']);
+                return;
+            }
+            
+            $receiverId = filter_var($data['receiver_id'] ?? null, FILTER_VALIDATE_INT);
+            $message = trim($data['message'] ?? '');
+            
+            // Validate inputs
+            if (!$receiverId || $receiverId <= 0) {
+                echo json_encode(['success' => false, 'message' => 'Invalid receiver ID']);
+                return;
+            }
+            
+            if (empty($message)) {
+                echo json_encode(['success' => false, 'message' => 'Message cannot be empty']);
+                return;
+            }
+            
+            // Check message length (e.g., max 1000 characters)
+            if (strlen($message) > 1000) {
+                echo json_encode(['success' => false, 'message' => 'Message too long (max 1000 characters)']);
+                return;
+            }
+            
+            $senderId = Session::get('user_id');
+            
+            // Can't message yourself
+            if ($senderId == $receiverId) {
+                echo json_encode(['success' => false, 'message' => 'Cannot send message to yourself']);
+                return;
+            }
+            
+            // Check if users are friends
+            if (!$this->friendshipModel->areFriends($senderId, $receiverId)) {
+                echo json_encode(['success' => false, 'message' => 'You can only message friends']);
+                return;
+            }
+            
+            // Sanitize message content
+            $message = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
+            
+            $messageId = $this->messageModel->sendMessage($senderId, $receiverId, $message);
+            
+            if ($messageId) {
+                echo json_encode([
+                    'success' => true,
+                    'message_id' => $messageId,
+                    'timestamp' => date('Y-m-d H:i:s'),
+                    'message' => 'Message sent successfully'
+                ]);
+            } else {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'message' => 'Failed to send message']);
+            }
+            
+        } catch (Exception $e) {
+            error_log("Message send error: " . $e->getMessage());
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Server error occurred']);
         }
         
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            http_response_code(405);
-            echo json_encode(['success' => false, 'message' => 'Method not allowed']);
-            return;
-        }
-        
-        $data = json_decode(file_get_contents('php://input'), true);
-        $receiverId = $data['receiver_id'] ?? null;
-        $message = trim($data['message'] ?? '');
-        
-        if (!$receiverId || !$message) {
-            echo json_encode(['success' => false, 'message' => 'Missing required fields']);
-            return;
-        }
-        
-        $senderId =Session::get('user_id');
-
-        
-        // Check if users are friends
-        if (!$this->friendshipModel->areFriends($senderId, $receiverId)) {
-            echo json_encode(['success' => false, 'message' => 'You can only message friends']);
-            return;
-        }
-        
-        $messageId = $this->messageModel->sendMessage($senderId, $receiverId, $message);
-        
-        if ($messageId) {
-            echo json_encode([
-                'success' => true,
-                'message_id' => $messageId,
-                'timestamp' => date('Y-m-d H:i:s')
-            ]);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to send message']);
-        }
+        exit;
     }
     
     /**
      * Get new messages via AJAX (for real-time updates)
      */
     public function getNewMessages($friendId, $lastMessageId = 0) {
-        if (!Session::has('user')) {
-            http_response_code(401);
-            echo json_encode(['success' => false]);
-            return;
+        header('Content-Type: application/json');
+        
+        try {
+            if (!Session::has('user')) {
+                http_response_code(401);
+                echo json_encode(['success' => false, 'message' => 'Not authenticated']);
+                return;
+            }
+            
+            $userId = Session::get('user_id');
+            $friendId = filter_var($friendId, FILTER_VALIDATE_INT);
+            $lastMessageId = filter_var($lastMessageId, FILTER_VALIDATE_INT);
+            
+            if (!$friendId || $friendId <= 0) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'message' => 'Invalid friend ID']);
+                return;
+            }
+            
+            // Check if users are friends
+            if (!$this->friendshipModel->areFriends($userId, $friendId)) {
+                http_response_code(403);
+                echo json_encode(['success' => false, 'message' => 'Not authorized']);
+                return;
+            }
+            
+            $query = "SELECT m.message_id, m.sender_id, m.receiver_id, m.message_content, m.created_at,
+                             sender.first_name as sender_name,
+                             sender.profile_picture as sender_picture
+                      FROM messages m
+                      JOIN users sender ON m.sender_id = sender.user_id
+                      WHERE ((m.sender_id = :user_id AND m.receiver_id = :friend_id)
+                         OR (m.sender_id = :friend_id AND m.receiver_id = :user_id))
+                        AND m.message_id > :last_message_id
+                      ORDER BY m.created_at ASC";
+            
+            $params = [
+                'user_id' => $userId,
+                'friend_id' => $friendId,
+                'last_message_id' => $lastMessageId ?: 0
+            ];
+            
+            $newMessages = $this->messageModel->query($query, $params)->fetchAll();
+            
+            // Mark new messages as read if they're from the friend
+            if (!empty($newMessages)) {
+                $this->messageModel->markAsRead($friendId, $userId);
+            }
+            
+            echo json_encode([
+                'success' => true,
+                'messages' => $newMessages,
+                'count' => count($newMessages)
+            ]);
+            
+        } catch (Exception $e) {
+            error_log("Get new messages error: " . $e->getMessage());
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Server error occurred']);
         }
         
-        $userId =Session::get('user_id');
-        
-        // Check if users are friends
-        if (!$this->friendshipModel->areFriends($userId, $friendId)) {
-            http_response_code(403);
-            echo json_encode(['success' => false]);
-            return;
-        }
-        
-        $query = "SELECT m.*, 
-                         sender.first_name as sender_name,
-                         sender.profile_picture as sender_picture
-                  FROM messages m
-                  JOIN users sender ON m.sender_id = sender.user_id
-                  WHERE ((m.sender_id = :user_id AND m.receiver_id = :friend_id)
-                        OR (m.sender_id = :friend_id AND m.receiver_id = :user_id))
-                  AND m.message_id > :last_message_id
-                  ORDER BY m.created_at ASC";
-        
-        $params = [
-            'user_id' => $userId,
-            'friend_id' => $friendId,
-            'last_message_id' => $lastMessageId
-        ];
-        
-        $messages = $this->messageModel->query($query, $params)->fetchAll();
-        
-        // Mark new messages from friend as read
-        if (!empty($messages)) {
-            $this->messageModel->markAsRead($friendId, $userId);
-        }
-        
-        echo json_encode([
-            'success' => true,
-            'messages' => $messages
-        ]);
+        exit;
     }
     
     /**
      * Delete a message
      */
-    public function delete($messageId) {
-        if (!Session::has('user')) {
-            http_response_code(401);
-            echo json_encode(['success' => false]);
-            return;
+    public function deleteMessage() {
+        header('Content-Type: application/json');
+        
+        try {
+            if (!Session::has('user')) {
+                http_response_code(401);
+                echo json_encode(['success' => false, 'message' => 'Not authenticated']);
+                return;
+            }
+            
+            $data = json_decode(file_get_contents('php://input'), true);
+            $messageId = filter_var($data['message_id'] ?? null, FILTER_VALIDATE_INT);
+            $userId = Session::get('user_id');
+            
+            if (!$messageId) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'message' => 'Invalid message ID']);
+                return;
+            }
+            
+            // Check if user owns the message
+            $message = $this->messageModel->getById($messageId);
+            if (!$message || $message->sender_id != $userId) {
+                http_response_code(403);
+                echo json_encode(['success' => false, 'message' => 'Not authorized to delete this message']);
+                return;
+            }
+            
+            $result = $this->messageModel->delete($messageId);
+            
+            if ($result) {
+                echo json_encode(['success' => true, 'message' => 'Message deleted']);
+            } else {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'message' => 'Failed to delete message']);
+            }
+            
+        } catch (Exception $e) {
+            error_log("Delete message error: " . $e->getMessage());
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Server error occurred']);
         }
         
-        $userId =Session::get('user_id');
-        $result = $this->messageModel->deleteMessage($messageId, $userId);
-        
-        echo json_encode(['success' => (bool)$result]);
+        exit;
     }
     
     /**
-     * Get unread message count for current user
+     * Get unread message count
      */
     public function getUnreadCount() {
-        if (!Session::has('user')) {
-            http_response_code(401);
+        header('Content-Type: application/json');
+        
+        try {
+            if (!Session::has('user')) {
+                http_response_code(401);
+                echo json_encode(['success' => false]);
+                return;
+            }
+            
+            $userId = Session::get('user_id');
+            $unreadCount = $this->messageModel->getUnreadCount($userId);
+            
+            echo json_encode([
+                'success' => true,
+                'unread_count' => $unreadCount
+            ]);
+            
+        } catch (Exception $e) {
+            error_log("Get unread count error: " . $e->getMessage());
+            http_response_code(500);
             echo json_encode(['success' => false]);
-            return;
         }
         
-        $userId =Session::get('user_id');
-        $count = $this->messageModel->getUnreadCount($userId);
-        
-        echo json_encode([
-            'success' => true,
-            'count' => $count
-        ]);
-    }
-    
-    /**
-     * Start conversation with a friend (from friends page)
-     */
-    public function startConversation($friendId) {
-        if (!Session::has('user')) {
-            redirect('/auth/login');
-        }
-        
-        $userId =Session::get('user_id');
-        
-        // Check if users are friends
-        if (!$this->friendshipModel->areFriends($userId, $friendId)) {
-            $_SESSION['error_message'] = 'You can only message friends.';
-            redirect('/friends');
-        }
-        
-        // Redirect to conversation
-        redirect("/messages/conversation/{$friendId}");
+        exit;
     }
 }
