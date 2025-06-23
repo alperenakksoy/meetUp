@@ -1,8 +1,7 @@
 <a?php
 
-// Set page variables
 $pageTitle = 'Dashboard';
-$activePage = 'events';
+$activePage = 'event';
 $isLoggedIn = true;
 ?>
 <?php loadPartial('head') ?>
@@ -121,7 +120,7 @@ $isLoggedIn = true;
             <div class="bg-white p-5 rounded-lg shadow">
                 <h3 class="text-lg font-semibold mb-3 pb-2 border-b border-gray-100">Host</h3>
                 <div class="flex items-center mb-4">
-                <img src="<?=$host->profile_picture?>" alt="Host" class="w-20 h-20 rounded-full object-cover border-4 border-[#f5a623] mr-4">
+                <img src="<?=getProfilePicture($host)?>" alt="Host" class="w-20 h-20 rounded-full object-cover border-4 border-[#f5a623] mr-4">
                     <div>
                         <div class="font-semibold mb-1"><?="{$event->first_name} {$event->last_name}"?></div>
                         <div class="text-sm text-gray-600">

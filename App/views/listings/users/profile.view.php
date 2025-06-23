@@ -55,19 +55,30 @@ loadPartial('head') ?>
                     </div>
                     
                     <?php if ($isOwnProfile): ?>
-                        <a href="/users/edit" class="block w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-md text-center transition-colors">
-                            <i class="fas fa-edit mr-1"></i> Edit Profile
-                        </a>
-                        <?php elseif($areFriends):?>
-                            <button class="block w-full bg-green-500 hover:bg-green-700 text-white py-2 px-4 rounded-md text-center transition-colors">
-                            <i class="fas fa-plus mr-1"></i> Add Friend
-                        </button>
-                        <?php else:?>
-                            <a href="/messages/start/{friendId}" class="block w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-md text-center transition-colors">
-                            <i class="fas fa-text mr-1"></i> Send Message
-                        </a>
-                    <?php endif; ?>
-                </div>
+    <!-- Own Profile - Show Edit Button -->
+    <a href="/users/edit" class="block w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-md text-center transition-colors">
+        <i class="fas fa-edit mr-1"></i> Edit Profile
+    </a>
+<?php else: ?>
+    <!-- Someone Else's Profile -->
+    <?php if ($areFriends): ?>
+        <!-- Already Friends - Show Message Button -->
+        <a href="/messages/conversation/<?= $user->user_id ?>" class="block w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md text-center transition-colors">
+            <i class="fas fa-comment mr-1"></i> Send Message
+        </a>
+    <?php elseif ($friendshipStatus === 'pending'): ?>
+        <!-- Request Already Sent -->
+        <button class="block w-full bg-gray-400 text-white py-2 px-4 rounded-md text-center cursor-not-allowed" disabled>
+            <i class="fas fa-clock mr-1"></i> Request Sent
+        </button>
+    <?php else: ?>
+        <!-- Send Friend Request -->
+        <button class="block w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-md text-center transition-colors send-friend-request" 
+                data-user-id="<?= $user->user_id ?>">
+            <i class="fas fa-user-plus mr-1"></i> Add Friend
+        </button>
+    <?php endif; ?>
+<?php endif; ?>
                 
                 <!-- User Details -->
                 <div class="mt-6">
@@ -288,39 +299,150 @@ loadPartial('head') ?>
 
     
     <?=loadPartial(name: 'footer'); ?>
-<script>
-        // Add click events to cards for navigation
-        document.addEventListener('DOMContentLoaded', function() {
-            // Make event cards clickable to navigate to event details
-            const eventCards = document.querySelectorAll('.bg-white.rounded-lg.shadow-sm');
-            eventCards.forEach(card => {
-                card.addEventListener('click', function() {
-                    const eventTitle = this.querySelector('h3').textContent;
-                    // In a real app, this would use an event ID instead of title
-                    window.location.href = `event_details.php?title=${encodeURIComponent(eventTitle)}`;
-                });
-            });
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Profile friend request system initializing...');
+    
+    // Handle friend request button clicks
+    document.addEventListener('click', function(e) {
+        // Check if the clicked element has the send-friend-request class
+        if (e.target.closest('.send-friend-request')) {
+            e.preventDefault();
+            const button = e.target.closest('.send-friend-request');
+            const userId = button.getAttribute('data-user-id');
             
-            // Make friend items clickable to navigate to friend profiles
-            const friendItems = document.querySelectorAll('.text-center.cursor-pointer');
-            friendItems.forEach(item => {
-                item.addEventListener('click', function() {
-                    const friendName = this.querySelector('div').textContent;
-                    // In a real app, this would use a user ID instead of name
-                    window.location.href = `profile.php?name=${encodeURIComponent(friendName)}`;
-                });
-            });
-            
-            // Make message items clickable to open conversation
-            const messageItems = document.querySelectorAll('.flex.p-4');
-            messageItems.forEach(item => {
-                item.addEventListener('click', function() {
-                    const senderName = this.querySelector('.font-semibold').textContent;
-                    // In a real app, this would use a conversation ID
-                    window.location.href = `messages.php?conversation=${encodeURIComponent(senderName)}`;
-                });
-            });
+            if (userId) {
+                handleSendFriendRequest(userId, button);
+            }
+        }
+    });
+
+    // Make event cards clickable to navigate to event details
+    const eventCards = document.querySelectorAll('.bg-white.rounded-lg.shadow-sm');
+    eventCards.forEach(card => {
+        card.addEventListener('click', function() {
+            const eventTitle = this.querySelector('h3')?.textContent;
+            if (eventTitle) {
+                // In a real app, this would use an event ID instead of title
+                window.location.href = `event_details.php?title=${encodeURIComponent(eventTitle)}`;
+            }
         });
-    </script>
+    });
+    
+    // Make friend items clickable to navigate to friend profiles
+    const friendItems = document.querySelectorAll('.text-center.cursor-pointer');
+    friendItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const friendName = this.querySelector('div')?.textContent;
+            if (friendName) {
+                // In a real app, this would use a user ID instead of name
+                window.location.href = `profile.php?name=${encodeURIComponent(friendName)}`;
+            }
+        });
+    });
+    
+    // Make message items clickable to open conversation
+    const messageItems = document.querySelectorAll('.flex.p-4');
+    messageItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const senderName = this.querySelector('.font-semibold')?.textContent;
+            if (senderName) {
+                // In a real app, this would use a conversation ID
+                window.location.href = `messages.php?conversation=${encodeURIComponent(senderName)}`;
+            }
+        });
+    });
+});
+
+/**
+ * Send friend request function
+ */
+async function handleSendFriendRequest(userId, button) {
+    console.log('Sending friend request to user:', userId);
+    
+    // Show loading state
+    const originalHTML = button.innerHTML;
+    button.disabled = true;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Sending...';
+    
+    try {
+        const response = await fetch('/api/friendship/send', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({
+                user_id: parseInt(userId)
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showNotification('Friend request sent successfully!', 'success');
+            
+            // Update button to show sent state
+            button.innerHTML = '<i class="fas fa-clock mr-1"></i> Request Sent';
+            button.classList.remove('bg-orange-500', 'hover:bg-orange-600');
+            button.classList.add('bg-gray-400', 'cursor-not-allowed');
+            button.disabled = true;
+            
+        } else {
+            throw new Error(data.message || 'Failed to send friend request');
+        }
+        
+    } catch (error) {
+        console.error('Send friend request failed:', error);
+        showNotification(error.message || 'Failed to send friend request', 'error');
+        
+        // Restore button state
+        button.disabled = false;
+        button.innerHTML = originalHTML;
+    }
+}
+
+/**
+ * Show notification function
+ */
+function showNotification(message, type = 'info') {
+    // Remove any existing notifications
+    const existingNotifications = document.querySelectorAll('.notification');
+    existingNotifications.forEach(notification => notification.remove());
+    
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification fixed top-4 right-4 z-50 px-6 py-3 rounded-lg text-white shadow-lg transition-all duration-300 ${
+        type === 'success' ? 'bg-green-500' : 
+        type === 'error' ? 'bg-red-500' : 
+        'bg-blue-500'
+    }`;
+    
+    notification.innerHTML = `
+        <div class="flex items-center">
+            <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'} mr-2"></i>
+            <span>${message}</span>
+            <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white hover:text-gray-200 focus:outline-none">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentElement) {
+            notification.style.transition = 'opacity 0.3s ease';
+            notification.style.opacity = '0';
+            setTimeout(() => notification.remove(), 300);
+        }
+    }, 5000);
+}
+</script>
 </body>
 </html>

@@ -1,5 +1,6 @@
 <?php
 use Framework\Session;
+use App\Models\Message;
 
 // Get user session data
 $user = Session::get('user');
@@ -58,8 +59,10 @@ if ($isLoggedIn && $userId) {
                 <a href="/users/friends/<?=$userId?>" class="text-gray-700 hover:text-orange-600 transition-colors">
                     <i class="fas fa-users mr-1"></i> Friends
                 </a>
-                <a href="/messages" class="text-gray-700 hover:text-orange-600 transition-colors">
-                    <i class="fas fa-envelope mr-1"></i> Messages
+                <a href="/messages" class="text-gray-700 hover:text-orange-600 transition-colors relative">
+                 <i class="fas fa-envelope mr-1"></i> Messages
+             <span id="messagesBadge" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full min-w-[20px] h-5 flex items-center justify-center font-bold hidden animate-pulse">
+                0</span>
                 </a>
             </div>
 
@@ -206,12 +209,11 @@ if ($isLoggedIn && $userId) {
                         <i class="fas fa-users mr-2"></i> Friends
                     </a>
                     <?php if(isset($user)): ?>
-    <a href="/messages" 
-       class="text-gray-700 hover:text-orange-600 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center">
-        <i class="fas fa-comments mr-2"></i>
-        Messages
-        <span id="unreadBadge" class="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full hidden"></span>
-    </a>
+                    <a href="/messages" class="block py-2 text-gray-700 hover:text-orange-600 transition-colors relative">
+                        <i class="fas fa-envelope mr-2"></i> Messages
+                  <span id="messagesBadgeMobile" class="absolute top-1 left-8 bg-red-500 text-white text-xs rounded-full min-w-[16px] h-4 flex items-center justify-center font-bold hidden text-[10px]">
+                        0</span>
+                    </a>
 <?php endif; ?>
                     <a href="/notifications" class="flex items-center justify-between py-2 text-gray-700 hover:text-orange-600 transition-colors">
                         <span><i class="fas fa-bell mr-2"></i> Notifications</span>
@@ -243,83 +245,137 @@ if ($isLoggedIn && $userId) {
     </div>
 </nav>
 
+</style>
+
+<!-- Add this JavaScript at the bottom of your navbar.php -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // User dropdown toggle
-    const userMenuButton = document.getElementById('userMenuButton');
-    const userDropdownMenu = document.getElementById('userDropdownMenu');
+    <?php if(isset($user) && $isLoggedIn): ?>
     
-    if (userMenuButton && userDropdownMenu) {
-        userMenuButton.addEventListener('click', function(e) {
-            e.stopPropagation();
-            userDropdownMenu.classList.toggle('hidden');
-        });
-        
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!userMenuButton.contains(e.target) && !userDropdownMenu.contains(e.target)) {
-                userDropdownMenu.classList.add('hidden');
-            }
-        });
-    }
-    
-    // Mobile menu toggle
-    const mobileMenuButton = document.getElementById('mobileMenuButton');
-    const mobileMenu = document.getElementById('mobileMenu');
-    
-    if (mobileMenuButton && mobileMenu) {
-        mobileMenuButton.addEventListener('click', function() {
-            mobileMenu.classList.toggle('hidden');
-        });
-    }
-    
-    // Notification count update function
-    <?php if ($isLoggedIn): ?>
-    function updateNotificationCount() {
-        fetch('/api/notifications/count')
-            .then(response => response.json())
-            .then(data => {
-                const notificationBadges = document.querySelectorAll('.notification-badge');
-                notificationBadges.forEach(badge => {
-                    if (data.count > 0) {
-                        badge.textContent = data.count > 99 ? '99+' : data.count;
-                        badge.style.display = 'flex';
-                    } else {
-                        badge.style.display = 'none';
-                    }
-                });
-            })
-            .catch(error => console.error('Error updating notification count:', error));
-    }
-    
-    // Update notification count on load and every minute
-    updateNotificationCount();
-    setInterval(updateNotificationCount, 60000);
-    <?php endif; ?>
-});
-document.addEventListener('DOMContentLoaded', function() {
-    <?php if(isset($user)): ?>
-    // Update unread message count
-    function updateUnreadCount() {
+    // Function to update unread message count
+    function updateUnreadMessageCount() {
         fetch('/messages/unread-count')
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
-                const badge = document.getElementById('unreadBadge');
+                console.log('Unread count response:', data);
+                
+                // Get badge elements
+                const desktopBadge = document.getElementById('messagesBadge');
+                const mobileBadge = document.getElementById('messagesBadgeMobile');
+                
                 if (data.success && data.count > 0) {
-                    badge.textContent = data.count;
-                    badge.classList.remove('hidden');
+                    // Show badges with count
+                    const displayCount = data.count > 99 ? '99+' : data.count.toString();
+                    
+                    if (desktopBadge) {
+                        desktopBadge.textContent = displayCount;
+                        desktopBadge.classList.remove('hidden');
+                        desktopBadge.classList.add('message-badge');
+                    }
+                    
+                    if (mobileBadge) {
+                        mobileBadge.textContent = displayCount;
+                        mobileBadge.classList.remove('hidden');
+                        mobileBadge.classList.add('message-badge');
+                    }
+                    
+                    // Update page title with unread count
+                    const originalTitle = document.title.replace(/^\(\d+\)\s/, '');
+                    document.title = `(${data.count}) ${originalTitle}`;
+                    
                 } else {
-                    badge.classList.add('hidden');
+                    // Hide badges when no unread messages
+                    if (desktopBadge) {
+                        desktopBadge.classList.add('hidden');
+                        desktopBadge.classList.remove('message-badge');
+                    }
+                    
+                    if (mobileBadge) {
+                        mobileBadge.classList.add('hidden');
+                        mobileBadge.classList.remove('message-badge');
+                    }
+                    
+                    // Reset page title
+                    const originalTitle = document.title.replace(/^\(\d+\)\s/, '');
+                    document.title = originalTitle;
                 }
             })
-            .catch(error => console.error('Error fetching unread count:', error));
+            .catch(error => {
+                console.error('Error fetching unread message count:', error);
+            });
     }
     
-    // Update on page load
-    updateUnreadCount();
+    // Update count immediately when page loads
+    updateUnreadMessageCount();
     
-    // Update every 30 seconds
-    setInterval(updateUnreadCount, 30000);
+    // Update count every 30 seconds for real-time updates
+    setInterval(updateUnreadMessageCount, 30000);
+    
+    // Update when user focuses on the page (in case they read messages in another tab)
+    window.addEventListener('focus', updateUnreadMessageCount);
+    
+    // Update when user returns from messages page
+    window.addEventListener('pageshow', function(event) {
+        if (event.persisted || window.location.pathname.includes('/messages')) {
+            setTimeout(updateUnreadMessageCount, 1000);
+        }
+    });
+    
+    // Optional: Clear badge when user clicks on messages link
+    const messagesLinks = document.querySelectorAll('a[href="/messages"]');
+    messagesLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            // Small delay to let the page navigation happen
+            setTimeout(() => {
+                const desktopBadge = document.getElementById('messagesBadge');
+                const mobileBadge = document.getElementById('messagesBadgeMobile');
+                
+                if (desktopBadge) desktopBadge.classList.add('hidden');
+                if (mobileBadge) mobileBadge.classList.add('hidden');
+            }, 500);
+        });
+    });
+    
     <?php endif; ?>
 });
+
+// Function to manually update badge (useful for when messages are sent/read)
+function updateMessageBadge() {
+    if (typeof updateUnreadMessageCount === 'function') {
+        updateUnreadMessageCount();
+    }
+}
 </script>
+<style>
+.message-badge {
+    animation: pulse 2s infinite;
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+    }
+    
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+    }
+    
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+    }
+}
+
+/* Ensure badge stays on top */
+.relative .absolute {
+    z-index: 10;
+}
+</style>

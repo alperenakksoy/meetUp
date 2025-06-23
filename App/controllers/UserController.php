@@ -48,7 +48,6 @@ class UserController extends BaseController {
             // Viewing someone else's profile
             $userId = $params['id'];
             $user = $this->userModel->usergetById($userId);
-            $areFriends = $this->friendshipModel->areFriends($userId,$currentUserId);
             
             if (!$user) {
                 $_SESSION['error_message'] = 'User not found';
@@ -57,6 +56,11 @@ class UserController extends BaseController {
             }
             
             $isOwnProfile = ($currentUserId == $userId);
+            
+            // Check friendship status (for other user's profile)
+            $areFriends = $this->friendshipModel->areFriends($currentUserId, $userId);
+            $friendshipStatus = $this->friendshipModel->checkFriendshipStatus($currentUserId, $userId);
+            
         } else {
             // Viewing own profile - get fresh data from database
             $userId = $currentUserId;
@@ -69,6 +73,8 @@ class UserController extends BaseController {
             }
             
             $isOwnProfile = true;
+            $areFriends = false; // Not applicable for own profile
+            $friendshipStatus = 'none'; // Not applicable for own profile
         }
     
         try {
@@ -140,7 +146,7 @@ class UserController extends BaseController {
                     $friend->profile_picture = '/uploads/profiles/' . $friend->profile_picture;
                 }
             }
-
+    
             // Load the view with all data (using fresh database data)
             loadView('users/profile', [
                 'user' => $user,  // This is fresh from the database
@@ -154,7 +160,8 @@ class UserController extends BaseController {
                 'friends' => $friends,
                 'isOwnProfile' => $isOwnProfile,
                 'userId' => $userId,
-                'areFriends' => $areFriends
+                'areFriends' => $areFriends,
+                'friendshipStatus' => $friendshipStatus ?? 'none'
             ]);
             
         } catch (Exception $e) {

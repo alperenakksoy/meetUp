@@ -94,16 +94,7 @@ class MessageController {
         }
         
         try {
-            // TEMPORARY: Skip friendship check for debugging
-            // TODO: Re-enable this after testing
-            /*
-            if (!$this->friendshipModel->areFriends($userId, $friendId)) {
-                $_SESSION['error_message'] = 'You can only message friends.';
-                redirect('/messages');
-                return;
-            }
-            */
-            
+          
             // Get friend info - FIXED: Use direct query instead of problematic method
             $query = "SELECT * FROM users WHERE user_id = :friend_id";
             $friend = $this->userModel->query($query, ['friend_id' => $friendId])->fetch();
@@ -204,15 +195,6 @@ class MessageController {
                 return;
             }
             
-            // TEMPORARY: Skip friendship check for debugging
-            // TODO: Re-enable this after testing
-            /*
-            if (!$this->friendshipModel->areFriends($senderId, $receiverId)) {
-                echo json_encode(['success' => false, 'message' => 'You can only message friends']);
-                return;
-            }
-            */
-            
             // Sanitize message content
             $message = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
             
@@ -247,7 +229,7 @@ class MessageController {
     /**
      * Get new messages via AJAX (for real-time updates)
      */
-    public function getNewMessages($params) {  // FIXED: Added $params parameter
+    public function getNewMessages($params) {  
         header('Content-Type: application/json');
         
         try {
@@ -266,16 +248,6 @@ class MessageController {
                 echo json_encode(['success' => false, 'message' => 'Invalid friend ID']);
                 return;
             }
-            
-            // Check if users are friends (you can comment this out for testing)
-            /*
-            if (!$this->friendshipModel->areFriends($userId, $friendId)) {
-                http_response_code(403);
-                echo json_encode(['success' => false, 'message' => 'Not authorized']);
-                return;
-            }
-            */
-            
             $query = "SELECT m.message_id, m.sender_id, m.receiver_id, m.message_content, m.created_at,
                              sender.first_name as sender_name,
                              sender.profile_picture as sender_picture
@@ -313,34 +285,33 @@ class MessageController {
         
         exit;
     }
-    
     /**
-     * Get unread message count
-     */
-    public function getUnreadCount() {
-        header('Content-Type: application/json');
-        
-        try {
-            if (!Session::has('user')) {
-                http_response_code(401);
-                echo json_encode(['success' => false]);
-                return;
-            }
-            
-            $userId = Session::get('user_id');
-            $unreadCount = $this->messageModel->getUnreadCount($userId);
-            
-            echo json_encode([
-                'success' => true,
-                'unread_count' => $unreadCount
-            ]);
-            
-        } catch (Exception $e) {
-            error_log("Get unread count error: " . $e->getMessage());
-            http_response_code(500);
-            echo json_encode(['success' => false]);
+ * Get unread message count
+ */
+public function getUnreadCount() {
+    header('Content-Type: application/json');
+    
+    try {
+        if (!Session::has('user')) {
+            http_response_code(401);
+            echo json_encode(['success' => false, 'count' => 0]);
+            return;
         }
         
-        exit;
+        $userId = Session::get('user_id');
+        $unreadCount = $this->messageModel->getUnreadCount($userId);
+        
+        echo json_encode([
+            'success' => true,
+            'count' => (int)$unreadCount  // Make sure it's an integer
+        ]);
+        
+    } catch (Exception $e) {
+        error_log("Get unread count error: " . $e->getMessage());
+        http_response_code(500);
+        echo json_encode(['success' => false, 'count' => 0]);
     }
+    
+    exit;
+}
 }

@@ -127,42 +127,67 @@ $isLoggedIn = true;
 
             <!-- Image Section -->
             <div class="mb-6">
-                <h3 class="text-lg font-semibold mb-4 pb-2.5 border-b border-gray-100 text-[#2c3e50]">Event Image</h3>
-                <div class="mb-5">
-                    <label for="event_image" class="block mb-2 font-medium">Upload Cover Image</label>
-                    <input type="file" id="event_image" name="event_image" value="<?=$listing['event_image'] ?? '' ?>" class="w-full py-2.5 px-4 border border-gray-300 rounded focus:border-[#f5a623] focus:outline-none text-base" accept="image/*">
-                    <span class="block text-sm text-gray-600 mt-1">Recommended size: 1200×600 pixels. Max file size: 5MB</span>
-                    <div class="form-image-preview mt-4 border border-dashed border-gray-300 rounded p-4 text-center">
-                        <div class="placeholder-image w-full h-[200px] bg-gray-100 flex items-center justify-center text-gray-600 rounded">
-                            <i class="fas fa-image text-4xl"></i>
-                        </div>
-                    </div>
+        <h3 class="text-lg font-semibold mb-4 pb-2.5 border-b border-gray-100 text-[#2c3e50]">Event Image</h3>
+        <div class="mb-5">
+            <label for="event_image" class="block mb-2 font-medium">Upload Cover Image</label>
+            <input type="file" 
+                   id="event_image" 
+                   name="event_image" 
+                   class="w-full py-2.5 px-4 border border-gray-300 rounded focus:border-[#f5a623] focus:outline-none text-base" 
+                   accept="image/*">
+            <span class="block text-sm text-gray-600 mt-1">Recommended size: 1200×600 pixels. Max file size: 5MB</span>
+            
+            <!-- Display any image upload errors -->
+            <?php if(isset($errors['event_image'])): ?>
+                <div class="text-red-500 text-sm mt-1"><?= $errors['event_image'] ?></div>
+            <?php endif; ?>
+            
+            <div class="form-image-preview mt-4 border border-dashed border-gray-300 rounded p-4 text-center">
+                <div class="placeholder-image w-full h-[200px] bg-gray-100 flex items-center justify-center text-gray-600 rounded">
+                    <i class="fas fa-image text-4xl"></i>
                 </div>
             </div>
+        </div>
+    </div>
             <!-- Form Actions -->
             <div class="flex justify-between pt-4 border-t border-gray-100">
-            <a href="/events" class="bg-white text-gray-900 border border-gray-300 py-5 px-10 rounded font-medium hover:bg-gray-100 inline-block text-center">Go Back</a>
-            <button type="submit" class="bg-[#f5a623] text-white py-3 px-6 rounded font-medium hover:bg-[#e5941d]">Create Event</button>
-            </div>
-        </form>
+        <a href="/events" class="bg-white text-gray-900 border border-gray-300 py-5 px-10 rounded font-medium hover:bg-gray-100 inline-block text-center">Go Back</a>
+        <button type="submit" class="bg-[#f5a623] text-white py-3 px-6 rounded font-medium hover:bg-[#e5941d]">Create Event</button>
+    </div>
+</form>
     </div>
 
     <script>
     // Image preview functionality
     const imageInput = document.getElementById('event_image');
-    const imagePreview = document.querySelector('.form-image-preview');
+const imagePreview = document.querySelector('.form-image-preview');
 
-    imageInput.addEventListener('change', function () {
-        if (this.files && this.files[0]) {
-            const reader = new FileReader();
-
-            reader.onload = function (e) {
-                imagePreview.innerHTML = `<img src="${e.target.result}" alt="Preview" class="w-full h-[200px] object-cover rounded" />`;
-            };
-
-            reader.readAsDataURL(this.files[0]);
+imageInput.addEventListener('change', function () {
+    if (this.files && this.files[0]) {
+        const file = this.files[0];
+        
+        // Validate file size (5MB = 5 * 1024 * 1024 bytes)
+        if (file.size > 5 * 1024 * 1024) {
+            alert('File size must be less than 5MB');
+            this.value = ''; // Clear the input
+            return;
         }
-    });
+        
+        // Validate file type
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+        if (!allowedTypes.includes(file.type)) {
+            alert('Only JPEG, PNG, and WebP images are allowed');
+            this.value = ''; // Clear the input
+            return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            imagePreview.innerHTML = `<img src="${e.target.result}" alt="Preview" class="w-full h-[200px] object-cover rounded" />`;
+        };
+        reader.readAsDataURL(file);
+    }
+});
 </script>
 
     <?=loadPartial('scripts'); ?>

@@ -94,8 +94,8 @@ class EventController extends BaseController {
         }
         
         // Add the host_id - this is critical!
-        $dbData['host_id'] = 1; // Or get from session if available
-    
+        $dbData['host_id'] = Session::get('user_id');
+        
         // Validate required fields
         $requiredFields = [
             'title',
@@ -107,7 +107,7 @@ class EventController extends BaseController {
             'country',
             'description'
         ];
-    
+        
         $errors = [];
         foreach ($requiredFields as $field) {
             if (empty($dbData[$field]) || !Validation::string($dbData[$field])) {
@@ -115,32 +115,75 @@ class EventController extends BaseController {
                 $errors[$formField] = ucfirst(str_replace('_', ' ', $formField)) . ' field is required.';
             }
         }
-    
+        
+        // Additional validation
+        if (!empty($dbData['max_attendees']) && (!is_numeric($dbData['max_attendees']) || $dbData['max_attendees'] < 1)) {
+            $errors['event_max_attendees'] = 'Max attendees must be a positive number.';
+        }
+        
+        // Validate dates
+        if (!empty($dbData['event_date']) && !empty($dbData['end_date'])) {
+            if (strtotime($dbData['end_date']) < strtotime($dbData['event_date'])) {
+                $errors['event_end_date'] = 'End date cannot be before start date.';
+            }
+        }
+        
         if (!empty($errors)) {
+            // If there are validation errors, show the form again with errors
             loadView('events/create', [
                 'errors' => $errors,
-                'event' => $newEventData
+                'listing' => $_POST // Pass back the submitted data
             ]);
-        } else {
-            try {
-                // Use the Event model to store the data
-                $eventId = $this->eventModel->create($dbData);
-                
-                // Redirect to the event page
-                redirect('/events/' . $eventId);
-            } catch (Exception $e) {
-                // Log the error and display a user-friendly message
-                error_log($e->getMessage());
-                $errors['database'] = 'There was an error saving your event. Please try again.';
+            return;
+        }
+        
+        try {
+            // Handle image upload BEFORE saving to database
+            $uploadedImage = $this->handleImageUpload();
+            
+            // If image upload failed and there was an error message set, show the form again
+            if (isset($_SESSION['error_message'])) {
                 loadView('events/create', [
-                    'errors' => $errors,
-                    'event' => $newEventData
+                    'errors' => ['event_image' => $_SESSION['error_message']],
+                    'listing' => $_POST
                 ]);
+                unset($_SESSION['error_message']);
+                return;
             }
+            
+            // Add image filename to database data if upload was successful
+            if ($uploadedImage) {
+                $dbData['cover_image'] = $uploadedImage;
+            }
+            
+            // Set default status
+            $dbData['status'] = 'upcoming';
+            $dbData['require_approval'] = 0; // or get from form if you have this field
+            
+            // Create the event in the database
+            $eventId = $this->eventModel->create($dbData);
+            
+            if ($eventId) {
+                // Success! Redirect to the new event
+                $_SESSION['success_message'] = 'Event created successfully!';
+                redirect('/events/' . $eventId);
+            } else {
+                // Database error
+                throw new Exception('Failed to create event in database');
+            }
+            
+        } catch (Exception $e) {
+            // Log the error and display a user-friendly message
+            error_log("Event creation error: " . $e->getMessage());
+            loadView('events/create', [
+                'errors' => ['database' => 'There was an error creating your event. Please try again.'],
+                'listing' => $_POST
+            ]);
         }
     }
     
     public function show($params) {
+        
         $userId = Session::get('user_id');
         $user= $this->userModel->usergetById($userId); 
         $event = $this->eventModel->getEventWithDetails($params['id']);    
@@ -194,9 +237,15 @@ class EventController extends BaseController {
             $event = $this->eventModel->getById($id);
             
             if (!$event) {
-                // Event not found
                 $_SESSION['error_message'] = 'Event not found';
                 redirect('/events');
+                return;
+            }
+            
+            // Check if user has permission to edit (should be the host)
+            if ($event->host_id != Session::get('user_id')) {
+                $_SESSION['error_message'] = 'You do not have permission to edit this event';
+                redirect('/events/' . $id);
                 return;
             }
             
@@ -217,7 +266,7 @@ class EventController extends BaseController {
                 'event_description'
             ];
             
-            // Process form data similar to store method
+            // Process form data
             $updateEventData = array_intersect_key($_POST, array_flip($allowedFields));
             $updateEventData = array_map('sanitize', $updateEventData);
             
@@ -272,32 +321,49 @@ class EventController extends BaseController {
                     'errors' => $errors,
                     'event' => $event
                 ]);
-            } else {
-                try {
-                    // Handle image upload if needed
-                    
-                    // Update the event
-                    if ($this->eventModel->update($id, $dbData)) {
-                        // Success
-                        $_SESSION['success_message'] = 'Event updated successfully';
-                        redirect('/events/' . $id);
-                    } else {
-                        // Failed
-                        $errors['database'] = 'Failed to update event';
-                        loadView('events/edit', [
-                            'errors' => $errors,
-                            'event' => $event
-                        ]);
-                    }
-                } catch (Exception $e) {
-                    // Log the error and display a user-friendly message
-                    error_log($e->getMessage());
-                    $errors['database'] = 'There was an error updating your event. Please try again.';
+                return;
+            }
+            
+            try {
+                // Handle image upload if a new image was provided
+                $uploadedImage = $this->handleImageUpload();
+                
+                // If image upload failed and there was an error message set, show the form again
+                if (isset($_SESSION['error_message'])) {
                     loadView('events/edit', [
-                        'errors' => $errors,
+                        'errors' => ['event_image' => $_SESSION['error_message']],
                         'event' => $event
                     ]);
+                    unset($_SESSION['error_message']);
+                    return;
                 }
+                
+                // Add new image filename to database data if upload was successful
+                if ($uploadedImage) {
+                    // Delete old image if it exists
+                    if (!empty($event->cover_image)) {
+                        $oldImagePath = basePath('public/uploads/events/' . $event->cover_image);
+                        if (file_exists($oldImagePath)) {
+                            unlink($oldImagePath);
+                        }
+                    }
+                    $dbData['cover_image'] = $uploadedImage;
+                }
+                
+                // Update the event
+                if ($this->eventModel->update($id, $dbData)) {
+                    $_SESSION['success_message'] = 'Event updated successfully';
+                    redirect('/events/' . $id);
+                } else {
+                    throw new Exception('Failed to update event in database');
+                }
+                
+            } catch (Exception $e) {
+                error_log("Event update error: " . $e->getMessage());
+                loadView('events/edit', [
+                    'errors' => ['database' => 'There was an error updating your event. Please try again.'],
+                    'event' => $event
+                ]);
             }
         }
     
@@ -385,7 +451,11 @@ private function handleImageUpload() {
     
     // Validate file type
     $allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
-    if (!in_array($file['type'], $allowedTypes)) {
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $mimeType = finfo_file($finfo, $file['tmp_name']);
+    finfo_close($finfo);
+    
+    if (!in_array($mimeType, $allowedTypes)) {
         $_SESSION['error_message'] = 'Only JPEG, PNG, and WebP images are allowed.';
         return null;
     }
@@ -397,14 +467,17 @@ private function handleImageUpload() {
     }
     
     // Create upload directory if it doesn't exist
-    $uploadDir = 'uploads/events/';
+    $uploadDir = basePath('public/uploads/events/');
     if (!is_dir($uploadDir)) {
-        mkdir($uploadDir, 0755, true);
+        if (!mkdir($uploadDir, 0755, true)) {
+            $_SESSION['error_message'] = 'Failed to create upload directory.';
+            return null;
+        }
     }
     
     // Generate unique filename
-    $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-    $filename = uniqid('event_') . '.' . $extension;
+    $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    $filename = 'event_' . uniqid() . '_' . time() . '.' . $extension;
     $uploadPath = $uploadDir . $filename;
     
     // Move uploaded file
