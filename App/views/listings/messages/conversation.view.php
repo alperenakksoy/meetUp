@@ -55,6 +55,8 @@ $isLoggedIn = true;
                         <?php endforeach; ?>
                     </div>
                 </div>
+
+            
                 
                 <!-- Chat Area -->
                 <div class="flex-1 flex flex-col">

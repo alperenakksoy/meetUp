@@ -53,10 +53,10 @@ $router->get('/api/hangouts/starting-soon', 'HangoutController@startingSoon');
 // Messages routes
 $router->get('/messages', 'MessageController@index',['auth']);
 $router->get('/messages/conversation/{id}', 'MessageController@conversation',['auth']);
-$router->post('/messages/send', 'MessageController@send',['auth']);
 $router->get('/messages/get-new/{friendId}/{lastMessageId}', 'MessageController@getNewMessages',['auth']);
-$router->delete('/messages/{id}', 'MessageController@delete',['auth']);
 $router->get('/messages/start/{friendId}', 'MessageController@startConversation',['auth']);
+$router->post('/messages/send', 'MessageController@send',['auth']);
+$router->delete('/messages/{id}', 'MessageController@delete',['auth']);
 
 // Add unread count endpoint
 $router->get('/messages/unread-count', 'MessageController@getUnreadCount');

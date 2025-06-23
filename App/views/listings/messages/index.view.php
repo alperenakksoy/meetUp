@@ -62,8 +62,10 @@ $isLoggedIn = true;
                                         </div>
                                     </div>
                                 </a>
+
                             <?php endforeach; ?>
                         <?php else: ?>
+
                             <div class="p-8 text-center text-gray-500">
                                 <i class="fas fa-comments fa-3x mb-4"></i>
                                 <p class="mb-2">No conversations yet</p>
@@ -75,7 +77,7 @@ $isLoggedIn = true;
                         <?php endif; ?>
                     </div>
                 </div>
-                
+
                 <!-- Main Content Area -->
                 <div class="flex-1 flex items-center justify-center bg-gray-50">
                     <div class="text-center text-gray-500">

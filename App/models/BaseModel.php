@@ -37,7 +37,13 @@ public function query($sql, $params = []) {
     public function usergetById($id) {
         $query = "SELECT * FROM {$this->table} WHERE user_id = :id";
         $params = ['id' => $id];
-        return $this->db->query($query, $params)->fetch();
+        $result = $this->db->query($query, $params)->fetch();
+        
+        // Debug log to see what's happening
+        error_log("usergetById called with ID: $id, table: {$this->table}");
+        error_log("Query result: " . ($result ? 'FOUND' : 'NOT FOUND'));
+        
+        return $result;
     }
     
     
