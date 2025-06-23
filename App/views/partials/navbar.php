@@ -26,7 +26,8 @@ if (!function_exists('getNavbarProfilePicture')) {
         // Local file path
         return "/uploads/profiles/" . $user['profile_picture'];
     }
-    }
+}
+
 // Get notification count for logged-in users
 $notificationCount = 0;
 if ($isLoggedIn && $userId) {
@@ -54,15 +55,16 @@ if ($isLoggedIn && $userId) {
                     <i class="fas fa-calendar-alt mr-1"></i> Events
                 </a>
                 <a href="/hangouts/index" class="text-gray-700 hover:text-orange-600 transition-colors">
-                <i class="fas fa-list-alt mr-2"></i> Hangouts
+                    <i class="fas fa-list-alt mr-2"></i> Hangouts
                 </a>
                 <a href="/users/friends/<?=$userId?>" class="text-gray-700 hover:text-orange-600 transition-colors">
                     <i class="fas fa-users mr-1"></i> Friends
                 </a>
                 <a href="/messages" class="text-gray-700 hover:text-orange-600 transition-colors relative">
-                 <i class="fas fa-envelope mr-1"></i> Messages
-             <span id="messagesBadge" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full min-w-[20px] h-5 flex items-center justify-center font-bold hidden animate-pulse">
-                0</span>
+                    <i class="fas fa-envelope mr-1"></i> Messages
+                    <span id="messagesBadge" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full min-w-[20px] h-5 flex items-center justify-center font-bold hidden animate-pulse">
+                        0
+                    </span>
                 </a>
             </div>
 
@@ -107,9 +109,8 @@ if ($isLoggedIn && $userId) {
                                             <?php
                                                 $fullname = strtolower(($user['first_name'] ?? '') . " " . ($user['last_name'] ?? ''));
                                                 $fullname = ucwords($fullname);
-                                                ?>
-                                                <?= htmlspecialchars($fullname) ?>
-
+                                            ?>
+                                            <?= htmlspecialchars($fullname) ?>
                                         </div>
                                         <div class="text-sm text-gray-600">
                                             <?= htmlspecialchars($user['email'] ?? '') ?>
@@ -211,10 +212,11 @@ if ($isLoggedIn && $userId) {
                     <?php if(isset($user)): ?>
                     <a href="/messages" class="block py-2 text-gray-700 hover:text-orange-600 transition-colors relative">
                         <i class="fas fa-envelope mr-2"></i> Messages
-                  <span id="messagesBadgeMobile" class="absolute top-1 left-8 bg-red-500 text-white text-xs rounded-full min-w-[16px] h-4 flex items-center justify-center font-bold hidden text-[10px]">
-                        0</span>
+                        <span id="messagesBadgeMobile" class="absolute top-1 left-8 bg-red-500 text-white text-xs rounded-full min-w-[16px] h-4 flex items-center justify-center font-bold hidden text-[10px]">
+                            0
+                        </span>
                     </a>
-<?php endif; ?>
+                    <?php endif; ?>
                     <a href="/notifications" class="flex items-center justify-between py-2 text-gray-700 hover:text-orange-600 transition-colors">
                         <span><i class="fas fa-bell mr-2"></i> Notifications</span>
                         <?php if ($notificationCount > 0): ?>
@@ -245,11 +247,37 @@ if ($isLoggedIn && $userId) {
     </div>
 </nav>
 
-</style>
-
-<!-- Add this JavaScript at the bottom of your navbar.php -->
+<!-- JavaScript and CSS for Navbar Functionality -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Mobile menu toggle
+    const mobileMenuButton = document.getElementById('mobileMenuButton');
+    const mobileMenu = document.getElementById('mobileMenu');
+    
+    if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
+        });
+    }
+
+    // User dropdown toggle
+    const userMenuButton = document.getElementById('userMenuButton');
+    const userDropdownMenu = document.getElementById('userDropdownMenu');
+    
+    if (userMenuButton && userDropdownMenu) {
+        userMenuButton.addEventListener('click', function(e) {
+            e.stopPropagation();
+            userDropdownMenu.classList.toggle('hidden');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!userMenuButton.contains(e.target) && !userDropdownMenu.contains(e.target)) {
+                userDropdownMenu.classList.add('hidden');
+            }
+        });
+    }
+
     <?php if(isset($user) && $isLoggedIn): ?>
     
     // Function to update unread message count
@@ -351,6 +379,7 @@ function updateMessageBadge() {
     }
 }
 </script>
+
 <style>
 .message-badge {
     animation: pulse 2s infinite;
@@ -377,5 +406,42 @@ function updateMessageBadge() {
 /* Ensure badge stays on top */
 .relative .absolute {
     z-index: 10;
+}
+
+/* Fix dropdown menu positioning */
+#userDropdownMenu {
+    z-index: 1000;
+}
+
+/* Mobile menu improvements */
+@media (max-width: 768px) {
+    #mobileMenu {
+        transition: all 0.3s ease;
+    }
+    
+    #mobileMenu.hidden {
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+    }
+    
+    #mobileMenu:not(.hidden) {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+}
+
+/* Improved hover effects */
+.hover\:bg-gray-100:hover {
+    background-color: rgb(243 244 246);
+}
+
+.hover\:bg-red-50:hover {
+    background-color: rgb(254 242 242);
+}
+
+.hover\:bg-purple-50:hover {
+    background-color: rgb(250 245 255);
 }
 </style>
